@@ -1,0 +1,85 @@
+    @import "compass/css3";
+
+    // Variables
+    $dark: #282828;
+    $pink: #fc2161;
+    $pink-d: darken($pink, 15%);
+    $green: #77BD42;
+    $green-d: darken($green, 15%);
+
+    // Fonts
+    @import url(http://fonts.googleapis.com/css?family=Montserrat:400);
+
+
+    // Get to business
+    body {
+    background-color: #777;
+    padding-top: 80px;
+    text-align: center;
+    }
+
+    .flipper-container {
+    text-align: center;
+    margin-top: 40px;
+    @include perspective(1000);
+    }
+
+    .flipper {
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    font-family: 'Montserrat', arial, sans-serif !important;
+    font-weight: 400;
+    text-transform: uppercase;
+    width: 100%; height: 4.5em;
+    background-color: $dark;
+    box-shadow: 0 3px 5px $dark;
+    @include transition(all 0.6s cubic-bezier(0.37, 0.74, 0.15, 1.65));
+    @include transform-style(preserve-3d);
+
+    &:target {
+    @include transform(rotateX(90deg), translateZ(50%));
+    }
+    }
+
+    .front-face, .back-face {
+    position: absolute;
+    width: 100%; height: 100%;
+    top: 0; left: 0;
+    padding-right: 70px;
+    letter-spacing: 2px;
+    line-height: 4.5em;
+    @include border-radius(2px);
+    @include backface-visibility(hidden);
+
+    &:before {
+    content: attr(data-icon);
+    font-size: 30px;
+    position: absolute;
+    top: 0; right: 0;
+    height: 100%; width: 70px;
+    border-radius: 0 2px 2px 0;
+    }
+    }
+
+    .front-face {
+    background-color: $pink;
+    color: #fff;
+    text-shadow: 0 1px 1px darken($pink, 20%);
+    @include transform(rotateX(0deg)translateZ(2.25em));
+
+    &:before {
+    @include background-image(linear-gradient(45deg,       $pink-d 0%, #eb1f56 50%, #f91858 50%, $pink));
+    }
+
+    }
+
+    .back-face {
+    background-color: rgba(119, 189, 66, 0.38);
+    color: rgba(0, 0, 0, 0.54);
+    @include transform(rotateX(-90deg)translateZ(2.25em));
+
+    &:before {
+    @include background-image(linear-gradient(45deg,       $green-d 0%, #76bc42 50%, #7dbd4c 50%, $green));
+    }
+    }

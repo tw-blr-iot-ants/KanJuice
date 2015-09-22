@@ -1,0 +1,69 @@
+@import "compass/reset";
+@import "compass/css3";
+
+body {
+    text-align: center;
+    font: 1em/1.5 Georgia, serif;
+    color: #333;
+    background-image: url("../images/bg.jpg");
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+h1 {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: xx-large !important;
+    padding: 0 1em !important;
+}
+
+.header {
+    padding: 5em 0 14em;
+
+    h1 {
+        font-style: inherit;
+    }
+}
+
+.avatar {
+    @include box-shadow(0 0 0px 3px #fff, 0 0 0 4px #ccc, 0 4px 6px #333);
+    @include border-radius(75px); // half the avatar size
+    width: 150px;
+    height: 150px;
+    margin-top: -25px;
+}
+
+h2
+{
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 100 !important;
+    font-size: medium;
+    text-align: center !important;
+    color: rgba(10, 9, 9, 0.6) !important;
+    margin-top: 20px;
+}
+
+.order{
+    background-color: black;
+    color: white;
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 100 !important;
+    font-size: medium;
+    text-align: center !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-top: 20px;
+}

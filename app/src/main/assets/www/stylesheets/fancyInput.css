@@ -1,0 +1,76 @@
+/*
+Error: Invalid CSS after "...v{ width:99.9%%": expected expression (e.g. 1px, bold), was "; }"
+        on line 41 of /Users/saikrisv/git/juice_center/juice_counter/src/sass/fancyInput.scss
+
+36: 			&.empty:before{ opacity:0.2; left:0; }
+37: 		}
+38: 	}
+39: 	input:focus ~ div.empty:before{ opacity:.1; }
+40: 	
+41: 	&.textarea > div{ width:99.9%%; }
+42: 
+43: 	*:focus ~ .caret,
+44: 	*:focus ~ div .caret{ opacity:.8; box-shadow:0 0 8px #FFF; -webkit-animation:0.4s 40ms caret infinite; animation:0.4s 40ms caret infinite; }
+45: 	.caret:only-child{  }
+46: 	.caret{ font-weight:normal; opacity:0; display:inline-block; width:3px; margin-left:-3px; background:#FFF; border-radius:4px; -moz-user-select:none; }
+
+Backtrace:
+/Users/saikrisv/git/juice_center/juice_counter/src/sass/fancyInput.scss:41
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:1162:in `expected'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/lexer.rb:221:in `expected!'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:571:in `assert_expr'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:235:in `times_div_or_mod'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:227:in `plus_or_minus'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:227:in `relational'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:227:in `eq_or_neq'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:227:in `and_expr'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:227:in `or_expr'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:362:in `space'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:346:in `interpolation'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:293:in `expr'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:569:in `assert_expr'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/parser.rb:62:in `parse'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:1024:in `sass_script'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:877:in `value!'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:750:in `block in try_declaration'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:1138:in `call'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:1138:in `rethrow'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:763:in `try_declaration'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:693:in `declaration_or_ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:658:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:647:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:639:in `block'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:708:in `declaration_or_ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:658:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:650:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:639:in `block'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:632:in `ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:657:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:650:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:117:in `stylesheet'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/scss/parser.rb:42:in `parse'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/engine.rb:403:in `_to_tree'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/engine.rb:278:in `render'
+/Library/Ruby/Gems/2.0.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:17:in `block in render'
+/Library/Ruby/Gems/2.0.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:29:in `with_import_scope'
+/Library/Ruby/Gems/2.0.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:16:in `render'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/plugin/compiler.rb:209:in `each'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/sass_compiler.rb:40:in `compile!'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/commands/update_project.rb:49:in `perform'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/commands/base.rb:18:in `execute'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/commands/project_base.rb:19:in `execute'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:15:in `run!'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/bin/compass:30:in `block in <top (required)>'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/bin/compass:44:in `call'
+/Library/Ruby/Gems/2.0.0/gems/compass-1.0.3/bin/compass:44:in `<top (required)>'
+/usr/bin/compass:23:in `load'
+/usr/bin/compass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"...v{ width:99.9%%\": expected expression (e.g. 1px, bold), was \"; }\"\A         on line 41 of /Users/saikrisv/git/juice_center/juice_counter/src/sass/fancyInput.scss\A \A 36: 			&.empty:before{ opacity:0.2; left:0; }\A 37: 		}\A 38: 	}\A 39: 	input:focus ~ div.empty:before{ opacity:.1; }\A 40: 	\A 41: 	&.textarea > div{ width:99.9%%; }\A 42: \A 43: 	*:focus ~ .caret,\A 44: 	*:focus ~ div .caret{ opacity:.8; box-shadow:0 0 8px #FFF; -webkit-animation:0.4s 40ms caret infinite; animation:0.4s 40ms caret infinite; }\A 45: 	.caret:only-child{  }\A 46: 	.caret{ font-weight:normal; opacity:0; display:inline-block; width:3px; margin-left:-3px; background:#FFF; border-radius:4px; -moz-user-select:none; }"; }
