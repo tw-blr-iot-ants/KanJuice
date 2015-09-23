@@ -23,15 +23,24 @@ public class RfidCardReader {
     private SerialInputOutputManager mSerialIoManager;
 
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private SerialInputOutputManager.Listener listener;
 
-    public RfidCardReader(Context context) {
+    private boolean isConnected  = true;
+
+    public RfidCardReader(Context context, SerialInputOutputManager.Listener listener) {
+        this.listener = listener;
         usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-        final List<UsbSerialDriver> drivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
-        port = drivers.get(0).getPorts().get(0);
-        SerialConsoleActivity.show(context, port);
+
+        try {
+            final List<UsbSerialDriver> drivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
+            port = drivers.get(0).getPorts().get(0);
+        } catch (Exception e) {
+            Log.d(TAG, "Failed to get serial port with exception : " + e.getMessage());
+            isConnected = false;
+        }
     }
 
-    private boolean connectToSerialPort() {
+    public boolean connectToSerialPort() {
         if (port == null) return false;
 
         UsbDeviceConnection connection = usbManager.openDevice(port.getDriver().getDevice());
@@ -64,7 +73,7 @@ public class RfidCardReader {
         }
     }
 
-    public void startIoManager(SerialInputOutputManager.Listener listener) {
+    public void startIoManager() {
         if (port != null) {
             Log.i(TAG, "Starting io manager ..");
             mSerialIoManager = new SerialInputOutputManager(port, listener);
@@ -72,4 +81,23 @@ public class RfidCardReader {
         }
     }
 
+    public void onDeviceStateChange() {
+        stopIoManager();
+        startIoManager();
+    }
+
+    public void closePort() {
+        if (port != null) {
+            try {
+                port.close();
+            } catch (IOException e) {
+                // Ignore.
+            }
+            port = null;
+        }
+    }
+
+    public Boolean isConnected() {
+        return isConnected;
+    }
 }
