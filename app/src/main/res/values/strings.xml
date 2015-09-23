@@ -10,5 +10,9 @@
     <string name="title_activity_juice_menu">JuiceMenuActivity</string>
     <string name="welcome_message">Time to be healthy!</string>
     <string name="title_activity_user_input">UserInputActivity</string>
+    <string name="title_activity_admin">AdminActivity</string>
+    <string name="set_availability">Set the Juice availability</string>
+    <string name="save">Save</string>
+    <string name="admin">Admin</string>
 
 </resources>

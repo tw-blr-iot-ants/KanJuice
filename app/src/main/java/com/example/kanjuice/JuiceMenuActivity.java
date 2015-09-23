@@ -35,6 +35,13 @@ public class JuiceMenuActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(JuiceMenuActivity.this, AdminActivity.class));
+            }
+        });
     }
 
     private static class JuiceAdapter extends BaseAdapter {
