@@ -7,5 +7,8 @@
 
     <string name="app_title">KanJuice</string>
     <string name="refreshing">Refreshing...</string>
+    <string name="title_activity_juice_menu">JuiceMenuActivity</string>
+    <string name="welcome_message">Time to be healthy!</string>
+    <string name="title_activity_user_input">UserInputActivity</string>
 
 </resources>
