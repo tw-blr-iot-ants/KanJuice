@@ -2,7 +2,6 @@ package com.example.kanjuice;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -16,9 +15,8 @@ public class UserInputActivity extends Activity {
     private static final String TAG = "UserInputActivity";
 
     private TextView cardNumberView;
-    private UsbManager usbManager;
     private RfidCardReader rfidCardReader;
-    private String cardNumber;
+    private String cardNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,6 @@ public class UserInputActivity extends Activity {
         }
     }
 
-
     public void setupViews(Intent intent) {
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(format("You have selected %s juice", intent.getStringExtra("juice_name")));
@@ -62,9 +59,15 @@ public class UserInputActivity extends Activity {
     private void updateReceivedData(byte[] data) {
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
-            cardNumberView.setText("card# " + cardNumber.substring(1, cardNumber.length() - 1).trim() + "");
-            cardNumber = "";
+            cardNumberView.setText("card# " + extractCardNumber(cardNumber));
+            this.cardNumber = "";
         }
+    }
+
+    private Integer extractCardNumber(String readString) {
+        String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
+        String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
+        return Integer.valueOf(binaryNumber.substring(7, binaryNumber.length() - 1), 2);
     }
 
     private final SerialInputOutputManager.Listener cardDataListener =
@@ -85,4 +88,6 @@ public class UserInputActivity extends Activity {
                     });
                 }
             };
+
+
 }
