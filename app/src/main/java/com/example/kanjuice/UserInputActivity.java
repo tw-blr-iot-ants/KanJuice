@@ -3,6 +3,8 @@ package com.example.kanjuice;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -13,10 +15,24 @@ import static java.lang.String.format;
 
 public class UserInputActivity extends Activity {
     private static final String TAG = "UserInputActivity";
+    public static final int FINISH_DELAY_MILLIS = 15000;
 
     private TextView cardNumberView;
     private RfidCardReader rfidCardReader;
     private String cardNumber = "";
+
+    private static final int MSG_FINISH = 101;
+    Handler H = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_FINISH:
+                    UserInputActivity.this.finish();
+                    break;
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +50,8 @@ public class UserInputActivity extends Activity {
         super.onPause();
         rfidCardReader.stopIoManager();
         rfidCardReader.closePort();
+
+        H.removeMessages(MSG_FINISH);
         finish();
     }
 
@@ -47,6 +65,8 @@ public class UserInputActivity extends Activity {
         } else {
             cardNumberView.setText("Failed to connect to serail port");
         }
+
+        H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
     }
 
     public void setupViews(Intent intent) {
@@ -59,6 +79,7 @@ public class UserInputActivity extends Activity {
     private void updateReceivedData(byte[] data) {
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
+            H.removeMessages(MSG_FINISH);
             cardNumberView.setText("card# " + extractCardNumber(cardNumber));
             this.cardNumber = "";
         }
