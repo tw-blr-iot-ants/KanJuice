@@ -8,7 +8,7 @@
     <dimen name="quantity_margin">5dp</dimen>
     <dimen name="quantity_width">60dp</dimen>
     <dimen name="quantity_height">60dp</dimen>
-    <dimen name="juice_item_title_font_size">22sp</dimen>
+    <dimen name="juice_item_title_font_size">30sp</dimen>
     <dimen name="go_button_size">100dp</dimen>
     <dimen name="go_button_text_size">35sp</dimen>
     <dimen name="input_help_layout_height">200dp</dimen>

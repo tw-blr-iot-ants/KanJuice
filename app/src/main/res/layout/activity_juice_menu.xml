@@ -15,7 +15,8 @@
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:padding="10dp"
-        android:listSelector="@color/default_background"/>
+        android:background="@color/gray_300"
+        android:listSelector="@android:color/holo_blue_bright"/>
 
     <ImageView
         android:id="@+id/order"

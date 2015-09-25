@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
+        card_view:contentPadding="5dp"
+        card_view:cardBackgroundColor="@drawable/card_background"
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="2dp">
 
@@ -42,6 +43,8 @@
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
+        card_view:contentPadding="5dp"
+        card_view:cardBackgroundColor="@drawable/card_background"
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="2dp">
 
@@ -62,6 +65,8 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
+        card_view:contentPadding="5dp"
+        card_view:cardBackgroundColor="@drawable/card_background"
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="2dp">
 
@@ -80,7 +85,8 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
-        android:padding="20dp"
+        card_view:contentPadding="5dp"
+        card_view:cardBackgroundColor="@drawable/card_background"
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="2dp">
 

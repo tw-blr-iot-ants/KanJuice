@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/juice_item_height"
     android:layout_gravity="center"
-    android:padding="10dp"
+    card_view:contentPadding="5dp"
+    card_view:cardBackgroundColor="@android:color/white"
     card_view:cardCornerRadius="1dp"
     card_view:cardElevation="2dp">
 
@@ -24,7 +25,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Mango"
-            android:background="@color/juice_item_title_background"
             android:textSize="@dimen/juice_item_title_font_size"/>
 
         <TextView
@@ -33,7 +33,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Kannada"
-            android:background="@color/juice_item_title_background"
             android:textSize="@dimen/juice_item_title_font_size"/>
 
     </LinearLayout>
@@ -53,7 +52,6 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="Quantity"
-            android:background="@color/juice_item_title_background"
             android:textSize="@dimen/juice_item_title_font_size"/>
 
         <LinearLayout
