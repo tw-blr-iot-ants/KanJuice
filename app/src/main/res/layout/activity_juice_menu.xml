@@ -2,37 +2,54 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.example.kanjuice.JuiceMenuActivity"
-                android:background="@color/default_background">
+                tools:context="com.example.kanjuice.JuiceMenuActivity">
 
     <GridView
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="130dp"
+        android:columnWidth="@dimen/juice_item_width"
         android:numColumns="auto_fit"
-        android:verticalSpacing="10dp"
+        android:verticalSpacing="8dp"
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
-        android:paddingTop="25dp"/>
+        android:padding="10dp"
+        android:listSelector="@color/default_background"
+        />
 
-    <TextView
-        android:text="@string/welcome_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:textSize="18dp"/>
+    <!--<TextView-->
+        <!--android:text="@string/welcome_message"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:gravity="center"-->
+        <!--android:textSize="18dp"/>-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/admin"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:src="@android:drawable/ic_menu_preferences"/>-->
+
 
     <ImageView
-        android:id="@+id/admin"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
+        android:id="@+id/order"
+        android:layout_width="@dimen/go_button_size"
+        android:layout_height="@dimen/go_button_size"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:src="@android:drawable/ic_menu_preferences"/>
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:src="@drawable/ic_chevron_right_white"
+        android:scaleType="center"
+        android:background="@drawable/button_circle_background"
+        android:visibility="invisible"/>
+
 
 </RelativeLayout>

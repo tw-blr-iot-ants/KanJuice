@@ -1,17 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="90dp"
-              android:background="#66ffffff">
-    <TextView
-        android:id="@+id/name"
-        android:text="Mango"
-        android:textSize="18sp"
+<android.support.v7.widget.CardView
+    android:id="@+id/card_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/juice_item_height"
+    android:layout_gravity="center"
+    android:padding="10dp"
+    card_view:cardCornerRadius="1dp"
+    card_view:cardElevation="2dp">
+
+    <LinearLayout
+        android:id="@+id/single_select_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/single_select_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Mango"
+            android:background="@color/juice_item_title_background"
+            android:textSize="@dimen/juice_item_title_font_size"/>
+
+        <TextView
+            android:id="@+id/single_select_title_in_kan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Kannada"
+            android:background="@color/juice_item_title_background"
+            android:textSize="@dimen/juice_item_title_font_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/multi_select_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="10dp"
-        />
+        android:orientation="vertical"
+        android:visibility="invisible">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/multi_select_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Quantity"
+            android:background="@color/juice_item_title_background"
+            android:textSize="@dimen/juice_item_title_font_size"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/one"
+                    android:layout_width="@dimen/quantity_width"
+                    android:layout_height="@dimen/quantity_height"
+                    android:background="@drawable/circle_background"
+                    android:layout_margin="@dimen/quantity_margin"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="1"/>
+
+                <Button
+                    android:id="@+id/two"
+                    android:layout_width="@dimen/quantity_width"
+                    android:layout_height="@dimen/quantity_height"
+                    android:background="@drawable/circle_background"
+                    android:layout_margin="@dimen/quantity_margin"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="2"/>
+
+                <Button
+                    android:id="@+id/three"
+                    android:layout_width="@dimen/quantity_width"
+                    android:layout_height="@dimen/quantity_height"
+                    android:background="@drawable/circle_background"
+                    android:layout_margin="@dimen/quantity_margin"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="3"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/four"
+                    android:layout_width="@dimen/quantity_width"
+                    android:layout_height="@dimen/quantity_height"
+                    android:background="@drawable/circle_background"
+                    android:layout_margin="@dimen/quantity_margin"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="4"/>
+
+                <Button
+                    android:id="@+id/five"
+                    android:layout_width="@dimen/quantity_width"
+                    android:layout_height="@dimen/quantity_height"
+                    android:background="@drawable/circle_background"
+                    android:layout_margin="@dimen/quantity_margin"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="5"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+

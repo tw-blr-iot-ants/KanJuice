@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".JuiceMenuActivity"
-            android:label="@string/title_activity_juice_menu"
+            android:label="@string/app_title"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -41,7 +41,7 @@
             android:label="@string/title_activity_user_input"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
-            
+
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>

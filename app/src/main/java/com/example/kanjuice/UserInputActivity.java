@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -71,9 +72,18 @@ public class UserInputActivity extends Activity {
 
     public void setupViews(Intent intent) {
         TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setText(format("You have selected %s juice", intent.getStringExtra("juice_name")));
+        Parcelable[] juices = intent.getParcelableArrayExtra("juices");
+        titleView.setText(format("You have selected %s juices", getJuiceCount(juices)));
 
         cardNumberView = (TextView) findViewById(R.id.card_number);
+    }
+
+    private Object getJuiceCount(Parcelable[] juices) {
+        int count = 0;
+        for(Parcelable item : juices) {
+            count += ((Juice)item).selectedQuantity;
+        }
+        return count;
     }
 
     private void updateReceivedData(byte[] data) {

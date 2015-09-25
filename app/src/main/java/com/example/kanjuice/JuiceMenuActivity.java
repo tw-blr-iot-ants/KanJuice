@@ -1,17 +1,18 @@
 package com.example.kanjuice;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.*;
+import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 
-public class JuiceMenuActivity extends Activity {
+public class JuiceMenuActivity extends Activity  {
+
+    private JuiceAdapter adapter;
+    private boolean isInMultiSelectMode = false;
+    private View goButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,56 +25,55 @@ public class JuiceMenuActivity extends Activity {
 
     private void setupViews() {
         final GridView juicesView = (GridView) findViewById(R.id.grid);
-        final JuiceAdapter adapter = new JuiceAdapter(this);
+        adapter = new JuiceAdapter(this);
         juicesView.setAdapter(adapter);
 
         juicesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
-                intent.putExtra("juice_name", adapter.getItem(position).toString());
-                startActivity(intent);
+                if (isInMultiSelectMode) {
+                    adapter.multiSelect(view, position);
+                } else {
+                    gotoSwipingScreen(position);
+                }
             }
         });
 
-        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {
+        juicesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                adapter.multiSelect(view, position);
+                enterMultiSelectionMode();
+                return true;
+            }
+        });
+
+        goButton = findViewById(R.id.order);
+        goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(JuiceMenuActivity.this, AdminActivity.class));
+                gotoSwipingScreen();
             }
         });
     }
 
-    private static class JuiceAdapter extends BaseAdapter {
+    private void enterMultiSelectionMode() {
+        isInMultiSelectMode = true;
+        goButton.setVisibility(View.VISIBLE);
 
-        private Context context;
-        private final LayoutInflater inflater;
+    }
 
-        public JuiceAdapter(Context context) {
-            this.context = context;
-            inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        }
+    private void gotoSwipingScreen() {
+        gotoSwipingScreen(adapter.getSelectedJuices());
+    }
 
-        @Override
-        public int getCount() {
-            return 25;
-        }
+    private void gotoSwipingScreen(int position) {
+        gotoSwipingScreen(new Juice[]{ (Juice) adapter.getItem(position)});
+    }
 
-        @Override
-        public Object getItem(int position) {
-            return "Mango";
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView == null ? inflater.inflate(R.layout.juice_item, parent, false)
-                    : convertView;
-            return view;
-        }
+    private void gotoSwipingScreen(Juice[] juices) {
+        Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
+        intent.putExtra("juices", juices);
+        startActivity(intent);
     }
 }

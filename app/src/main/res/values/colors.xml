@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="default_background">#55992288</color>
+    <color name="blue_500">#3F51B5</color>
+    <color name="blue_800">#283593</color>
+    <color name="juice_item_title_background">#55ffffff</color>
 </resources>
