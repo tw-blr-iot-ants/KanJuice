@@ -126,6 +126,14 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         return selectedJuicesArray;
     }
 
+    public void reset() {
+        for(Juice juice : juices) {
+            juice.isMultiSelected = false;
+            juice.selectedQuantity = 1;
+        }
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder {
         public LinearLayout singleItemView;
         public LinearLayout multiSelectView;

@@ -11,5 +11,11 @@
     <dimen name="juice_item_title_font_size">22sp</dimen>
     <dimen name="go_button_size">100dp</dimen>
     <dimen name="go_button_text_size">35sp</dimen>
+    <dimen name="input_help_layout_height">200dp</dimen>
+    <dimen name="input_help_layout_top_margin">100dp</dimen>
+    <dimen name="input_help_layout_width">400dp</dimen>
+    <dimen name="euid_number_view_width">250dp</dimen>
+    <dimen name="input_or_layout_width">120dp</dimen>
+    <dimen name="default_icons_size">60dp</dimen>
 
 </resources>

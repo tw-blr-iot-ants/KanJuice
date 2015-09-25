@@ -13,6 +13,7 @@ public class JuiceMenuActivity extends Activity  {
     private JuiceAdapter adapter;
     private boolean isInMultiSelectMode = false;
     private View goButton;
+    private View cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +56,44 @@ public class JuiceMenuActivity extends Activity  {
                 gotoSwipingScreen();
             }
         });
+
+        cancelButton = findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitMultiSelectMode();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        exitMultiSelectMode();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isInMultiSelectMode) {
+            exitMultiSelectMode();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void exitMultiSelectMode() {
+        adapter.reset();
+
+        isInMultiSelectMode = false;
+        goButton.setVisibility(View.INVISIBLE);
+        cancelButton.setVisibility(View.INVISIBLE);
     }
 
     private void enterMultiSelectionMode() {
         isInMultiSelectMode = true;
         goButton.setVisibility(View.VISIBLE);
-
+        cancelButton.setVisibility(View.VISIBLE);
     }
 
     private void gotoSwipingScreen() {

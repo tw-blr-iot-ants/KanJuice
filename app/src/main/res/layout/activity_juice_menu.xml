@@ -15,32 +15,12 @@
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:padding="10dp"
-        android:listSelector="@color/default_background"
-        />
-
-    <!--<TextView-->
-        <!--android:text="@string/welcome_message"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:gravity="center"-->
-        <!--android:textSize="18dp"/>-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/admin"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:paddingRight="10dp"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:src="@android:drawable/ic_menu_preferences"/>-->
-
+        android:listSelector="@color/default_background"/>
 
     <ImageView
         android:id="@+id/order"
-        android:layout_width="@dimen/go_button_size"
-        android:layout_height="@dimen/go_button_size"
+        android:layout_width="@dimen/default_icons_size"
+        android:layout_height="@dimen/default_icons_size"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
@@ -51,5 +31,17 @@
         android:background="@drawable/button_circle_background"
         android:visibility="invisible"/>
 
-
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="@dimen/default_icons_size"
+        android:layout_height="@dimen/default_icons_size"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/order"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:src="@drawable/ic_close_white"
+        android:scaleType="center"
+        android:background="@drawable/button_circle_background"
+        android:visibility="invisible"/>
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
@@ -64,18 +65,25 @@ public class UserInputActivity extends Activity {
             rfidCardReader.connectToSerialPort();
             rfidCardReader.onDeviceStateChange();
         } else {
-            cardNumberView.setText("Failed to connect to serail port");
+            cardNumberView.setText("Sorry, Some technical error in reading your RFID card");
         }
 
-        H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
+        //H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
     }
 
     public void setupViews(Intent intent) {
         TextView titleView = (TextView) findViewById(R.id.title);
         Parcelable[] juices = intent.getParcelableArrayExtra("juices");
-        titleView.setText(format("You have selected %s juices", getJuiceCount(juices)));
+        titleView.setText(format("You have selected %s", getJuiceCount(juices)));
 
         cardNumberView = (TextView) findViewById(R.id.card_number);
+
+        findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserInputActivity.this.finish();
+            }
+        });
     }
 
     private Object getJuiceCount(Parcelable[] juices) {
@@ -83,7 +91,7 @@ public class UserInputActivity extends Activity {
         for(Parcelable item : juices) {
             count += ((Juice)item).selectedQuantity;
         }
-        return count;
+        return count == 1 ? ((Juice)juices[0]).juiceName + " juice" : count + " juices";
     }
 
     private void updateReceivedData(byte[] data) {

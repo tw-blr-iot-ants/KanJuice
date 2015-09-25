@@ -13,9 +13,11 @@
     <string name="set_availability">Set the Juice availability</string>
     <string name="save">Save</string>
     <string name="admin">Admin</string>
-    <string name="swipe_your_card">Swipe your card to order</string>
+    <string name="swipe_your_card">Swipe your card to finish the order</string>
     <string name="ok">OK</string>
     <string name="order">Go</string>
-    <string name="go"><![CDATA[>]]></string>
+    <string name="go">GO</string>
+    <string name="enter_your_euid">Enter your employee id</string>
+    <string name="or">OR</string>
 
 </resources>

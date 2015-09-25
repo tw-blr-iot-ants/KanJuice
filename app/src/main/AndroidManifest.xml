@@ -40,6 +40,7 @@
             android:name=".UserInputActivity"
             android:label="@string/title_activity_user_input"
             android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
 
             <intent-filter>
