@@ -8,6 +8,7 @@ public class Juice implements Parcelable {
     public boolean isMultiSelected;
     public int selectedQuantity;
     public String juiceNameInKan;
+    public boolean animate;
 
     public Juice(String juiceName, String juiceNameInKan, boolean isMultiSelected) {
         this.juiceName = juiceName;
