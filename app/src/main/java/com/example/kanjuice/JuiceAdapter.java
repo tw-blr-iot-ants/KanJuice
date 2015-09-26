@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,11 +51,11 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView == null ? newView(parent) : convertView;
-        bind(view, juices.get(position), position);
+        bind(view, juices.get(position));
         return view;
     }
 
-    private void bind(View view, Juice juice, int position) {
+    private void bind(View view, Juice juice) {
         final ViewHolder h = (ViewHolder) view.getTag();
 
         if (juice.animate) {
@@ -188,7 +187,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         return selectedJuicesArray;
     }
 
-    public void reset(boolean animate) {
+    public void reset() {
         for(Juice juice : juices) {
             juice.animate = juice.isMultiSelected;
             juice.isMultiSelected = false;

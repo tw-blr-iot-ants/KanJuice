@@ -73,7 +73,7 @@ public class JuiceMenuActivity extends Activity  {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitMultiSelectMode(true);
+                exitMultiSelectMode();
             }
         });
     }
@@ -82,20 +82,20 @@ public class JuiceMenuActivity extends Activity  {
     protected void onResume() {
         super.onResume();
 
-        exitMultiSelectMode(false);
+        exitMultiSelectMode();
     }
 
     @Override
     public void onBackPressed() {
         if (isInMultiSelectMode) {
-            exitMultiSelectMode(true);
+            exitMultiSelectMode();
         } else {
             super.onBackPressed();
         }
     }
 
-    private void exitMultiSelectMode(boolean animate) {
-        adapter.reset(animate);
+    private void exitMultiSelectMode() {
+        adapter.reset();
 
         isInMultiSelectMode = false;
 
