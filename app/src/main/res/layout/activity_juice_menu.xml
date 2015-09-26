@@ -8,41 +8,47 @@
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="@dimen/juice_item_width"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
-        android:padding="10dp"
         android:background="@color/gray_300"
-        android:listSelector="@android:color/holo_blue_bright"/>
+        android:columnWidth="@dimen/juice_item_width"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@android:color/holo_blue_bright"
+        android:numColumns="auto_fit"
+        android:padding="10dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="8dp"/>
 
-    <ImageView
-        android:id="@+id/order"
-        android:layout_width="@dimen/default_icons_size"
+    <LinearLayout
+        android:id="@+id/action_button_layout"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/default_icons_size"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:src="@drawable/ic_chevron_right_white"
-        android:scaleType="center"
-        android:background="@drawable/button_circle_background"
-        android:visibility="invisible"/>
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
-    <ImageView
-        android:id="@+id/cancel"
-        android:layout_width="@dimen/default_icons_size"
-        android:layout_height="@dimen/default_icons_size"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/order"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:src="@drawable/ic_close_white"
-        android:scaleType="center"
-        android:background="@drawable/button_circle_background"
-        android:visibility="invisible"/>
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="@dimen/default_icons_size"
+            android:layout_height="@dimen/default_icons_size"
+            android:background="@drawable/button_circle_background"
+            android:gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/ic_close_white"
+            />
+
+        <ImageView
+            android:id="@+id/order"
+            android:layout_width="@dimen/default_icons_size"
+            android:layout_height="@dimen/default_icons_size"
+            android:background="@drawable/button_circle_background"
+            android:gravity="center"
+            android:scaleType="center"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_chevron_right_white"/>
+
+
+    </LinearLayout>
 </RelativeLayout>

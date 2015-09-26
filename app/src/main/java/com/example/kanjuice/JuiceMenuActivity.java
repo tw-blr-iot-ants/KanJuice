@@ -1,8 +1,12 @@
 package com.example.kanjuice;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -10,10 +14,12 @@ import android.widget.GridView;
 
 public class JuiceMenuActivity extends Activity  {
 
+    private static final String TAG = "JuiceMenuActivity";
     private JuiceAdapter adapter;
     private boolean isInMultiSelectMode = false;
     private View goButton;
     private View cancelButton;
+    private View actionButtonLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,7 @@ public class JuiceMenuActivity extends Activity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (isInMultiSelectMode) {
-                    adapter.multiSelect(view, position);
+                    adapter.toggleSelectionChoice(position);
                 } else {
                     gotoSwipingScreen(position);
                 }
@@ -43,11 +49,17 @@ public class JuiceMenuActivity extends Activity  {
         juicesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.multiSelect(view, position);
-                enterMultiSelectionMode();
+                Log.d(TAG, "onIemLongClick: " + position);
+                adapter.toggleSelectionChoice(position);
+
+                if (!isInMultiSelectMode) {
+                    enterMultiSelectionMode();
+                }
                 return true;
             }
         });
+
+        actionButtonLayout = findViewById(R.id.action_button_layout);
 
         goButton = findViewById(R.id.order);
         goButton.setOnClickListener(new View.OnClickListener() {
@@ -86,14 +98,29 @@ public class JuiceMenuActivity extends Activity  {
         adapter.reset();
 
         isInMultiSelectMode = false;
-        goButton.setVisibility(View.INVISIBLE);
-        cancelButton.setVisibility(View.INVISIBLE);
+
+        ObjectAnimator anim = ObjectAnimator.ofFloat(actionButtonLayout, "translationY", -20f, 200f);
+        anim.setDuration(500);
+        anim.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animation) {
+                actionButtonLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        anim.start();
     }
 
     private void enterMultiSelectionMode() {
         isInMultiSelectMode = true;
-        goButton.setVisibility(View.VISIBLE);
-        cancelButton.setVisibility(View.VISIBLE);
+
+        actionButtonLayout.setVisibility(View.VISIBLE);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(actionButtonLayout, "translationY", 100f, -15f);
+        anim.setDuration(500);
+        anim.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animation) {
+                actionButtonLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        anim.start();
     }
 
     private void gotoSwipingScreen() {
