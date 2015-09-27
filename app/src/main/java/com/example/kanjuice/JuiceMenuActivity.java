@@ -11,6 +11,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class JuiceMenuActivity extends Activity  {
 
@@ -28,40 +34,73 @@ public class JuiceMenuActivity extends Activity  {
         setContentView(R.layout.activity_juice_menu);
 
         setupViews();
+
+        fetchMenu();
+    }
+
+    private void fetchMenu() {
+        getJuiceServer().getJuices(new Callback<List<Juice>>() {
+            @Override
+            public void success(List<Juice> juices, Response response) {
+                adapter.addAll(juices);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch menu list : " + error);
+            }
+        });
+    }
+
+    private KanJuiceApp getApp() {
+        return (KanJuiceApp) getApplication();
+    }
+
+    private JuiceServer getJuiceServer() {
+        return getApp().getJuiceServer();
     }
 
     private void setupViews() {
         final GridView juicesView = (GridView) findViewById(R.id.grid);
-        adapter = new JuiceAdapter(this);
-        juicesView.setAdapter(adapter);
+        setupAdapter(juicesView);
 
         juicesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (isInMultiSelectMode) {
-                    adapter.toggleSelectionChoice(position);
-                } else {
-                    gotoSwipingScreen(position);
-                }
+                onJuiceItemClick(position);
             }
         });
 
         juicesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onIemLongClick: " + position);
-                adapter.toggleSelectionChoice(position);
-
-                if (!isInMultiSelectMode) {
-                    enterMultiSelectionMode();
-                }
-                return true;
+                return onJuiceItemLongClick(position);
             }
         });
 
+        setupActionLayout();
+    }
+
+    private boolean onJuiceItemLongClick(int position) {
+        adapter.toggleSelectionChoice(position);
+        if (!isInMultiSelectMode) {
+            enterMultiSelectionMode();
+        }
+        return true;
+    }
+
+    private void onJuiceItemClick(int position) {
+        if (isInMultiSelectMode) {
+            adapter.toggleSelectionChoice(position);
+        } else {
+            gotoSwipingScreen(position);
+        }
+    }
+
+    private void setupActionLayout() {
         actionButtonLayout = findViewById(R.id.action_button_layout);
 
-        goButton = findViewById(R.id.order);
+        goButton = actionButtonLayout.findViewById(R.id.order);
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,13 +108,18 @@ public class JuiceMenuActivity extends Activity  {
             }
         });
 
-        cancelButton = findViewById(R.id.cancel);
+        cancelButton = actionButtonLayout.findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 exitMultiSelectMode();
             }
         });
+    }
+
+    private void setupAdapter(GridView juicesView) {
+        adapter = new JuiceAdapter(this);
+        juicesView.setAdapter(adapter);
     }
 
     @Override
@@ -128,12 +172,12 @@ public class JuiceMenuActivity extends Activity  {
     }
 
     private void gotoSwipingScreen(int position) {
-        gotoSwipingScreen(new Juice[]{ (Juice) adapter.getItem(position)});
+        gotoSwipingScreen(new JuiceItem[]{ (JuiceItem) adapter.getItem(position)});
     }
 
-    private void gotoSwipingScreen(Juice[] juices) {
+    private void gotoSwipingScreen(JuiceItem[] juiceItems) {
         Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
-        intent.putExtra("juices", juices);
+        intent.putExtra("juiceItems", juiceItems);
         startActivity(intent);
     }
 }

@@ -19,28 +19,28 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     private static final String TAG = "JuiceAdapter";
     public static final int ANIMATION_DURATION = 500;
-    private final ArrayList<Juice> juices;
+    private final ArrayList<JuiceItem> juiceItems;
     private final LayoutInflater inflater;
 
     private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.four, R.id.five};
 
     public JuiceAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        juices = new ArrayList<>();
+        juiceItems = new ArrayList<>();
 
-        for (int i = 0; i < 30; i ++) {
-            juices.add(new Juice("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ", false));
+        for (int i = 0; i < 10; i ++) {
+            juiceItems.add(new JuiceItem("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ"));
         }
     }
 
     @Override
     public int getCount() {
-        return juices.size();
+        return juiceItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return juices.get(position);
+        return juiceItems.get(position);
     }
 
     @Override
@@ -51,34 +51,34 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView == null ? newView(parent) : convertView;
-        bind(view, juices.get(position));
+        bind(view, juiceItems.get(position));
         return view;
     }
 
-    private void bind(View view, Juice juice) {
+    private void bind(View view, JuiceItem juiceItem) {
         final ViewHolder h = (ViewHolder) view.getTag();
 
-        if (juice.animate) {
-            showContentWithAnimation(h, juice);
+        if (juiceItem.animate) {
+            showContentWithAnimation(h, juiceItem);
         } else {
-            showContent(h, juice);
+            showContent(h, juiceItem);
         }
 
-        if (juice.isMultiSelected) {
-            h.multiSelect.titleView.setText(juice.juiceName);
+        if (juiceItem.isMultiSelected) {
+            h.multiSelect.titleView.setText(juiceItem.juiceName);
             for (View v : h.multiSelect.quantityViews) {
                 v.setSelected(false);
-                v.setTag(juice);
+                v.setTag(juiceItem);
             }
-            h.multiSelect.quantityViews.get(juice.selectedQuantity - 1).setSelected(true);
+            h.multiSelect.quantityViews.get(juiceItem.selectedQuantity - 1).setSelected(true);
         } else {
-            h.singleSelect.titleView.setText(juice.juiceName);
-            h.singleSelect.titleInKanView.setText(juice.juiceNameInKan);
+            h.singleSelect.titleView.setText(juiceItem.juiceName);
+            h.singleSelect.titleInKanView.setText(juiceItem.juiceNameInKan);
         }
     }
 
-    private void showContentWithAnimation(final ViewHolder h, final Juice juice) {
-        if (h.multiSelectView.getVisibility() == View.INVISIBLE && juice.isMultiSelected == true) {
+    private void showContentWithAnimation(final ViewHolder h, final JuiceItem juiceItem) {
+        if (h.multiSelectView.getVisibility() == View.INVISIBLE && juiceItem.isMultiSelected == true) {
             h.multiSelectView.setVisibility(View.VISIBLE);
             ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY", 500f, 0f);
             anim.setDuration(ANIMATION_DURATION);
@@ -94,12 +94,12 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             anim1.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animation) {
                     h.singleItemView.setVisibility(View.INVISIBLE);
-                    juice.animate = false;
+                    juiceItem.animate = false;
                 }
             });
             anim1.start();
 
-        } else if (h.multiSelectView.getVisibility() == View.VISIBLE && juice.isMultiSelected == false) {
+        } else if (h.multiSelectView.getVisibility() == View.VISIBLE && juiceItem.isMultiSelected == false) {
             ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY",  -0f, 500f);
             anim.setDuration(ANIMATION_DURATION);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -115,7 +115,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             anim1.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animation) {
                     h.singleItemView.setVisibility(View.VISIBLE);
-                    juice.animate = false;
+                    juiceItem.animate = false;
                 }
             });
             anim1.start();
@@ -123,14 +123,14 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     }
 
-    private void showContent(ViewHolder h, Juice juice) {
+    private void showContent(ViewHolder h, JuiceItem juiceItem) {
         h.multiSelectView.setTranslationY(0f);
         h.multiSelectView.setTranslationY(0f);
         h.singleItemView.setTranslationY(0f);
         h.singleItemView.setTranslationY(0f);
 
-        h.multiSelectView.setVisibility(juice.isMultiSelected ? View.VISIBLE : View.INVISIBLE);
-        h.singleItemView.setVisibility(juice.isMultiSelected ? View.INVISIBLE : View.VISIBLE);
+        h.multiSelectView.setVisibility(juiceItem.isMultiSelected ? View.VISIBLE : View.INVISIBLE);
+        h.singleItemView.setVisibility(juiceItem.isMultiSelected ? View.INVISIBLE : View.VISIBLE);
     }
 
     private View newView(ViewGroup parent) {
@@ -160,41 +160,48 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        Juice selectedJuice = (Juice) view.getTag();
-        Log.d(TAG, "clicked on juice : " + selectedJuice.juiceName
+        JuiceItem selectedJuiceItem = (JuiceItem) view.getTag();
+        Log.d(TAG, "clicked on juice : " + selectedJuiceItem.juiceName
                 + " qty: " + Integer.parseInt(((TextView) view).getText().toString()));
 
-        selectedJuice.selectedQuantity = Integer.parseInt(((TextView) view).getText().toString());
+        selectedJuiceItem.selectedQuantity = Integer.parseInt(((TextView) view).getText().toString());
         notifyDataSetChanged();
     }
 
     public void toggleSelectionChoice(int position) {
-        juices.get(position).isMultiSelected = !juices.get(position).isMultiSelected;
-        juices.get(position).animate = true;
+        juiceItems.get(position).isMultiSelected = !juiceItems.get(position).isMultiSelected;
+        juiceItems.get(position).animate = true;
         notifyDataSetChanged();
     }
 
-    public Juice[] getSelectedJuices() {
-        List<Juice> selectedJuices = new ArrayList<>();
-        for (Juice item : juices) {
+    public JuiceItem[] getSelectedJuices() {
+        List<JuiceItem> selectedJuiceItems = new ArrayList<>();
+        for (JuiceItem item : juiceItems) {
             if (item.isMultiSelected) {
-                selectedJuices.add(item);
+                selectedJuiceItems.add(item);
             }
         }
 
-        Juice[] selectedJuicesArray = new Juice[selectedJuices.size()];
-        selectedJuices.toArray(selectedJuicesArray);
+        JuiceItem[] selectedJuicesArray = new JuiceItem[selectedJuiceItems.size()];
+        selectedJuiceItems.toArray(selectedJuicesArray);
         return selectedJuicesArray;
     }
 
     public void reset() {
-        for(Juice juice : juices) {
-            juice.animate = juice.isMultiSelected;
-            juice.isMultiSelected = false;
-            juice.selectedQuantity = 1;
+        for(JuiceItem juiceItem : juiceItems) {
+            juiceItem.animate = juiceItem.isMultiSelected;
+            juiceItem.isMultiSelected = false;
+            juiceItem.selectedQuantity = 1;
         }
         notifyDataSetChanged();
 
+    }
+
+    public void addAll(List<Juice> juices) {
+        for(Juice juice : juices) {
+            juiceItems.add(new JuiceItem(juice.name, ""));
+        }
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder {

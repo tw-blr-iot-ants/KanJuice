@@ -9,9 +9,18 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static java.lang.String.format;
 
 
@@ -35,6 +44,7 @@ public class UserInputActivity extends Activity {
             }
         }
     };
+    private Parcelable[] juices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +52,8 @@ public class UserInputActivity extends Activity {
 
         setContentView(R.layout.activity_user_input);
 
-        setupViews(getIntent());
-
+        juices = getIntent().getParcelableArrayExtra("juices");
+        setupViews(juices);
         rfidCardReader = new RfidCardReader(this, cardDataListener);
     }
 
@@ -68,12 +78,55 @@ public class UserInputActivity extends Activity {
             cardNumberView.setText("Sorry, Some technical error in reading your RFID card");
         }
 
-        //H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
+        H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
     }
 
-    public void setupViews(Intent intent) {
+    private KanJuiceApp getApp() {
+        return (KanJuiceApp) getApplication();
+    }
+
+    private JuiceServer getJuiceServer() {
+        return getApp().getJuiceServer();
+    }
+
+    private void onCardNumberReceived(int cardNumber) {
+        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+
+            @Override
+            public void success(User user, Response response) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void placeUserOrder(User user) {
+        Order order = new Order();
+        order.employeeId = user.empId;
+        getJuiceServer().placeOrder(order, new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Successfully placed your order");
+                makeText(UserInputActivity.this, "Your order is placed", LENGTH_SHORT).show();
+                UserInputActivity.this.finish();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to place your order");
+                makeText(UserInputActivity.this, "Your order is placement failed", LENGTH_SHORT).show();
+                UserInputActivity.this.finish();
+            }
+        });
+    }
+
+    public void setupViews(Parcelable[] juices) {
         TextView titleView = (TextView) findViewById(R.id.title);
-        Parcelable[] juices = intent.getParcelableArrayExtra("juices");
         titleView.setText(format("You have selected %s", getJuiceCount(juices)));
 
         cardNumberView = (TextView) findViewById(R.id.card_number);
@@ -89,9 +142,9 @@ public class UserInputActivity extends Activity {
     private Object getJuiceCount(Parcelable[] juices) {
         int count = 0;
         for(Parcelable item : juices) {
-            count += ((Juice)item).selectedQuantity;
+            count += ((JuiceItem)item).selectedQuantity;
         }
-        return count == 1 ? ((Juice)juices[0]).juiceName + " juice" : count + " juices";
+        return count == 1 ? ((JuiceItem)juices[0]).juiceName + " juice" : count + " juices";
     }
 
     private void updateReceivedData(byte[] data) {
@@ -100,6 +153,7 @@ public class UserInputActivity extends Activity {
             H.removeMessages(MSG_FINISH);
             cardNumberView.setText("card# " + extractCardNumber(cardNumber));
             this.cardNumber = "";
+            onCardNumberReceived(extractCardNumber(cardNumber));
         }
     }
 
