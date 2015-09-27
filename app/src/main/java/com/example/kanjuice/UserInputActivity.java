@@ -8,6 +8,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,6 +108,7 @@ public class UserInputActivity extends Activity {
     private void placeUserOrder(User user) {
         Order order = new Order();
         order.employeeId = user.empId;
+        /* Add more properties here */
         getJuiceServer().placeOrder(order, new Callback<Response>() {
 
             @Override
@@ -135,6 +137,36 @@ public class UserInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 UserInputActivity.this.finish();
+            }
+        });
+
+        final EditText euidView = (EditText) findViewById(R.id.edit_text_euid);
+
+        findViewById(R.id.go).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                placeOrderForEuid(euidView.getText().toString().trim());
+            }
+        });
+    }
+
+    private void placeOrderForEuid(final String euid) {
+        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
+
+            @Override
+            public void success(final User user, Response response) {
+                UserInputActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        placeUserOrder(user);
+                    }
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user by euid for : " + euid);
             }
         });
     }

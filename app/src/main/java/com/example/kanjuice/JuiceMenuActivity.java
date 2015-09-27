@@ -41,8 +41,13 @@ public class JuiceMenuActivity extends Activity  {
     private void fetchMenu() {
         getJuiceServer().getJuices(new Callback<List<Juice>>() {
             @Override
-            public void success(List<Juice> juices, Response response) {
-                adapter.addAll(juices);
+            public void success(final List<Juice> juices, Response response) {
+                JuiceMenuActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.addAll(juices);
+                    }
+                });
             }
 
             @Override
@@ -177,7 +182,7 @@ public class JuiceMenuActivity extends Activity  {
 
     private void gotoSwipingScreen(JuiceItem[] juiceItems) {
         Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
-        intent.putExtra("juiceItems", juiceItems);
+        intent.putExtra("juices", juiceItems);
         startActivity(intent);
     }
 }

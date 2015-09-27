@@ -110,6 +110,7 @@
                 android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/edit_text_euid"
                 android:layout_width="@dimen/euid_number_view_width"
                 android:layout_height="wrap_content"
                 android:textSize="30dp"
@@ -120,6 +121,7 @@
                 android:inputType="numberDecimal"/>
 
             <Button
+                android:id="@+id/go"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="30dp"
