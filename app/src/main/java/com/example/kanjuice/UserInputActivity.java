@@ -100,15 +100,23 @@ public class UserInputActivity extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
-
+                handleUserNotFound();
             }
         });
     }
 
     private void placeUserOrder(User user) {
+        if (user == null) {
+            handleUserNotFound();
+            return;
+        }
+
         Order order = new Order();
         order.employeeId = user.empId;
-        /* Add more properties here */
+        for(Parcelable juice : juices) {
+            JuiceItem item = (JuiceItem) juice;
+            order.addDrink(item.juiceName, item.selectedQuantity);
+        }
         getJuiceServer().placeOrder(order, new Callback<Response>() {
 
             @Override
@@ -125,6 +133,12 @@ public class UserInputActivity extends Activity {
                 UserInputActivity.this.finish();
             }
         });
+    }
+
+    private void handleUserNotFound() {
+        Log.d(TAG, "user is not found, so not placing any order");
+        makeText(UserInputActivity.this, "Sorry, We are not able to find you in our database", Toast.LENGTH_LONG).show();
+        UserInputActivity.this.finish();
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -166,7 +180,7 @@ public class UserInputActivity extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user by euid for : " + euid);
+                handleUserNotFound();
             }
         });
     }

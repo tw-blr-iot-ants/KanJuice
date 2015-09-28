@@ -12,10 +12,10 @@ public interface JuiceServer {
     @GET("/api/beverages/")
     public void getJuices(Callback<List<Juice>> cb);
 
-    @GET("/api/users/{cardNumber}")
+    @GET("/api/users/internalNumber/{cardNumber}")
     public void getUserByCardNumber(@Path("cardNumber") int cardNumber, Callback<User> cb);
 
-    @GET("/api/users/{euid}")
+    @GET("/api/users/empId/{euid}")
     public void getUserByEuid(@Path("euid") String euid, Callback<User> cb);
 
     @FormUrlEncoded

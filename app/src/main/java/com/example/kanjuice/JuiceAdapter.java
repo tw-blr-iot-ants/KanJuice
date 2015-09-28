@@ -28,7 +28,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         juiceItems = new ArrayList<>();
 
-        for (int i = 0; i < 10; i ++) {
+        for (int i = 0; i < 20; i ++) {
             juiceItems.add(new JuiceItem("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ"));
         }
     }
