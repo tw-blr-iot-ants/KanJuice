@@ -19,8 +19,35 @@
     <string name="go">GO</string>
     <string name="enter_your_euid">Enter your employee id</string>
     <string name="or">OR</string>
+
     <string name="mango_kan">ಮಾವು</string>
     <string name="watermelon_kan">ಕಲ್ಲಂಗಡಿ</string>
+    <string name="moosambi_kan">ಮೂಸಂಬಿ</string>
+    <string name="muskmelon_kan">ಕರ್ಬೂಜ</string>
+    <string name="pineapple_kan">ಅನಾನಸ್</string>
+    <string name="grapes_kan">ದ್ರಾಕ್ಷಿ</string>
+    <string name="amla_kan">ಅಮ್ಲ </string>
+    <string name="kokum_kan">ಮುರುಗಲ ಹಣ್ಣು</string>
+    <string name="cucumber_kan">ಸೌತೆಕಾಯಿ</string>
+    <string name="mixed_fruit_kan">ಹಣ್ಣಿನ ಮಿಶ್ರಣ</string>
+    <string name="orange_kan">ಕಿತ್ತಳೆ</string>
+    <string name="lime_kan">ನಿಂಬೆ     </string>
+    <string name="ginger_lime_kan">ನಿಂಬೆ ಮತ್ತು ಶುಂಟಿ</string>
+    <string name="mint_lime_kan">ನಿಂಬೆ ಮತ್ತು ಪುದೀನ</string>
+    <string name="ginger_mint_lime_kan">ನಿಂಬೆ, ಪುದೀನ, ಮತ್ತು ಶುಂಟಿ</string>
+    <string name="soda_kan">ಸೋಡ</string>
+    <string name="sweet_lime_soda_kan">ಸಿಹಿ ನಿಂಬೆ ಸೋಡ </string>
+    <string name="salt_lime_soda_kan">ಉಪ್ಪು ನಿಂಬೆ ಸೋಡ </string>
+    <string name="sweet_and_salt_lime_soda_kan">ಸಿಹಿ ಮತ್ತು ಉಪ್ಪು ನಿಂಬೆ ಸೋಡಾ</string>
+    <string name="black_jeera_masala_soda_kan">ಮಸಾಲ ಸೋಡ</string>
+    <string name="jal_jeera_kan">ಜೀರಿಗೆ ನೀರು</string>
+    <string name="banana_kan">ಬಾಳೆಹಣ್ಣು</string>
+    <string name="papaya_kan">ಪರಂಗಿ ಹಣ್ಣು</string>
+    <string name="sapota_kan">ಸಪೋಟ</string>
+    <string name="apple_kan">ಸೇಬು</string>
+    <string name="butter_fruit_kan">ಬೆಣ್ಣೆ ಹಣ್ಣು</string>
+    <string name="unknown_kan"> </string>
+
     <string name="no_network_connection">No internet connection?</string>
     <string name="retry">Retry</string>
 </resources>
