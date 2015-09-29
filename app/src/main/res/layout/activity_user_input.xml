@@ -38,6 +38,7 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_swipe_layout"
         android:layout_width="@dimen/input_help_layout_width"
         android:layout_height="@dimen/input_help_layout_height"
         android:layout_alignParentLeft="true"
@@ -60,6 +61,7 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/or_layout"
         android:layout_width="@dimen/input_or_layout_width"
         android:layout_height="@dimen/input_help_layout_height"
         android:layout_centerHorizontal="true"
@@ -80,6 +82,7 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/euid_layout"
         android:layout_width="@dimen/input_help_layout_width"
         android:layout_height="@dimen/input_help_layout_height"
         android:layout_alignParentRight="true"
@@ -136,6 +139,38 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/ordering"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/status_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="center"/>
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:gravity="center" />
+    </LinearLayout>
 
 
 </RelativeLayout>

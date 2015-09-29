@@ -1,31 +1,28 @@
 package com.example.kanjuice;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedString;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -34,7 +31,9 @@ import static java.lang.String.format;
 
 public class UserInputActivity extends Activity {
     private static final String TAG = "UserInputActivity";
-    public static final int FINISH_DELAY_MILLIS = 15000;
+    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 15000;
+    public static final int ANIMATION_DURATION = 500;
+    public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2000;
 
     private TextView cardNumberView;
     private RfidCardReader rfidCardReader;
@@ -53,7 +52,13 @@ public class UserInputActivity extends Activity {
         }
     };
     private Parcelable[] juices;
-    private ProgressDialog progressDialog;
+    private View cardLayout;
+    private View euidLayout;
+    private View orLayout;
+    private View orderingProgressView;
+    private TextView messageView;
+    private ImageView statusView;
+    private View messageLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,6 @@ public class UserInputActivity extends Activity {
         juices = getIntent().getParcelableArrayExtra("juices");
         setupViews(juices);
         rfidCardReader = new RfidCardReader(this, cardDataListener);
-        progressDialog = new ProgressDialog();
     }
 
     @Override
@@ -88,115 +92,20 @@ public class UserInputActivity extends Activity {
             cardNumberView.setText("Sorry, Some technical error in reading your RFID card");
         }
 
-        H.sendEmptyMessageDelayed(MSG_FINISH, FINISH_DELAY_MILLIS);
+        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
     }
 
-    private KanJuiceApp getApp() {
-        return (KanJuiceApp) getApplication();
-    }
-
-    private JuiceServer getJuiceServer() {
-        return getApp().getJuiceServer();
-    }
-
-    private void onGo(EditText euidView) {
-        String cardNumber = euidView.getText().toString().trim();
-        if (cardNumber.length() == 5) {
-            showProgressDialog();
-            placeOrderForEuid(cardNumber);
-        } else {
-            makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT);
-        }
-    }
-
-    private void showProgressDialog() {
-        progressDialog.show(getFragmentManager(), "orderProgress");
-    }
-
-    private void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
-
-    private void placeOrderForEuid(final String euid) {
-        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
-
-            @Override
-            public void success(final User user, Response response) {
-                placeUserOrder(user);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
-                handleUserNotFound();
-            }
-        });
-    }
-
-    private void onCardNumberReceived(int cardNumber) {
-        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
-
-            @Override
-            public void success(User user, Response response) {
-                placeUserOrder(user);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given euid : " + error.getMessage());
-                handleUserNotFound();
-            }
-        });
-    }
-
-    private void placeUserOrder(User user) {
-        if (user == null) {
-            handleUserNotFound();
-            return;
-        }
-
-        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user).asJson()), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Log.d(TAG, "Successfully placed your order");
-                finishActivityWithToast("Your order is successfully placed");
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to place your order: " + error.getMessage());
-                finishActivityWithToast("Failed to place your order");
-            }
-        });
-    }
-
-    private Order constructOrder(User user) {
-        Order order = new Order();
-        order.employeeId = user.empId;
-        for(Parcelable juice : juices) {
-            JuiceItem item = (JuiceItem) juice;
-            order.addDrink(item.juiceName, item.selectedQuantity);
-        }
-        Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
-        return order;
-    }
-
-    private void handleUserNotFound() {
-        finishActivityWithToast("Sorry, We are not able to find you in our database");
-    }
-
-    private void finishActivityWithToast(final String message) {
-        UserInputActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                makeText(UserInputActivity.this, message, Toast.LENGTH_LONG).show();
-                dismissProgressDialog();
-                UserInputActivity.this.finish();
-            }
-        });
-    }
 
     public void setupViews(Parcelable[] juices) {
+        cardLayout = findViewById(R.id.card_swipe_layout);
+        euidLayout = findViewById(R.id.euid_layout);
+        orLayout = findViewById(R.id.or_layout);
+        orderingProgressView = findViewById(R.id.ordering);
+
+        messageLayout = findViewById(R.id.message_layout);
+        statusView = (ImageView) findViewById(R.id.status_icon);
+        messageView = (TextView) findViewById(R.id.message);
+
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(format("You have selected %s", getJuiceCount(juices)));
 
@@ -229,6 +138,145 @@ public class UserInputActivity extends Activity {
                 onGo(euidView);
             }
         });
+    }
+
+    private void animateOut() {
+        ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
+        cardAnimation.setDuration(ANIMATION_DURATION);
+        cardAnimation.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animation) {
+                cardLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        cardAnimation.start();
+
+        ObjectAnimator euidAnimation = ObjectAnimator.ofFloat(euidLayout, "translationX", 0f, 400f);
+        euidAnimation.setDuration(ANIMATION_DURATION);
+        euidAnimation.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animation) {
+                euidLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        euidAnimation.start();
+
+        ObjectAnimator orAnimation = ObjectAnimator.ofFloat(orLayout, "translationY", 0f, 400f);
+        orAnimation.setDuration(ANIMATION_DURATION);
+        orAnimation.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animation) {
+                orLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        orAnimation.start();
+    }
+
+    private KanJuiceApp getApp() {
+        return (KanJuiceApp) getApplication();
+    }
+
+    private JuiceServer getJuiceServer() {
+        return getApp().getJuiceServer();
+    }
+
+    private void onGo(EditText euidView) {
+        String cardNumber = euidView.getText().toString().trim();
+        if (cardNumber.length() == 5) {
+            showOrdering();
+            placeOrderForEuid(cardNumber);
+        } else {
+            makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT);
+        }
+    }
+
+    private void showOrdering() {
+        hideIme();
+        H.removeMessages(MSG_FINISH);
+        orderingProgressView.setVisibility(View.VISIBLE);
+        animateOut();
+    }
+
+    private void orderFinished(final boolean isSuccess, final String message) {
+        UserInputActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                orderingProgressView.setVisibility(View.INVISIBLE);
+                messageView.setText(message);
+                statusView.setImageResource(isSuccess ? R.drawable.success : R.drawable.failure);
+                messageLayout.setVisibility(View.VISIBLE);
+                H.sendEmptyMessageDelayed(MSG_FINISH, DELAY_BEFORE_FINISHING_ACTIVITY);
+            }
+        });
+    }
+
+    private void hideIme() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void placeOrderForEuid(final String euid) {
+        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
+
+            @Override
+            public void success(final User user, Response response) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
+                orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
+            }
+        });
+    }
+
+    private void onCardNumberReceived(final int cardNumber) {
+        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+
+            @Override
+            public void success(User user, Response response) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
+                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
+            }
+        });
+    }
+
+    private void placeUserOrder(final User user) {
+        if (user == null) {
+            orderFinished(false, "Failed to fetch your information");
+            return;
+        }
+
+        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user).asJson()), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Successfully placed your order");
+                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to place your order: " + error.getMessage());
+                orderFinished(false, "Sorry!, Failed to place your order");
+            }
+        });
+    }
+
+    private Order constructOrder(User user) {
+        Order order = new Order();
+        order.employeeId = user.empId;
+        for(Parcelable juice : juices) {
+            JuiceItem item = (JuiceItem) juice;
+            order.addDrink(item.juiceName, item.selectedQuantity);
+        }
+        Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
+        return order;
     }
 
     private Object getJuiceCount(Parcelable[] juices) {
@@ -277,16 +325,4 @@ public class UserInputActivity extends Activity {
                     });
                 }
             };
-
-
-    public static class ProgressDialog extends DialogFragment {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.dialog_order_progress, null));
-            return builder.create();
-        }
-    }
 }
