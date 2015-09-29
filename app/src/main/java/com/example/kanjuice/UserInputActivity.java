@@ -1,24 +1,24 @@
 package com.example.kanjuice;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -90,6 +90,31 @@ public class UserInputActivity extends Activity {
         return getApp().getJuiceServer();
     }
 
+    private void onGo(EditText euidView) {
+        String cardNumber = euidView.getText().toString().trim();
+        if (cardNumber.length() == 5) {
+            placeOrderForEuid(cardNumber);
+        } else {
+            makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT);
+        }
+    }
+
+    private void placeOrderForEuid(final String euid) {
+        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
+
+            @Override
+            public void success(final User user, Response response) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
+                handleUserNotFound();
+            }
+        });
+    }
+
     private void onCardNumberReceived(int cardNumber) {
         getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
 
@@ -100,6 +125,7 @@ public class UserInputActivity extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given euid : " + error.getMessage());
                 handleUserNotFound();
             }
         });
@@ -111,34 +137,44 @@ public class UserInputActivity extends Activity {
             return;
         }
 
+        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user).asJson()), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Successfully placed your order");
+                finishActivityWithToast("Your order is successfully placed");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to place your order: " + error.getMessage());
+                finishActivityWithToast("Failed to place your order");
+            }
+        });
+    }
+
+    private Order constructOrder(User user) {
         Order order = new Order();
         order.employeeId = user.empId;
         for(Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
             order.addDrink(item.juiceName, item.selectedQuantity);
         }
-        getJuiceServer().placeOrder(order, new Callback<Response>() {
-
-            @Override
-            public void success(Response response, Response response2) {
-                Log.d(TAG, "Successfully placed your order");
-                makeText(UserInputActivity.this, "Your order is placed", LENGTH_SHORT).show();
-                UserInputActivity.this.finish();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to place your order");
-                makeText(UserInputActivity.this, "Your order is placement failed", LENGTH_SHORT).show();
-                UserInputActivity.this.finish();
-            }
-        });
+        Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
+        return order;
     }
 
     private void handleUserNotFound() {
-        Log.d(TAG, "user is not found, so not placing any order");
-        makeText(UserInputActivity.this, "Sorry, We are not able to find you in our database", Toast.LENGTH_LONG).show();
-        UserInputActivity.this.finish();
+        finishActivityWithToast("Sorry, We are not able to find you in our database");
+    }
+
+    private void finishActivityWithToast(final String message) {
+        UserInputActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                makeText(UserInputActivity.this, message, Toast.LENGTH_LONG).show();
+                UserInputActivity.this.finish();
+            }
+        });
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -155,37 +191,32 @@ public class UserInputActivity extends Activity {
         });
 
         final EditText euidView = (EditText) findViewById(R.id.edit_text_euid);
+        euidView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    onGo(euidView);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
 
         findViewById(R.id.go).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                placeOrderForEuid(euidView.getText().toString().trim());
-            }
-        });
-    }
-
-    private void placeOrderForEuid(final String euid) {
-        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
-
-            @Override
-            public void success(final User user, Response response) {
-                UserInputActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        placeUserOrder(user);
-                    }
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                handleUserNotFound();
+                onGo(euidView);
             }
         });
     }
 
     private Object getJuiceCount(Parcelable[] juices) {
+        if (juices == null) {
+            return "";
+        }
+
         int count = 0;
         for(Parcelable item : juices) {
             count += ((JuiceItem)item).selectedQuantity;
@@ -197,13 +228,14 @@ public class UserInputActivity extends Activity {
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
             H.removeMessages(MSG_FINISH);
-            cardNumberView.setText("card# " + extractCardNumber(cardNumber));
-            this.cardNumber = "";
+            //cardNumberView.setText("card# " + extractCardNumber(cardNumber));
             onCardNumberReceived(extractCardNumber(cardNumber));
+            this.cardNumber = "";
         }
     }
 
     private Integer extractCardNumber(String readString) {
+        Log.d(TAG, "Card# " + readString);
         String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
         String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
         return Integer.valueOf(binaryNumber.substring(7, binaryNumber.length() - 1), 2);

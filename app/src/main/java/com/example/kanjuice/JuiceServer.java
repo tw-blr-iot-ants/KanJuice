@@ -6,6 +6,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.*;
+import retrofit.mime.TypedString;
 
 public interface JuiceServer {
 
@@ -18,7 +19,6 @@ public interface JuiceServer {
     @GET("/api/users/empId/{euid}")
     public void getUserByEuid(@Path("euid") String euid, Callback<User> cb);
 
-    @FormUrlEncoded
     @POST("/api/orders")
-    public void placeOrder(@Body Order order, Callback<Response> cb);
+    public void placeOrder(@Body TypedJsonString orderJson, Callback<Response> cb);
 }
