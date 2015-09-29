@@ -1,13 +1,20 @@
 package com.example.kanjuice;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +53,7 @@ public class UserInputActivity extends Activity {
         }
     };
     private Parcelable[] juices;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,7 @@ public class UserInputActivity extends Activity {
         juices = getIntent().getParcelableArrayExtra("juices");
         setupViews(juices);
         rfidCardReader = new RfidCardReader(this, cardDataListener);
+        progressDialog = new ProgressDialog();
     }
 
     @Override
@@ -93,10 +102,19 @@ public class UserInputActivity extends Activity {
     private void onGo(EditText euidView) {
         String cardNumber = euidView.getText().toString().trim();
         if (cardNumber.length() == 5) {
+            showProgressDialog();
             placeOrderForEuid(cardNumber);
         } else {
             makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT);
         }
+    }
+
+    private void showProgressDialog() {
+        progressDialog.show(getFragmentManager(), "orderProgress");
+    }
+
+    private void dismissProgressDialog() {
+        progressDialog.dismiss();
     }
 
     private void placeOrderForEuid(final String euid) {
@@ -172,6 +190,7 @@ public class UserInputActivity extends Activity {
             @Override
             public void run() {
                 makeText(UserInputActivity.this, message, Toast.LENGTH_LONG).show();
+                dismissProgressDialog();
                 UserInputActivity.this.finish();
             }
         });
@@ -228,7 +247,6 @@ public class UserInputActivity extends Activity {
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
             H.removeMessages(MSG_FINISH);
-            //cardNumberView.setText("card# " + extractCardNumber(cardNumber));
             onCardNumberReceived(extractCardNumber(cardNumber));
             this.cardNumber = "";
         }
@@ -261,4 +279,14 @@ public class UserInputActivity extends Activity {
             };
 
 
+    public static class ProgressDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.dialog_order_progress, null));
+            return builder.create();
+        }
+    }
 }

@@ -9,7 +9,7 @@
     <dimen name="quantity_width">60dp</dimen>
     <dimen name="quantity_height">60dp</dimen>
     <dimen name="juice_item_title_font_size">25sp</dimen>
-    <dimen name="juice_item_title_font_size_in_kannada">35sp</dimen>
+    <dimen name="juice_item_title_font_size_in_kannada">30sp</dimen>
     <dimen name="juice_item_title_font_size_in_multi_select">25sp</dimen>
     <dimen name="go_button_size">100dp</dimen>
     <dimen name="go_button_text_size">35sp</dimen>

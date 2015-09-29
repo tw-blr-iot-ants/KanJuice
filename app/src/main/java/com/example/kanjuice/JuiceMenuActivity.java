@@ -4,6 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +30,10 @@ public class JuiceMenuActivity extends Activity  {
     private View goButton;
     private View cancelButton;
     private View actionButtonLayout;
+    private JuiceDecorator juiceDecorator;
+    private View noNetworkView;
+    private GridView juicesView;
+    private View menuLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,8 @@ public class JuiceMenuActivity extends Activity  {
         setupViews();
 
         fetchMenu();
+
+        juiceDecorator = new JuiceDecorator();
     }
 
     private void fetchMenu() {
@@ -45,7 +55,9 @@ public class JuiceMenuActivity extends Activity  {
                 JuiceMenuActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.addAll(juices);
+                        menuLoadingView.setVisibility(View.GONE);
+                        juicesView.setVisibility(View.VISIBLE);
+                        onJuicesListReceived(juices);
                     }
                 });
             }
@@ -53,8 +65,34 @@ public class JuiceMenuActivity extends Activity  {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch menu list : " + error);
+                JuiceMenuActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showNoNetworkView();
+                    }
+                });
+
             }
         });
+    }
+
+    private void showNoNetworkView() {
+        noNetworkView.setVisibility(View.VISIBLE);
+        juicesView.setVisibility(View.GONE);
+        menuLoadingView.setVisibility(View.GONE);
+    }
+
+
+    private void onJuicesListReceived(List<Juice> juices) {
+        decorate(juices);
+        adapter.addAll(juices);
+    }
+
+    private void decorate(List<Juice> juices) {
+        for (Juice juice : juices) {
+            juice.imageId = juiceDecorator.matchImage(juice.name);
+            juice.kanId = juiceDecorator.matchKannadaName(juice.name);
+        }
     }
 
     private KanJuiceApp getApp() {
@@ -66,7 +104,7 @@ public class JuiceMenuActivity extends Activity  {
     }
 
     private void setupViews() {
-        final GridView juicesView = (GridView) findViewById(R.id.grid);
+        juicesView = (GridView) findViewById(R.id.grid);
         setupAdapter(juicesView);
 
         juicesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,6 +122,21 @@ public class JuiceMenuActivity extends Activity  {
         });
 
         setupActionLayout();
+        setupNoNetworkLayout();
+
+        menuLoadingView = findViewById(R.id.loading);
+    }
+
+    private void setupNoNetworkLayout() {
+        noNetworkView = findViewById(R.id.no_network_layout);
+        findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menuLoadingView.setVisibility(View.VISIBLE);
+                noNetworkView.setVisibility(View.INVISIBLE);
+                fetchMenu();
+            }
+        });
     }
 
     private boolean onJuiceItemLongClick(int position) {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,10 +28,10 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     public JuiceAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         juiceItems = new ArrayList<>();
-
-        for (int i = 0; i < 20; i ++) {
-            juiceItems.add(new JuiceItem("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ"));
-        }
+//
+//        for (int i = 0; i < 20; i ++) {
+//            juiceItems.add(new JuiceItem("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ", R.drawable.watermelon));
+//        }
     }
 
     @Override
@@ -73,7 +74,8 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             h.multiSelect.quantityViews.get(juiceItem.selectedQuantity - 1).setSelected(true);
         } else {
             h.singleSelect.titleView.setText(juiceItem.juiceName);
-            h.singleSelect.titleInKanView.setText(juiceItem.juiceNameInKan);
+            h.singleSelect.titleInKanView.setText(juiceItem.kanResId);
+            h.singleSelect.imageView.setImageResource(juiceItem.imageResId);
         }
     }
 
@@ -142,6 +144,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         h.multiSelect.titleView = (TextView) juiceItemView.findViewById(R.id.multi_select_title);
         h.singleSelect.titleView = (TextView) juiceItemView.findViewById(R.id.single_select_title);
         h.singleSelect.titleInKanView = (TextView) juiceItemView.findViewById(R.id.single_select_title_in_kan);
+        h.singleSelect.imageView = (ImageView) juiceItemView.findViewById(R.id.image);
 
         List<View> quantityViews = new ArrayList<>();
         for (int id : quantityNumbers) {
@@ -199,7 +202,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     public void addAll(List<Juice> juices) {
         for(Juice juice : juices) {
-            juiceItems.add(new JuiceItem(juice.name, ""));
+            juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
         }
         notifyDataSetChanged();
     }
@@ -220,6 +223,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         public class SingleSelect {
             public TextView titleView;
             public TextView titleInKanView;
+            public ImageView imageView;
         }
     }
 

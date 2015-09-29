@@ -18,21 +18,24 @@
         <LinearLayout
             android:id="@+id/single_select_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="center"
             android:layout_gravity="center"
+            android:padding="10dp"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:scaleType="center"
                 android:src="@drawable/strawberry"/>
 
             <TextView
                 android:id="@+id/single_select_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Mango"
                 android:textSize="@dimen/juice_item_title_font_size"/>
@@ -40,7 +43,7 @@
             <TextView
                 android:id="@+id/single_select_title_in_kan"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Kannada"
                 android:textSize="@dimen/juice_item_title_font_size_in_kannada"/>

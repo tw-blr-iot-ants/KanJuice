@@ -7,15 +7,16 @@ public class JuiceItem implements Parcelable {
     public String juiceName;
     public boolean isMultiSelected;
     public int selectedQuantity;
-    public String juiceNameInKan;
     public boolean animate;
+    public int imageResId;
+    public int kanResId;
 
-    public JuiceItem(String juiceName, String juiceNameInKan) {
+    public JuiceItem(String juiceName, int kanResId, int imageId) {
         this.juiceName = juiceName;
-        this.juiceNameInKan = juiceNameInKan;
+        this.kanResId = kanResId;
         this.isMultiSelected = false;
         this.selectedQuantity = 1;
-
+        this.imageResId = imageId;
     }
 
     @Override

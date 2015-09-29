@@ -19,5 +19,8 @@
     <string name="go">GO</string>
     <string name="enter_your_euid">Enter your employee id</string>
     <string name="or">OR</string>
-
+    <string name="mango_kan">ಮಾವು</string>
+    <string name="watermelon_kan">ಕಲ್ಲಂಗಡಿ</string>
+    <string name="no_network_connection">No internet connection?</string>
+    <string name="retry">Retry</string>
 </resources>
