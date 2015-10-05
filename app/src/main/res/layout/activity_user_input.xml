@@ -3,142 +3,151 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="30dp"
+                android:padding="20dp"
                 tools:context="com.example.kanjuice.UserInputActivity">
 
     <ImageButton
         android:id="@+id/go_back"
         android:layout_width="@dimen/default_icons_size"
         android:layout_height="@dimen/default_icons_size"
-        android:src="@drawable/ic_chevron_left_white"
         android:layout_alignParentLeft="true"
         android:layout_margin="15dp"
+        android:background="@drawable/button_circle_background"
         android:scaleType="center"
-        android:background="@drawable/button_circle_background"/>
+        android:src="@drawable/ic_chevron_left_white"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        card_view:contentPadding="5dp"
         card_view:cardBackgroundColor="@drawable/card_background"
         card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="2dp">
+        card_view:cardElevation="2dp"
+        card_view:contentPadding="5dp">
 
         <TextView
             android:id="@+id/title"
-            android:text="@string/swipe_your_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
             android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/swipe_your_card"
             android:textSize="30dp"/>
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_swipe_layout"
-        android:layout_width="@dimen/input_help_layout_width"
-        android:layout_height="@dimen/input_help_layout_height"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
-        card_view:contentPadding="5dp"
-        card_view:cardBackgroundColor="@drawable/card_background"
-        card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="2dp">
+        android:weightSum="100">
 
-        <TextView
-            android:id="@+id/card_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="20dp"
-            android:textSize="30dp"
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_swipe_layout"
+            android:layout_width="0dp"
+            android:layout_weight="45"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
-            android:text="@string/swipe_your_card"/>
-    </android.support.v7.widget.CardView>
+            card_view:cardBackgroundColor="@drawable/card_background"
+            card_view:cardCornerRadius="1dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="5dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/or_layout"
-        android:layout_width="@dimen/input_or_layout_width"
-        android:layout_height="@dimen/input_help_layout_height"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/input_help_layout_top_margin"
-        card_view:contentPadding="5dp"
-        card_view:cardBackgroundColor="@drawable/card_background"
-        card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="2dp">
+            <TextView
+                android:id="@+id/card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:padding="20dp"
+                android:text="@string/swipe_your_card"
+                android:textSize="30dp"/>
+        </android.support.v7.widget.CardView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
+        <android.support.v7.widget.CardView
+            android:id="@+id/or_layout"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/or"/>
-    </android.support.v7.widget.CardView>
+            card_view:cardBackgroundColor="@drawable/card_background"
+            card_view:cardCornerRadius="1dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="5dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/euid_layout"
-        android:layout_width="@dimen/input_help_layout_width"
-        android:layout_height="@dimen/input_help_layout_height"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/input_help_layout_top_margin"
-        card_view:contentPadding="5dp"
-        card_view:cardBackgroundColor="@drawable/card_background"
-        card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="2dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:padding="10dp"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/enter_your_euid"/>
+                android:text="@string/or"
+                android:textSize="30dp"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/euid_layout"
+            android:layout_width="0dp"
+            android:layout_weight="45"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            card_view:cardBackgroundColor="@drawable/card_background"
+            card_view:cardCornerRadius="1dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/edit_text_euid"
-                android:layout_width="@dimen/euid_number_view_width"
-                android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:padding="10dp"
                 android:layout_gravity="center"
-                android:maxLength="5"
-                android:imeOptions="actionGo"
-                android:inputType="numberDecimal"/>
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/go"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:gravity="center"
-                android:text="@string/go"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/enter_your_euid"
+                    android:textSize="30dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_text_euid"
+                        android:layout_width="@dimen/euid_number_view_width"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:imeOptions="actionGo"
+                        android:inputType="numberDecimal"
+                        android:maxLength="5"
+                        android:padding="10dp"
+                        android:textSize="30dp"/>
+
+                    <Button
+                        android:id="@+id/go"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/go"
+                        android:textSize="30dp"/>
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/ordering"
@@ -168,8 +177,8 @@
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="30dp"/>
     </LinearLayout>
 
 

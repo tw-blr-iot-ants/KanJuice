@@ -234,4 +234,5 @@ public class JuiceMenuActivity extends Activity  {
         intent.putExtra("juices", juiceItems);
         startActivity(intent);
     }
+
 }

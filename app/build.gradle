@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.kanjuice"
-        minSdkVersion 18
+        minSdkVersion 14
         targetSdkVersion 21
     }
 
