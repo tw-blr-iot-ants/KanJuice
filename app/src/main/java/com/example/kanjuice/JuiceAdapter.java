@@ -202,7 +202,9 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     public void addAll(List<Juice> juices) {
         for(Juice juice : juices) {
-            juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
+            if(juice.available) {
+                juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
+            }
         }
         notifyDataSetChanged();
     }

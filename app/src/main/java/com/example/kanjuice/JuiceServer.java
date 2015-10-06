@@ -10,7 +10,7 @@ import retrofit.mime.TypedString;
 
 public interface JuiceServer {
 
-    @GET("/api/beverages/")
+    @GET("/api/beverages/juices")
     public void getJuices(Callback<List<Juice>> cb);
 
     @GET("/api/users/internalNumber/{cardNumber}")
