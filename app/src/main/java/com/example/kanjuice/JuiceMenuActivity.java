@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +44,34 @@ public class JuiceMenuActivity extends Activity  {
         fetchMenu();
 
         juiceDecorator = new JuiceDecorator();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableRecentAppsClick();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        exitMultiSelectMode();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isInMultiSelectMode) {
+            exitMultiSelectMode();
+        }
+
+        // else block back button
+    }
+
+    private void disableRecentAppsClick() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.moveTaskToFront(getTaskId(), 0);
     }
 
     private void fetchMenu() {
@@ -176,21 +206,6 @@ public class JuiceMenuActivity extends Activity  {
         juicesView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        exitMultiSelectMode();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isInMultiSelectMode) {
-            exitMultiSelectMode();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     private void exitMultiSelectMode() {
         adapter.reset();
@@ -234,5 +249,7 @@ public class JuiceMenuActivity extends Activity  {
         intent.putExtra("juices", juiceItems);
         startActivity(intent);
     }
+
+
 
 }

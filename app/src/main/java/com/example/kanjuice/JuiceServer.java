@@ -24,4 +24,7 @@ public interface JuiceServer {
 
     @PUT("/api/beverages/{id}")
     void updateJuice(@Path("id") String id, TypedString juice, Callback<Response> cb);
+
+    @POST("/api/register")
+    public void register(@Body TypedJsonString userJson, Callback<Response> cb);
 }

@@ -10,7 +10,7 @@ import retrofit.RestAdapter;
 public class KanJuiceApp extends Application {
 
     private static final String KANJUICE_PROD_SERVER_URL = "http://10.4.1.41:8083";
-    private static final String KANJUICE_DEV_SERVER_URL = "http://192.168.0.53:8083";
+    private static final String KANJUICE_DEV_SERVER_URL = "http://192.168.0.52:8083";
     private static final String KANJUICE_SERVER_URL = KANJUICE_DEV_SERVER_URL;
     private RestAdapter restAdapter;
     private JuiceServer juiceServer;

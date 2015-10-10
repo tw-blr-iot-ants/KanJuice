@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +37,9 @@ public class UserInputActivity extends Activity {
     public static final int ANIMATION_DURATION = 500;
     public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2000;
 
+    private static final int REQUEST_CODE_ADMIN = 1001;
+    private static final int REQUEST_CODE_REGISTER = 1002;
+
     private TextView cardNumberView;
     private RfidCardReader rfidCardReader;
     private String cardNumber = "";
@@ -59,6 +64,7 @@ public class UserInputActivity extends Activity {
     private TextView messageView;
     private ImageView statusView;
     private View messageLayout;
+    private int internalCardNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +80,18 @@ public class UserInputActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        disableRecentAppsClick();
         rfidCardReader.stopIoManager();
         rfidCardReader.closePort();
 
         H.removeMessages(MSG_FINISH);
         finish();
+    }
+
+    private void disableRecentAppsClick() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.moveTaskToFront(getTaskId(), 0);
     }
 
     @Override
@@ -138,7 +151,20 @@ public class UserInputActivity extends Activity {
                 onGo(euidView);
             }
         });
+
+        findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                H.removeMessages(MSG_FINISH);
+                showRegisterScreen();
+            }
+        });
     }
+
+    private void showRegisterScreen() {
+        startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_CODE_REGISTER);
+    }
+
 
     private void animateOut() {
         ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
@@ -179,7 +205,10 @@ public class UserInputActivity extends Activity {
 
     private void onGo(EditText euidView) {
         String cardNumber = euidView.getText().toString().trim();
-        if (cardNumber.length() == 5) {
+
+        if (cardNumber.length() == 3) {
+            handleEasterEggs(cardNumber);
+        } else if (cardNumber.length() == 5) {
             showOrdering();
             placeOrderForEuid(cardNumber);
         } else {
@@ -187,11 +216,60 @@ public class UserInputActivity extends Activity {
         }
     }
 
+    private void handleEasterEggs(String whichEgg) {
+        if (whichEgg.equals("999")) {
+            showAdminPage(whichEgg);
+        } else if (whichEgg.equals("888")) {
+            H.removeMessages(MSG_FINISH);
+            showRegisterScreen();
+        } else if (whichEgg.equals("777")) {
+            AndroidUtils.clearKanJuiceAsDefaultApp(this);
+        }
+    }
+
+    private void showAdminPage(String cardNumber) {
+        H.removeMessages(MSG_FINISH);
+        startActivityForResult(new Intent(this, AdminActivity.class), REQUEST_CODE_ADMIN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADMIN) {
+            finish();
+        } else if (requestCode == REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
+            registerUser(getUserFromIntent(data));
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void registerUser(final User user) {
+        getJuiceServer().register(new TypedJsonString(user.toJson()), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to register the user");
+            }
+        });
+    }
+
+    private User getUserFromIntent(Intent data) {
+        User newUser = new User();
+        newUser.employeeName = data.getStringExtra("employeeName");
+        newUser.empId = data.getStringExtra("empId");
+        newUser.internalNumber = String.valueOf(internalCardNumber);
+        return newUser;
+    }
+
     private void showOrdering() {
         hideIme();
         H.removeMessages(MSG_FINISH);
-        orderingProgressView.setVisibility(View.VISIBLE);
         animateOut();
+        orderingProgressView.setVisibility(View.VISIBLE);
     }
 
     private void orderFinished(final boolean isSuccess, final String message) {
@@ -232,6 +310,7 @@ public class UserInputActivity extends Activity {
     }
 
     private void onCardNumberReceived(final int cardNumber) {
+        internalCardNumber = cardNumber;
         getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
 
             @Override
@@ -294,7 +373,7 @@ public class UserInputActivity extends Activity {
     private void updateReceivedData(byte[] data) {
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
-            H.removeMessages(MSG_FINISH);
+            showOrdering();
             onCardNumberReceived(extractCardNumber(cardNumber));
             this.cardNumber = "";
         }

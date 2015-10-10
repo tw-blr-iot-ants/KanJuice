@@ -1,5 +1,7 @@
 package com.example.kanjuice;
 
+import com.google.gson.Gson;
+
 public class User {
     public String empId;
     public String externalNumber;
@@ -9,5 +11,9 @@ public class User {
     @Override
     public String toString() {
         return String.format("user[%s:%s:%s:%s]", empId, externalNumber, internalNumber, employeeName);
+    }
+
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

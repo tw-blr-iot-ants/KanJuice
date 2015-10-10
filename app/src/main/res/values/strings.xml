@@ -50,4 +50,11 @@
 
     <string name="no_network_connection">No internet connection?</string>
     <string name="retry">Retry</string>
+    <string name="title_activity_register">Register</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="empId">Employee Id</string>
+    <string name="name">Name</string>
+    <string name="enter_emp_id_here">EUID here</string>
+    <string name="enter_name_here">Name here</string>
 </resources>

@@ -25,7 +25,7 @@
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="2dp"
         card_view:contentPadding="5dp">
-
+`
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="300dp"
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
         android:weightSum="100">
@@ -64,7 +64,7 @@
                 android:layout_gravity="center"
                 android:padding="20dp"
                 android:text="@string/swipe_your_card"
-                android:textSize="30dp"/>
+                android:textSize="20dp"/>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -85,7 +85,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/or"
-                android:textSize="30dp"/>
+                android:textSize="20dp"/>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -108,21 +108,23 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/enter_your_euid"
-                    android:textSize="30dp"/>
+                    android:textSize="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="100">
 
                     <EditText
                         android:id="@+id/edit_text_euid"
-                        android:layout_width="@dimen/euid_number_view_width"
+                        android:layout_width="0dp"
+                        android:layout_weight="75"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:imeOptions="actionGo"
@@ -133,15 +135,16 @@
 
                     <Button
                         android:id="@+id/go"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="25"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingBottom="10dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/go"
-                        android:textSize="30dp"/>
+                        android:textSize="20dp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -179,6 +182,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="30dp"/>
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="30dp"
+            android:text="Register Here"/>
     </LinearLayout>
 
 
