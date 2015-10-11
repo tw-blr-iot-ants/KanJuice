@@ -1,5 +1,7 @@
 package com.example.kanjuice;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AndroidUtils {
+
+    public static void disableRecentAppsClick(Activity activity) {
+        ActivityManager activityManager = (ActivityManager) activity.getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.moveTaskToFront(activity.getTaskId(), 0);
+    }
 
     public static boolean isMyLauncherDefault(Context context) {
         final IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);

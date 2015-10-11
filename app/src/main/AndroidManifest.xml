@@ -31,12 +31,16 @@
             android:name=".JuiceMenuActivity"
             android:label="@string/app_title"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -63,10 +67,6 @@
             android:label="@string/title_activity_admin"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".RegisterActivity"

@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 public class JuiceDecorator {
 
-    private final HashMap<String, Integer> imageIdMap;
-    private final HashMap<String, Integer> kanTextMap;
+    private static HashMap<String, Integer> imageIdMap;
+    private static HashMap<String, Integer> kanTextMap;
 
-    public JuiceDecorator() {
+   static {
         imageIdMap = new HashMap<>();
         imageIdMap.put("amla", R.drawable.amla);
         imageIdMap.put("black jeera masala soda", R.drawable.black_jeera_masala_soda);
@@ -21,13 +21,25 @@ public class JuiceDecorator {
         imageIdMap.put("mint lime", R.drawable.mint_lime);
         imageIdMap.put("mixed fruit", R.drawable.mixed_fruit);
         imageIdMap.put("muskmelon", R.drawable.muskmelon);
+        imageIdMap.put("musk melon", R.drawable.muskmelon);
         imageIdMap.put("orange", R.drawable.orange);
         imageIdMap.put("pineapple", R.drawable.pineapple);
+        imageIdMap.put("pine apple", R.drawable.pineapple);
         imageIdMap.put("salt lime soda", R.drawable.salt_lime_soda);
         imageIdMap.put("soda", R.drawable.soda);
         imageIdMap.put("sweet and salt lime soda", R.drawable.sweet_and_salt_lime_soda);
         imageIdMap.put("sweet lime soda", R.drawable.sweet_lime_soda);
         imageIdMap.put("watermelon", R.drawable.watermelon);
+        imageIdMap.put("water melon", R.drawable.watermelon);
+        imageIdMap.put("apple", R.drawable.apple);
+        imageIdMap.put("custard apple", R.drawable.custard_apple);
+        imageIdMap.put("custardapple", R.drawable.custard_apple);
+        imageIdMap.put("butter fruit", R.drawable.butter_fruit);
+        imageIdMap.put("butterfruit", R.drawable.butter_fruit);
+        imageIdMap.put("banana", R.drawable.banana);
+        imageIdMap.put("mango", R.drawable.mango);
+        imageIdMap.put("papaya", R.drawable.papaya);
+        imageIdMap.put("sapota", R.drawable.sapota);
 
         kanTextMap = new HashMap<>();
         kanTextMap.put("amla", R.string.amla_kan);
@@ -42,6 +54,7 @@ public class JuiceDecorator {
         kanTextMap.put("mint lime", R.string.mint_lime_kan);
         kanTextMap.put("mixed fruit", R.string.mixed_fruit_kan);
         kanTextMap.put("muskmelon", R.string.muskmelon_kan);
+        kanTextMap.put("musk melon", R.string.muskmelon_kan);
         kanTextMap.put("orange", R.string.orange_kan);
         kanTextMap.put("pineapple", R.string.pineapple_kan);
         kanTextMap.put("salt lime soda", R.string.salt_lime_soda_kan);
@@ -51,15 +64,20 @@ public class JuiceDecorator {
         kanTextMap.put("watermelon", R.string.watermelon_kan);
         kanTextMap.put("banana", R.string.banana_kan);
         kanTextMap.put("butter fruit", R.string.butter_fruit_kan);
+        kanTextMap.put("butterfruit", R.string.butter_fruit_kan);
         kanTextMap.put("sapota", R.string.sapota_kan);
         kanTextMap.put("apple", R.string.apple_kan);
         kanTextMap.put("moosambi", R.string.moosambi_kan);
         kanTextMap.put("grapes", R.string.grapes_kan);
         kanTextMap.put("grape", R.string.grapes_kan);
         kanTextMap.put("mango", R.string.mango_kan);
+        kanTextMap.put("custard apple", R.string.custard_apple);
+        kanTextMap.put("custardapple", R.string.custard_apple);
+        kanTextMap.put("papaya", R.string.papaya);
+
     }
 
-    public int matchImage(String name) {
+    public static int matchImage(String name) {
         Integer id = imageIdMap.get(name.toLowerCase().trim());
         if (id == null) {
             id = R.drawable.mixed_fruit;
@@ -67,7 +85,7 @@ public class JuiceDecorator {
         return id;
     }
 
-    public int matchKannadaName(String name) {
+    public static int matchKannadaName(String name) {
         Integer id = kanTextMap.get(name.toLowerCase().trim());
         if (id == null) {
             id = R.string.unknown_kan;

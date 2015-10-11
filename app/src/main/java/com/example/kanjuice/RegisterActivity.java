@@ -54,13 +54,13 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     private void save(String euid, String name) {
-        if (euid.length() != 5) {
+        if (euid.trim().length() != 5) {
             return;
         }
 
         Intent data = new Intent();
-        data.putExtra("empId", euid);
-        data.putExtra("employeeName", name);
+        data.putExtra("empId", euid.trim());
+        data.putExtra("employeeName", name.trim());
         setResult(RESULT_OK, data);
         finish();
     }

@@ -28,7 +28,6 @@ public class JuiceMenuActivity extends Activity  {
     private View goButton;
     private View cancelButton;
     private View actionButtonLayout;
-    private JuiceDecorator juiceDecorator;
     private View noNetworkView;
     private GridView juicesView;
     private View menuLoadingView;
@@ -42,8 +41,6 @@ public class JuiceMenuActivity extends Activity  {
         setupViews();
 
         fetchMenu();
-
-        juiceDecorator = new JuiceDecorator();
     }
 
     @Override
@@ -116,8 +113,8 @@ public class JuiceMenuActivity extends Activity  {
 
     private void decorate(List<Juice> juices) {
         for (Juice juice : juices) {
-            juice.imageId = juiceDecorator.matchImage(juice.name);
-            juice.kanId = juiceDecorator.matchKannadaName(juice.name);
+            juice.imageId = JuiceDecorator.matchImage(juice.name);
+            juice.kanId = JuiceDecorator.matchKannadaName(juice.name);
         }
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 
 public class AdminActivity extends Activity {
@@ -51,22 +52,26 @@ public class AdminActivity extends Activity {
                 Juice juice = (Juice) view.getTag();
                 if (juice != null) {
                     juice.available = !juice.available;
-//                    getJuiceServer().updateJuice(juice, new Callback<Response>() {
-//
-//                        @Override
-//                        public void success(Response response, Response response2) {
-//
-//                        }
-//
-//                        @Override
-//                        public void failure(RetrofitError error) {
-//
-//                        }
-//                    });
+                    setJuiceAvailability(juice);
                 }
             }
         });
 
+    }
+
+    private void setJuiceAvailability(final Juice juice) {
+        getJuiceServer().updateJuice("id", new TypedString(juice.name), new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     private void fetchMenu() {
@@ -117,9 +122,13 @@ public class AdminActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView == null ? inflater.inflate(R.layout.juice_avail_item, parent, false) : convertView;
-            TextView titleView = (TextView) view.findViewById(R.id.title);
             Juice juice = (Juice) getItem(position);
+
+            TextView titleView = (TextView) view.findViewById(R.id.title);
             titleView.setText(juice.name);
+
+            TextView kanTitleView = (TextView) view.findViewById(R.id.title_kan);
+            kanTitleView.setText(JuiceDecorator.matchKannadaName(juice.name));
 
             CheckBox availabilityView = (CheckBox) view.findViewById(R.id.availability);
             availabilityView.setChecked(juice.available);

@@ -65,6 +65,7 @@ public class UserInputActivity extends Activity {
     private ImageView statusView;
     private View messageLayout;
     private int internalCardNumber;
+    private View registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,18 +81,12 @@ public class UserInputActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        disableRecentAppsClick();
+        AndroidUtils.disableRecentAppsClick(this);
         rfidCardReader.stopIoManager();
         rfidCardReader.closePort();
 
         H.removeMessages(MSG_FINISH);
-        finish();
-    }
-
-    private void disableRecentAppsClick() {
-        ActivityManager activityManager = (ActivityManager) getApplicationContext()
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        activityManager.moveTaskToFront(getTaskId(), 0);
+       // finish();
     }
 
     @Override
@@ -107,7 +102,6 @@ public class UserInputActivity extends Activity {
 
         H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
     }
-
 
     public void setupViews(Parcelable[] juices) {
         cardLayout = findViewById(R.id.card_swipe_layout);
@@ -152,10 +146,11 @@ public class UserInputActivity extends Activity {
             }
         });
 
-        findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
+        registerButton = findViewById(R.id.register);
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                H.removeMessages(MSG_FINISH);
+                showOrdering();
                 showRegisterScreen();
             }
         });
@@ -164,7 +159,6 @@ public class UserInputActivity extends Activity {
     private void showRegisterScreen() {
         startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_CODE_REGISTER);
     }
-
 
     private void animateOut() {
         ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
@@ -262,6 +256,8 @@ public class UserInputActivity extends Activity {
         newUser.employeeName = data.getStringExtra("employeeName");
         newUser.empId = data.getStringExtra("empId");
         newUser.internalNumber = String.valueOf(internalCardNumber);
+
+        Log.d(TAG, " new user registered : " + newUser.toString());
         return newUser;
     }
 
@@ -273,6 +269,10 @@ public class UserInputActivity extends Activity {
     }
 
     private void orderFinished(final boolean isSuccess, final String message) {
+        orderFinished(isSuccess, message, DELAY_BEFORE_FINISHING_ACTIVITY);
+    }
+
+    private void orderFinished(final boolean isSuccess, final String message, final int timeForFinish) {
         UserInputActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -280,7 +280,7 @@ public class UserInputActivity extends Activity {
                 messageView.setText(message);
                 statusView.setImageResource(isSuccess ? R.drawable.success : R.drawable.failure);
                 messageLayout.setVisibility(View.VISIBLE);
-                H.sendEmptyMessageDelayed(MSG_FINISH, DELAY_BEFORE_FINISHING_ACTIVITY);
+                H.sendEmptyMessageDelayed(MSG_FINISH, timeForFinish);
             }
         });
     }
@@ -336,13 +336,26 @@ public class UserInputActivity extends Activity {
             @Override
             public void success(Response response, Response response2) {
                 Log.d(TAG, "Successfully placed your order");
+                setRegisterButtonVisibility(false);
                 orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to place your order: " + error.getMessage());
+                if (!user.internalNumber.isEmpty()) {
+                    setRegisterButtonVisibility(true);
+                }
                 orderFinished(false, "Sorry!, Failed to place your order");
+            }
+        });
+    }
+
+    private void setRegisterButtonVisibility(final boolean visible) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                registerButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
             }
         });
     }
