@@ -5,4 +5,5 @@ public class Juice {
     public int cost;
     public boolean available;
     public int imageId;
+    public int kanId;
 }

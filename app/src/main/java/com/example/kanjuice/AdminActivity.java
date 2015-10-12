@@ -60,18 +60,18 @@ public class AdminActivity extends Activity {
     }
 
     private void setJuiceAvailability(final Juice juice) {
-        getJuiceServer().updateJuice("id", new TypedString(juice.name), new Callback<Response>() {
-
-            @Override
-            public void success(Response response, Response response2) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+//        getJuiceServer().updateJuice(new TypedString(juice.toJson()), new Callback<Response>() {
+//
+//            @Override
+//            public void success(Response response, Response response2) {
+//
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//
+//            }
+//        });
     }
 
     private void fetchMenu() {
