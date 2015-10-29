@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
@@ -45,6 +46,7 @@ public class UserInputActivity extends Activity {
     private String cardNumber = "";
 
     private static final int MSG_FINISH = 101;
+    public static final int MSG_DATA_RECEIVED = 102;
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -52,10 +54,13 @@ public class UserInputActivity extends Activity {
                 case MSG_FINISH:
                     UserInputActivity.this.finish();
                     break;
+                case MSG_DATA_RECEIVED:
+                    onBluetoothDataReceived(msg.arg1, msg.obj);
 
             }
         }
     };
+
     private Parcelable[] juices;
     private View cardLayout;
     private View euidLayout;
@@ -86,7 +91,6 @@ public class UserInputActivity extends Activity {
         rfidCardReader.closePort();
 
         H.removeMessages(MSG_FINISH);
-       // finish();
     }
 
     @Override
@@ -97,10 +101,14 @@ public class UserInputActivity extends Activity {
             rfidCardReader.connectToSerialPort();
             rfidCardReader.onDeviceStateChange();
         } else {
-            cardNumberView.setText("Sorry, Some technical error in reading your RFID card");
+            cardNumberView.setText("Card reader is not connected");
         }
 
         H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
+
+        // REMOVE ME PLEASE
+        setRegisterButtonVisibility(true);
+        orderFinished(false, "this sucks");
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -417,4 +425,26 @@ public class UserInputActivity extends Activity {
                     });
                 }
             };
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        BlueToothProvider blueToothProvider = getApp().getBlueToothProvider();
+        blueToothProvider.startReading(H);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        getApp().getBlueToothProvider().stopReading();
+    }
+
+
+    private void onBluetoothDataReceived(int arg1, Object obj) {
+        Toast.makeText(this, "Bytes received : " + arg1, Toast.LENGTH_LONG).show();
+    }
+
 }
