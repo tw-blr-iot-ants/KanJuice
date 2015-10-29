@@ -396,7 +396,7 @@ public class UserInputActivity extends Activity {
         Log.d(TAG, "Card# " + readString);
         String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
         String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
-        return Integer.valueOf(binaryNumber.substring(7, binaryNumber.length() - 1), 2);
+        return Integer.valueOf(binaryNumber.substring(binaryNumber.length() - 17, binaryNumber.length() - 1), 2);
     }
 
     private final SerialInputOutputManager.Listener cardDataListener =
