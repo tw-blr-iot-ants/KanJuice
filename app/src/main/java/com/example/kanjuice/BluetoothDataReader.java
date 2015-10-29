@@ -43,17 +43,18 @@ public class BluetoothDataReader {
         }
     }
 
-    void openConnection() {
+    boolean openConnection() {
         try {
             findBT();
-            openBT();
+            return openBT();
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "Failed to open BT with exception : " + e.getMessage());
+            return false;
         }
     }
 
-    void findBT() {
+    private void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Log.d(TAG, "No bluetooth adapter available");
@@ -75,7 +76,7 @@ public class BluetoothDataReader {
         }
     }
 
-    void openBT() throws IOException {
+    private boolean openBT() throws IOException {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
         mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
         mmSocket.connect();
@@ -83,10 +84,10 @@ public class BluetoothDataReader {
         mmInputStream = mmSocket.getInputStream();
         Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
-
+        return true;
     }
 
-    void beginListenForData() {
+    private void beginListenForData() {
         setStopWorker(false);
         readBufferPosition = 0;
         readBuffer = new byte[1024];
@@ -114,7 +115,7 @@ public class BluetoothDataReader {
         workerThread.start();
     }
 
-    void closeBT() throws IOException {
+    private void closeBT() throws IOException {
         setStopWorker(true);
         mmOutputStream.close();
         mmInputStream.close();

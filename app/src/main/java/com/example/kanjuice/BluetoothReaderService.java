@@ -2,6 +2,7 @@ package com.example.kanjuice;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,11 +42,16 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         }
     }
 
+    private boolean connectionClosed;
     private BroadcastReceiver stateChangeListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String state = intent.getAction();
             Log.d(TAG, "BluetoothConnectionStatechange: " + state);
+            if (state.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
+                bluetoothDataReader.closeConnection();
+                connectionClosed = true;
+            }
         }
     };
 
@@ -63,8 +69,13 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     }
 
     private void registerForBluetoothConnectionChange() {
-        IntentFilter intentFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(stateChangeListener, intentFilter);
+        IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
+        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+        this.registerReceiver(stateChangeListener, filter1);
+        this.registerReceiver(stateChangeListener, filter2);
+        this.registerReceiver(stateChangeListener, filter3);
     }
 
     @Override
@@ -90,6 +101,11 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     }
 
     public void startListening(Handler clientHandler) {
+        if (connectionClosed) {
+            bluetoothDataReader.openConnection();
+            connectionClosed = false;
+        }
+
         this.clientHandler = clientHandler;
         clientListening = true;
     }
