@@ -32,7 +32,7 @@ import static android.widget.Toast.makeText;
 import static java.lang.String.format;
 
 
-public class UserInputActivity extends Activity {
+public class UserInputActivity extends BluetoothActivity {
     private static final String TAG = "UserInputActivity";
     public static final int NO_USER_ACTIVITY_FINISH_DELAY = 15000;
     public static final int ANIMATION_DURATION = 500;
@@ -55,7 +55,8 @@ public class UserInputActivity extends Activity {
                     UserInputActivity.this.finish();
                     break;
                 case MSG_DATA_RECEIVED:
-                    onBluetoothDataReceived(msg.arg1, msg.obj);
+                     UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
+                    break;
 
             }
         }
@@ -73,7 +74,7 @@ public class UserInputActivity extends Activity {
     private View registerButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_input);
@@ -104,11 +105,11 @@ public class UserInputActivity extends Activity {
             cardNumberView.setText("Card reader is not connected");
         }
 
-        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
-
-        // REMOVE ME PLEASE
-        setRegisterButtonVisibility(true);
-        orderFinished(false, "this sucks");
+//        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
+//
+//        // REMOVE ME PLEASE
+//        setRegisterButtonVisibility(true);
+//        orderFinished(false, "this sucks");
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -354,7 +355,7 @@ public class UserInputActivity extends Activity {
                 if (!user.internalNumber.isEmpty()) {
                     setRegisterButtonVisibility(true);
                 }
-                orderFinished(false, "Sorry!, Failed to place your order");
+                orderFinished(false, "Sorry!, Failed to place your order", 50000);
             }
         });
     }
@@ -392,6 +393,7 @@ public class UserInputActivity extends Activity {
     }
 
     private void updateReceivedData(byte[] data) {
+        Log.d(TAG, "updateDataReceived " + new String(data));
         cardNumber += new String(data);
         if (cardNumber.contains("*")) {
             showOrdering();
@@ -427,24 +429,26 @@ public class UserInputActivity extends Activity {
             };
 
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        BlueToothProvider blueToothProvider = getApp().getBlueToothProvider();
+//        blueToothProvider.startReading(H);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//        getApp().getBlueToothProvider().stopReading();
+//    }
+
+
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        BlueToothProvider blueToothProvider = getApp().getBlueToothProvider();
-        blueToothProvider.startReading(H);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        getApp().getBlueToothProvider().stopReading();
-    }
-
-
-    private void onBluetoothDataReceived(int arg1, Object obj) {
-        Toast.makeText(this, "Bytes received : " + arg1, Toast.LENGTH_LONG).show();
+    protected void onBluetoothDataReceived(byte[] data) {
+        Log.d(TAG, "Data received from BT, " + data);
+        H.obtainMessage(MSG_DATA_RECEIVED, data).sendToTarget();
     }
 
 }

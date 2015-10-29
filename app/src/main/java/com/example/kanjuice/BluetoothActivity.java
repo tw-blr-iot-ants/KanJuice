@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +22,8 @@ import java.util.UUID;
 public class BluetoothActivity extends Activity {
 
     public static final String TAG = "ArduinoBT";
-    TextView myLabel;
-    EditText myTextbox;
+//    TextView myLabel;
+//    EditText myTextbox;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -44,15 +42,16 @@ public class BluetoothActivity extends Activity {
         }
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_bluetooth);
 
-        Button openButton = (Button) findViewById(R.id.open);
-        Button closeButton = (Button) findViewById(R.id.close);
-        myLabel = (TextView) findViewById(R.id.label);
+//        Button openButton = (Button) findViewById(R.id.open);
+//        Button closeButton = (Button) findViewById(R.id.close);
+//        myLabel = (TextView) findViewById(R.id.label);
 //
 //        // Open Button
 //        openButton.setOnClickListener(new View.OnClickListener() {
@@ -77,24 +76,14 @@ public class BluetoothActivity extends Activity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onResume() {
         super.onStart();
 
-        H.sendEmptyMessage(100);
-    }
-
-    private void openConnection() {
-        try {
-            findBT();
-            openBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "Failed to open BT with exception : " + e.getMessage());
-        }
+        H.sendEmptyMessageDelayed(100, 2000);
     }
 
     @Override
-    protected void onStop() {
+    protected void onPause() {
         super.onStop();
 
         closeConnection();
@@ -109,10 +98,20 @@ public class BluetoothActivity extends Activity {
         }
     }
 
+    private void openConnection() {
+        try {
+            findBT();
+            openBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Failed to open BT with exception : " + e.getMessage());
+        }
+    }
+
     void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            myLabel.setText("No bluetooth adapter available");
+            Log.d(TAG, "No bluetooth adapter available");
         }
 
         if (!mBluetoothAdapter.isEnabled()) {
@@ -137,7 +136,7 @@ public class BluetoothActivity extends Activity {
         mmSocket.connect();
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
-        myLabel.setText("Bluetooth Opened");
+        Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
 
     }
@@ -154,7 +153,11 @@ public class BluetoothActivity extends Activity {
                         byte[] packetBytes = new byte[bytesAvailable];
                         int read = mmInputStream.read(packetBytes);
                         if (read > 0) {
-                            Log.d(TAG, "byetes:  : " + new String(packetBytes));
+                            String data = new String(packetBytes);
+                            Log.d(TAG, "byetes:  : " + data);
+                            onBluetoothDataReceived(packetBytes);
+
+
                         }
                     } catch (IOException ex) {
                         stopWorker = true;
@@ -171,8 +174,10 @@ public class BluetoothActivity extends Activity {
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        myLabel.setText("Bluetooth Closed");
+        Log.d(TAG, "Bluetooth Closed");
     }
 
-
+    protected void onBluetoothDataReceived(byte[] data) {
+//        Toast.makeText(this, "Bytes received : " + data, Toast.LENGTH_LONG).show();
+    }
 }

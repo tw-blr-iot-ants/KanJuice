@@ -15,7 +15,7 @@ public class KanJuiceApp extends Application {
     private static final String KANJUICE_SERVER_URL = DEBUG ? KANJUICE_DEV_SERVER_URL : KANJUICE_PROD_SERVER_URL;
     private RestAdapter restAdapter;
     private JuiceServer juiceServer;
-    private BlueToothProvider blueToothProvider;
+//    private BlueToothProvider blueToothProvider;
 
     @Override
     public void onCreate() {
@@ -30,7 +30,7 @@ public class KanJuiceApp extends Application {
 
     @Override
     public void onTerminate() {
-        blueToothProvider.disconnect();
+        //blueToothProvider.disconnect();
     }
 
     private void setupRestAdapter() {
@@ -48,8 +48,8 @@ public class KanJuiceApp extends Application {
         return juiceServer;
     }
 
-    public BlueToothProvider getBlueToothProvider() {
-        return blueToothProvider;
-    }
+//    public BlueToothProvider getBlueToothProvider() {
+//        return blueToothProvider;
+//    }
 
 }
