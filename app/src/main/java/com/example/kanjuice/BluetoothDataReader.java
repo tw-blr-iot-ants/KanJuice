@@ -22,13 +22,13 @@ public class BluetoothDataReader {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
-    private BluetoothDataReceiver receiver;
+    private SerialDataReceiver receiver;
 
-    public interface BluetoothDataReceiver {
+    public interface SerialDataReceiver {
         void onDataReceived(byte[] data);
     }
 
-    public BluetoothDataReader(BluetoothDataReceiver receiver) {
+    public BluetoothDataReader(SerialDataReceiver receiver) {
         this.receiver = receiver;
     }
 

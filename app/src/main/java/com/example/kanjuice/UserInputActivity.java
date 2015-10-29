@@ -34,7 +34,7 @@ import static java.lang.String.format;
 
 public class UserInputActivity extends BluetoothActivity {
     private static final String TAG = "UserInputActivity";
-    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 15000;
+    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 35000;
     public static final int ANIMATION_DURATION = 500;
     public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2000;
 
@@ -42,7 +42,6 @@ public class UserInputActivity extends BluetoothActivity {
     private static final int REQUEST_CODE_REGISTER = 1002;
 
     private TextView cardNumberView;
-    private RfidCardReader rfidCardReader;
     private String cardNumber = "";
 
     private static final int MSG_FINISH = 101;
@@ -81,35 +80,19 @@ public class UserInputActivity extends BluetoothActivity {
 
         juices = getIntent().getParcelableArrayExtra("juices");
         setupViews(juices);
-        rfidCardReader = new RfidCardReader(this, cardDataListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         AndroidUtils.disableRecentAppsClick(this);
-        rfidCardReader.stopIoManager();
-        rfidCardReader.closePort();
-
         H.removeMessages(MSG_FINISH);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (rfidCardReader.isConnected()) {
-            rfidCardReader.connectToSerialPort();
-            rfidCardReader.onDeviceStateChange();
-        } else {
-            cardNumberView.setText("Card reader is not connected");
-        }
-
-//        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
-//
-//        // REMOVE ME PLEASE
-//        setRegisterButtonVisibility(true);
-//        orderFinished(false, "this sucks");
+        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -289,6 +272,8 @@ public class UserInputActivity extends BluetoothActivity {
                 messageView.setText(message);
                 statusView.setImageResource(isSuccess ? R.drawable.success : R.drawable.failure);
                 messageLayout.setVisibility(View.VISIBLE);
+
+                H.removeMessages(MSG_FINISH);
                 H.sendEmptyMessageDelayed(MSG_FINISH, timeForFinish);
             }
         });
@@ -409,24 +394,6 @@ public class UserInputActivity extends BluetoothActivity {
         return Integer.valueOf(binaryNumber.substring(binaryNumber.length() - 17, binaryNumber.length() - 1), 2);
     }
 
-    private final SerialInputOutputManager.Listener cardDataListener =
-            new SerialInputOutputManager.Listener() {
-
-                @Override
-                public void onRunError(Exception e) {
-                    Log.d(TAG, "Runner stopped.");
-                }
-
-                @Override
-                public void onNewData(final byte[] data) {
-                    UserInputActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UserInputActivity.this.updateReceivedData(data);
-                        }
-                    });
-                }
-            };
 
     @Override
     public void onDataReceived(byte[] data) {

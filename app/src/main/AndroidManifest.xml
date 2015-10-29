@@ -75,15 +75,15 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
 
-        <activity
-            android:name=".BluetoothActivity"
-            android:label="@string/title_activity_register"
-            android:screenOrientation="landscape">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+        <!--<activity-->
+            <!--android:name=".BluetoothActivity"-->
+            <!--android:label="@string/title_activity_register"-->
+            <!--android:screenOrientation="landscape">-->
+            <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
+        <!--</activity>-->
     </application>
 
 </manifest>

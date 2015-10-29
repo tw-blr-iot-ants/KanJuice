@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.kanjuice.BluetoothDataReader.BluetoothDataReceiver;
+import com.example.kanjuice.BluetoothDataReader.SerialDataReceiver;
 
-public abstract class BluetoothActivity extends Activity implements BluetoothDataReceiver {
+public abstract class BluetoothActivity extends Activity implements SerialDataReceiver {
 
     public static final String TAG = "ArduinoBT";
     final BluetoothDataReader bluetoothDataReader = new BluetoothDataReader(this);
