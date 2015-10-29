@@ -428,25 +428,8 @@ public class UserInputActivity extends BluetoothActivity {
                 }
             };
 
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        BlueToothProvider blueToothProvider = getApp().getBlueToothProvider();
-//        blueToothProvider.startReading(H);
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//
-//        getApp().getBlueToothProvider().stopReading();
-//    }
-
-
     @Override
-    protected void onBluetoothDataReceived(byte[] data) {
+    public void onDataReceived(byte[] data) {
         Log.d(TAG, "Data received from BT, " + data);
         H.obtainMessage(MSG_DATA_RECEIVED, data).sendToTarget();
     }
