@@ -32,7 +32,7 @@ import static android.widget.Toast.makeText;
 import static java.lang.String.format;
 
 
-public class UserInputActivity extends BluetoothActivity {
+public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final String TAG = "UserInputActivity";
     public static final int NO_USER_ACTIVITY_FINISH_DELAY = 35000;
     public static final int ANIMATION_DURATION = 500;
@@ -304,20 +304,21 @@ public class UserInputActivity extends BluetoothActivity {
     }
 
     private void onCardNumberReceived(final int cardNumber) {
-        internalCardNumber = cardNumber;
-        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
-
-            @Override
-            public void success(User user, Response response) {
-                placeUserOrder(user);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
-            }
-        });
+        Log.d(TAG, "onCardNumberReceived: " + cardNumber);
+//        internalCardNumber = cardNumber;
+//        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+//
+//            @Override
+//            public void success(User user, Response response) {
+//                placeUserOrder(user);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
+//                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
+//            }
+//        });
     }
 
     private void placeUserOrder(final User user) {
@@ -394,11 +395,15 @@ public class UserInputActivity extends BluetoothActivity {
         return Integer.valueOf(binaryNumber.substring(binaryNumber.length() - 17, binaryNumber.length() - 1), 2);
     }
 
+//
+//    @Override
+//    public void onDataReceived(byte[] data) {
+//        Log.d(TAG, "Data received from BT, " + data);
+//        H.obtainMessage(MSG_DATA_RECEIVED, data).sendToTarget();
+//    }
 
     @Override
-    public void onDataReceived(byte[] data) {
-        Log.d(TAG, "Data received from BT, " + data);
-        H.obtainMessage(MSG_DATA_RECEIVED, data).sendToTarget();
+    protected Handler getHandler() {
+        return H;
     }
-
 }

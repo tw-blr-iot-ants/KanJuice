@@ -12,16 +12,18 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BluetoothDataReader {
-    BluetoothAdapter mBluetoothAdapter;
-    BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
-    OutputStream mmOutputStream;
-    InputStream mmInputStream;
-    Thread workerThread;
-    byte[] readBuffer;
-    int readBufferPosition;
-    int counter;
-    volatile boolean stopWorker;
+
+    public static final String TAG = "BluetoothDataReader";
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket mmSocket;
+    private BluetoothDevice mmDevice;
+    private OutputStream mmOutputStream;
+    private InputStream mmInputStream;
+    private Thread workerThread;
+    private byte[] readBuffer;
+    private int readBufferPosition;
+    private int counter;
+    private volatile boolean stopWorker;
     private SerialDataReceiver receiver;
 
     public interface SerialDataReceiver {
@@ -37,7 +39,7 @@ public class BluetoothDataReader {
             closeBT();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(BluetoothActivity.TAG, "Failed to close BT with exception : " + e.getMessage());
+            Log.d(TAG, "Failed to close BT with exception : " + e.getMessage());
         }
     }
 
@@ -47,14 +49,14 @@ public class BluetoothDataReader {
             openBT();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(BluetoothActivity.TAG, "Failed to open BT with exception : " + e.getMessage());
+            Log.d(TAG, "Failed to open BT with exception : " + e.getMessage());
         }
     }
 
     void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            Log.d(BluetoothActivity.TAG, "No bluetooth adapter available");
+            Log.d(TAG, "No bluetooth adapter available");
         }
 
 //        if (!mBluetoothAdapter.isEnabled()) {
@@ -66,8 +68,8 @@ public class BluetoothDataReader {
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 mmDevice = device;
-                Log.v(BluetoothActivity.TAG, "findBT found device named " + mmDevice.getName());
-                Log.v(BluetoothActivity.TAG, "device address is " + mmDevice.getAddress());
+                Log.v(TAG, "findBT found device named " + mmDevice.getName());
+                Log.v(TAG, "device address is " + mmDevice.getAddress());
                 break;
             }
         }
@@ -79,7 +81,7 @@ public class BluetoothDataReader {
         mmSocket.connect();
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
-        Log.d(BluetoothActivity.TAG, "Bluetooth Opened");
+        Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
 
     }
@@ -97,7 +99,7 @@ public class BluetoothDataReader {
                         int read = mmInputStream.read(packetBytes);
                         if (read > 0) {
                             String data = new String(packetBytes);
-                            Log.d(BluetoothActivity.TAG, "byetes:  : " + data);
+                            Log.d(TAG, "byetes:  : " + data);
                             receiver.onDataReceived(packetBytes);
 
 
@@ -117,7 +119,7 @@ public class BluetoothDataReader {
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        Log.d(BluetoothActivity.TAG, "Bluetooth Closed");
+        Log.d(TAG, "Bluetooth Closed");
     }
 
     public void setStopWorker(boolean stopWorker) {

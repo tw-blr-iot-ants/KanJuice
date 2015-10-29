@@ -41,6 +41,12 @@ public class JuiceMenuActivity extends Activity  {
         setupViews();
 
         fetchMenu();
+
+        startBluetoothDataReaderService();
+    }
+
+    private void startBluetoothDataReaderService() {
+        startService(new Intent(this, BluetoothReaderService.class));
     }
 
     @Override
