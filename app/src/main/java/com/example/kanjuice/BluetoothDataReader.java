@@ -14,16 +14,21 @@ import java.util.UUID;
 public class BluetoothDataReader {
 
     public static final String TAG = "BluetoothDataReader";
+    public static final java.util.UUID BLUETOOTH_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothSocket mmSocket;
-    private BluetoothDevice mmDevice;
+    private BluetoothSocket socket;
+    private BluetoothDevice arduinoDevice;
+
     private OutputStream mmOutputStream;
     private InputStream mmInputStream;
     private Thread workerThread;
     private byte[] readBuffer;
+
     private int readBufferPosition;
     private int counter;
     private volatile boolean stopWorker;
+
     private SerialDataReceiver receiver;
 
     public interface SerialDataReceiver {
@@ -45,8 +50,7 @@ public class BluetoothDataReader {
 
     boolean openConnection() {
         try {
-            findBT();
-            return openBT();
+            return openBT(findBT());
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "Failed to open BT with exception : " + e.getMessage());
@@ -54,7 +58,7 @@ public class BluetoothDataReader {
         }
     }
 
-    private void findBT() {
+    private BluetoothDevice findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Log.d(TAG, "No bluetooth adapter available");
@@ -68,20 +72,24 @@ public class BluetoothDataReader {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                mmDevice = device;
-                Log.v(TAG, "findBT found device named " + mmDevice.getName());
-                Log.v(TAG, "device address is " + mmDevice.getAddress());
+                arduinoDevice = device;
+                Log.v(TAG, "findBT found device named " + arduinoDevice.getName());
+                Log.v(TAG, "device address is " + arduinoDevice.getAddress());
                 break;
             }
         }
+        return arduinoDevice;
     }
 
-    private boolean openBT() throws IOException {
-        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-        mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-        mmSocket.connect();
-        mmOutputStream = mmSocket.getOutputStream();
-        mmInputStream = mmSocket.getInputStream();
+    private boolean openBT(BluetoothDevice arduinoDevice) throws IOException {
+        if (arduinoDevice == null) {
+            return false;
+        }
+
+        socket = arduinoDevice.createRfcommSocketToServiceRecord(BLUETOOTH_UUID);
+        socket.connect();
+        mmOutputStream = socket.getOutputStream();
+        mmInputStream = socket.getInputStream();
         Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
         return true;
@@ -102,8 +110,6 @@ public class BluetoothDataReader {
                             String data = new String(packetBytes);
                             Log.d(TAG, "byetes:  : " + data);
                             receiver.onDataReceived(packetBytes);
-
-
                         }
                     } catch (IOException ex) {
                         setStopWorker(true);
@@ -119,7 +125,7 @@ public class BluetoothDataReader {
         setStopWorker(true);
         mmOutputStream.close();
         mmInputStream.close();
-        mmSocket.close();
+        socket.close();
         Log.d(TAG, "Bluetooth Closed");
     }
 

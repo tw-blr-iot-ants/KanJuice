@@ -46,6 +46,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private static final int MSG_FINISH = 101;
     public static final int MSG_DATA_RECEIVED = 102;
+    public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -57,6 +58,11 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                      UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
                     break;
 
+                case MSG_FAILED_BLUETOOTH_CONNECTION:
+                    Toast.makeText(UserInputActivity.this,
+                            "Failed to connect to bluetooth device",
+                            Toast.LENGTH_LONG).show();
+                    break;
             }
         }
     };
@@ -305,20 +311,20 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private void onCardNumberReceived(final int cardNumber) {
         Log.d(TAG, "onCardNumberReceived: " + cardNumber);
-//        internalCardNumber = cardNumber;
-//        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
-//
-//            @Override
-//            public void success(User user, Response response) {
-//                placeUserOrder(user);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
-//                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
-//            }
-//        });
+        internalCardNumber = cardNumber;
+        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+
+            @Override
+            public void success(User user, Response response) {
+                placeUserOrder(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
+                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
+            }
+        });
     }
 
     private void placeUserOrder(final User user) {
@@ -394,13 +400,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
         return Integer.valueOf(binaryNumber.substring(binaryNumber.length() - 17, binaryNumber.length() - 1), 2);
     }
-
-//
-//    @Override
-//    public void onDataReceived(byte[] data) {
-//        Log.d(TAG, "Data received from BT, " + data);
-//        H.obtainMessage(MSG_DATA_RECEIVED, data).sendToTarget();
-//    }
 
     @Override
     protected Handler getHandler() {

@@ -1,7 +1,6 @@
 package com.example.kanjuice;
 
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +17,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public static final String TAG = "BluetoothReaderService";
 
     final BluetoothDataReader bluetoothDataReader;
+    private boolean isConnected;
 
     private static final int MSG_INITIALIZE_BLUETOOTH = 501;
 
@@ -26,7 +26,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         public void handleMessage(Message msg) {
             switch(msg.what) {
                 case MSG_INITIALIZE_BLUETOOTH:
-                    bluetoothDataReader.openConnection();
+                    isConnected = bluetoothDataReader.openConnection();
                     break;
             }
         }
@@ -42,7 +42,6 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         }
     }
 
-    private boolean connectionClosed;
     private BroadcastReceiver stateChangeListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -50,7 +49,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
             Log.d(TAG, "BluetoothConnectionStatechange: " + state);
             if (state.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
                 bluetoothDataReader.closeConnection();
-                connectionClosed = true;
+                isConnected = false;
             }
         }
     };
@@ -101,9 +100,11 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     }
 
     public void startListening(Handler clientHandler) {
-        if (connectionClosed) {
-            bluetoothDataReader.openConnection();
-            connectionClosed = false;
+        if (!isConnected) {
+            isConnected = bluetoothDataReader.openConnection();
+            if (!isConnected) {
+                clientHandler.obtainMessage(UserInputActivity.MSG_FAILED_BLUETOOTH_CONNECTION).sendToTarget();
+            }
         }
 
         this.clientHandler = clientHandler;
@@ -113,6 +114,5 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public void stopListening() {
         clientListening = false;
         clientHandler = null;
-
     }
 }

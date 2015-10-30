@@ -1,99 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kanjuice"
-    android:versionCode="1"
-    android:versionName="1.0" >
+<manifest package="com.example.kanjuice"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="14" />
+        android:targetSdkVersion="14"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-feature android:name="android.hardware.usb.host"/>
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        android:maxSdkVersion="18"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+        android:maxSdkVersion="18"/>
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application
         android:name=".KanJuiceApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".JuiceMenuActivity"
             android:label="@string/app_title"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.HOME" /> -->
             <!-- <category android:name="android.intent.category.DEFAULT" /> -->
             <!-- </intent-filter> -->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".UserInputActivity"
             android:label="@string/title_activity_user_input"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateHidden" >
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" /> -->
-            <!-- </intent-filter> -->
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
+                android:resource="@xml/device_filter"/>
         </activity>
         <activity
             android:name=".AdminActivity"
             android:label="@string/title_activity_admin"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         </activity>
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
 
-        <!-- <activity -->
-        <!-- android:name=".BluetoothActivity" -->
-        <!-- android:label="@string/title_activity_register" -->
-        <!-- android:screenOrientation="landscape"> -->
-        <!-- &lt;!&ndash;<intent-filter>&ndash;&gt; -->
-        <!-- &lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt; -->
-        <!-- &lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt; -->
-        <!-- &lt;!&ndash;</intent-filter>&ndash;&gt; -->
-        <!-- </activity> -->
         <service
             android:name=".BluetoothReaderService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
         </service>
     </application>
 
