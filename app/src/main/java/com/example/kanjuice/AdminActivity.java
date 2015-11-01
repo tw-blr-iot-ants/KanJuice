@@ -17,8 +17,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedString;
 
 
-public class AdminActivity extends Activity {
-
+public class AdminActivity extends Activity implements CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "Admin";
     private ListAvailAdapter adapter;
@@ -42,36 +41,25 @@ public class AdminActivity extends Activity {
 
     private void setupViews() {
         ListView list = (ListView) findViewById(R.id.list);
-        List<Juice> juices = new ArrayList<>();
-        adapter = new ListAvailAdapter(this, juices);
+        adapter = new ListAvailAdapter(this, new ArrayList<Juice>());
         list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Juice juice = (Juice) view.getTag();
-                if (juice != null) {
-                    juice.available = !juice.available;
-                    setJuiceAvailability(juice);
-                }
-            }
-        });
-
     }
 
     private void setJuiceAvailability(final Juice juice) {
-//        getJuiceServer().updateJuice(new TypedString(juice.toJson()), new Callback<Response>() {
-//
-//            @Override
-//            public void success(Response response, Response response2) {
-//
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//
-//            }
-//        });
+        Log.d(TAG, "setJuiceAvailability: "  + juice.asJson());
+        getJuiceServer().updateJuice(new TypedJsonString(juice.asJson()), new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Updated juice availibility");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "failed to update  juice availibility");
+                juice.available = !juice.available;
+            }
+        });
     }
 
     private void fetchMenu() {
@@ -94,14 +82,26 @@ public class AdminActivity extends Activity {
             }
         });
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Juice juice = (Juice) buttonView.getTag();
+        if (juice != null) {
+            juice.available = !juice.available;
+            setJuiceAvailability(juice);
+        }
+    }
+
     public static class ListAvailAdapter extends BaseAdapter {
 
+        private AdminActivity adminActivity;
         private final List<Juice> juices;
         private LayoutInflater inflater;
 
-        public ListAvailAdapter(Context context, List<Juice> juices) {
+        public ListAvailAdapter(AdminActivity adminActivity, List<Juice> juices) {
+            this.adminActivity = adminActivity;
             this.juices = juices;
-            inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) adminActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -121,9 +121,12 @@ public class AdminActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView == null ? inflater.inflate(R.layout.juice_avail_item, parent, false) : convertView;
-            Juice juice = (Juice) getItem(position);
+            View view = inflater.inflate(R.layout.juice_avail_item, parent, false);
+            bind(view, (Juice) getItem(position));
+            return view;
+        }
 
+        private void bind(View view, final Juice juice) {
             TextView titleView = (TextView) view.findViewById(R.id.title);
             titleView.setText(juice.name);
 
@@ -132,10 +135,10 @@ public class AdminActivity extends Activity {
 
             CheckBox availabilityView = (CheckBox) view.findViewById(R.id.availability);
             availabilityView.setChecked(juice.available);
+            availabilityView.setOnCheckedChangeListener(adminActivity);
+            availabilityView.setTag(juice);
 
             view.setTag(juice);
-            return view;
-
         }
 
         public void addAll(List<Juice> juices) {

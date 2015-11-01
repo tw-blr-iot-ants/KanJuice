@@ -22,8 +22,8 @@ public interface JuiceServer {
     @POST("/api/orders")
     public void placeOrder(@Body TypedJsonString orderJson, Callback<Response> cb);
 
-    @PUT("/api/beverages/updateWithUpsert")
-    void updateJuice(String body, Callback<Response> cb);
+    @POST("/api/beverages/updateWithUpsert")
+    void updateJuice(@Body TypedJsonString body, Callback<Response> cb);
 
     @POST("/api/register/")
     public void register(@Body TypedJsonString userJson, Callback<Response> cb);

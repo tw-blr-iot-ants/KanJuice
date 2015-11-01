@@ -20,7 +20,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     private static final String TAG = "JuiceAdapter";
     public static final int ANIMATION_DURATION = 500;
-    private final ArrayList<JuiceItem> juiceItems;
+    private ArrayList<JuiceItem> juiceItems;
     private final LayoutInflater inflater;
 
     private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.four, R.id.five};
@@ -28,10 +28,6 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     public JuiceAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         juiceItems = new ArrayList<>();
-//
-//        for (int i = 0; i < 20; i ++) {
-//            juiceItems.add(new JuiceItem("Water Mellon" + i, "ಕಲ್ಲಂಗಡಿ", R.drawable.watermelon));
-//        }
     }
 
     @Override
@@ -122,7 +118,6 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             });
             anim1.start();
         }
-
     }
 
     private void showContent(ViewHolder h, JuiceItem juiceItem) {
@@ -201,6 +196,8 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     }
 
     public void addAll(List<Juice> juices) {
+        juiceItems = new ArrayList<>();
+
         for(Juice juice : juices) {
             if(juice.available) {
                 juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));

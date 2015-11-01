@@ -40,8 +40,6 @@ public class JuiceMenuActivity extends Activity  {
 
         setupViews();
 
-        fetchMenu();
-
         startBluetoothDataReaderService();
     }
 
@@ -60,6 +58,8 @@ public class JuiceMenuActivity extends Activity  {
         super.onResume();
 
         exitMultiSelectMode();
+
+        fetchMenu();
     }
 
     @Override
@@ -209,7 +209,6 @@ public class JuiceMenuActivity extends Activity  {
         juicesView.setAdapter(adapter);
     }
 
-
     private void exitMultiSelectMode() {
         adapter.reset();
 
@@ -252,7 +251,4 @@ public class JuiceMenuActivity extends Activity  {
         intent.putExtra("juices", juiceItems);
         startActivity(intent);
     }
-
-
-
 }
