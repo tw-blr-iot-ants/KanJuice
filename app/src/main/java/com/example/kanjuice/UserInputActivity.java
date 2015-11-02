@@ -228,8 +228,12 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_ADMIN) {
             finish();
-        } else if (requestCode == REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
-            registerUser(getUserFromIntent(data));
+        } else if (requestCode == REQUEST_CODE_REGISTER) {
+            if(resultCode == RESULT_OK) {
+                registerUser(getUserFromIntent(data));
+            } else {
+                H.sendEmptyMessage(MSG_FINISH);
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
