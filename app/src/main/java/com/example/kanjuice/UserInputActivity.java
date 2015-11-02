@@ -239,7 +239,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         getJuiceServer().register(new TypedJsonString(user.toJson()), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                placeUserOrder(user);
+                placeUserOrder(user, false);
             }
 
             @Override
@@ -298,13 +298,14 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void success(final User user, Response response) {
-                placeUserOrder(user);
+                placeUserOrder(user, false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
                 orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
+                setRegisterButtonVisibility(false);
             }
         });
     }
@@ -316,18 +317,18 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void success(User user, Response response) {
-                placeUserOrder(user);
+                placeUserOrder(user, true);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber, 8000);
+                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber, 6500);
             }
         });
     }
 
-    private void placeUserOrder(final User user) {
+    private void placeUserOrder(final User user, final boolean allowRegistration) {
         if (user == null) {
             orderFinished(false, "Failed to fetch your information");
             return;
@@ -344,9 +345,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to place your order: " + error.getMessage());
-                if (!user.internalNumber.isEmpty()) {
-                    setRegisterButtonVisibility(true);
-                }
+                setRegisterButtonVisibility(allowRegistration ? true : false);
                 orderFinished(false, "Sorry!, Problem facing your order");
             }
         });
