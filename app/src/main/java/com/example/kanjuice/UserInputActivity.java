@@ -155,6 +155,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void showRegisterScreen() {
+        H.removeMessages(MSG_FINISH);
         startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_CODE_REGISTER);
     }
 
@@ -212,7 +213,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         if (whichEgg.equals("999")) {
             showAdminPage(whichEgg);
         } else if (whichEgg.equals("888")) {
-            H.removeMessages(MSG_FINISH);
             showRegisterScreen();
         } else if (whichEgg.equals("777")) {
             AndroidUtils.clearKanJuiceAsDefaultApp(this);
@@ -338,7 +338,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             public void success(Response response, Response response2) {
                 Log.d(TAG, "Successfully placed your order");
                 setRegisterButtonVisibility(false);
-                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
+                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed", 50000);
             }
 
             @Override
@@ -347,7 +347,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 if (!user.internalNumber.isEmpty()) {
                     setRegisterButtonVisibility(true);
                 }
-                orderFinished(false, "Sorry!, Failed to place your order", 50000);
+                orderFinished(false, "Sorry!, Failed to place your order");
             }
         });
     }
@@ -386,11 +386,16 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private void updateReceivedData(byte[] data) {
         Log.d(TAG, "updateDataReceived " + new String(data));
-        cardNumber += new String(data);
-        if (cardNumber.contains("*")) {
-            showOrdering();
-            onCardNumberReceived(extractCardNumber(cardNumber));
+        try {
+            cardNumber += new String(data);
+            if (cardNumber.contains("*")) {
+                showOrdering();
+                onCardNumberReceived(extractCardNumber(cardNumber));
+                this.cardNumber = "";
+            }
+        } catch(Exception e) {
             this.cardNumber = "";
+            orderFinished(false, "Problem reading your card number");
         }
     }
 
