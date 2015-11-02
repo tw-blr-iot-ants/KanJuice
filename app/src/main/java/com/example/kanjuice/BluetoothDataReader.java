@@ -20,7 +20,6 @@ public class BluetoothDataReader {
     private BluetoothSocket socket;
     private BluetoothDevice arduinoDevice;
 
-    private OutputStream mmOutputStream;
     private InputStream mmInputStream;
     private Thread workerThread;
     private byte[] readBuffer;
@@ -88,7 +87,6 @@ public class BluetoothDataReader {
 
         socket = arduinoDevice.createRfcommSocketToServiceRecord(BLUETOOTH_UUID);
         socket.connect();
-        mmOutputStream = socket.getOutputStream();
         mmInputStream = socket.getInputStream();
         Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
@@ -123,9 +121,16 @@ public class BluetoothDataReader {
 
     private void closeBT() throws IOException {
         setStopWorker(true);
-        mmOutputStream.close();
-        mmInputStream.close();
-        socket.close();
+
+        if (mmInputStream != null) {
+            mmInputStream.close();
+            mmInputStream = null;
+        }
+
+        if (socket != null) {
+            socket.close();
+            socket = null;
+        }
         Log.d(TAG, "Bluetooth Closed");
     }
 

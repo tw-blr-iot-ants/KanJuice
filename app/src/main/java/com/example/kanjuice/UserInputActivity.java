@@ -34,9 +34,9 @@ import static java.lang.String.format;
 
 public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final String TAG = "UserInputActivity";
-    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 35000;
+    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 10000;
     public static final int ANIMATION_DURATION = 500;
-    public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2000;
+    public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2500;
 
     private static final int REQUEST_CODE_ADMIN = 1001;
     private static final int REQUEST_CODE_REGISTER = 1002;
@@ -322,7 +322,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber);
+                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber, 8000);
             }
         });
     }
@@ -338,7 +338,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             public void success(Response response, Response response2) {
                 Log.d(TAG, "Successfully placed your order");
                 setRegisterButtonVisibility(false);
-                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed", 50000);
+                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
             }
 
             @Override
@@ -347,7 +347,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 if (!user.internalNumber.isEmpty()) {
                     setRegisterButtonVisibility(true);
                 }
-                orderFinished(false, "Sorry!, Failed to place your order");
+                orderFinished(false, "Sorry!, Problem facing your order");
             }
         });
     }
@@ -394,6 +394,8 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 this.cardNumber = "";
             }
         } catch(Exception e) {
+            Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
+            e.printStackTrace();
             this.cardNumber = "";
             orderFinished(false, "Problem reading your card number");
         }
@@ -403,7 +405,11 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         Log.d(TAG, "Card# " + readString);
         String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
         String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
-        return Integer.valueOf(binaryNumber.substring(binaryNumber.length() - 17, binaryNumber.length() - 1), 2);
+        int startIndex = binaryNumber.length() - 17;
+        if (startIndex < 0) {
+            startIndex = 0;
+        }
+        return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
     }
 
     @Override

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.kanjuice.AdminActivity"/>
+      <point      
+        x = "728"      
+        y = "452"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.kanjuice.UserInputActivity"/>
+      <point      
+        x = "728"      
+        y = "472"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.kanjuice.RegisterActivity"/>
+      <point      
+        x = "1220"      
+        y = "908"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.kanjuice.JuiceMenuActivity"/>
+      <point      
+        x = "120"      
+        y = "-144"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>
