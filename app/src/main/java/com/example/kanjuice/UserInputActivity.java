@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -112,7 +113,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         messageView = (TextView) findViewById(R.id.message);
 
         TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setText(format("You have selected %s", getJuiceCount(juices)));
+        titleView.setText(Html.fromHtml(format("You have selected <b>%s</b>", getJuiceCount(juices))));
 
         cardNumberView = (TextView) findViewById(R.id.card_number);
 

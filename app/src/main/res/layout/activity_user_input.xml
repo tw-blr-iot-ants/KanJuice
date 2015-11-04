@@ -33,13 +33,13 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/swipe_your_card"
-            android:textSize="30dp"/>
+            android:textSize="40dp"/>
 
     </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="320dp"
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/input_help_layout_top_margin"
         android:weightSum="100">
@@ -51,6 +51,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             card_view:cardBackgroundColor="@drawable/card_background"
             card_view:cardCornerRadius="1dp"
             card_view:cardElevation="2dp"
@@ -64,7 +65,7 @@
                 android:layout_gravity="center"
                 android:padding="20dp"
                 android:text="@string/swipe_your_card"
-                android:textSize="20dp"/>
+                android:textSize="24dp"/>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -74,6 +75,7 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             card_view:cardBackgroundColor="@drawable/card_background"
             card_view:cardCornerRadius="1dp"
             card_view:cardElevation="2dp"
@@ -95,6 +97,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             card_view:cardBackgroundColor="@drawable/card_background"
             card_view:cardCornerRadius="1dp"
             card_view:cardElevation="2dp"
@@ -109,10 +112,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:padding="10dp"
                     android:text="@string/enter_your_euid"
-                    android:textSize="20dp"/>
+                    android:textSize="24dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -144,7 +147,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/go"
-                        android:textSize="20dp"/>
+                        android:textSize="24dp"/>
                 </LinearLayout>
 
             </LinearLayout>
