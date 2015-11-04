@@ -326,8 +326,8 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given cardNumber : " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for card number : " + cardNumber, 6500);
+                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
+                orderFinished(false, "Your card is not registered" , 6500);
             }
         });
     }
