@@ -351,7 +351,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to place your order: " + error.getMessage());
                 setRegisterButtonVisibility(allowRegistration ? true : false);
-                orderFinished(false, "Sorry!, Problem facing your order");
+                orderFinished(false, "Sorry! Problem placing your order");
             }
         });
     }
@@ -368,6 +368,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private Order constructOrder(User user) {
         Order order = new Order();
         order.employeeId = user.empId;
+        order.employeeName = user.employeeName;
         for(Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
             order.addDrink(item.juiceName, item.selectedQuantity);

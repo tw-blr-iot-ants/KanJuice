@@ -10,6 +10,7 @@ import retrofit.mime.TypedString;
 public class Order {
     public String employeeId;
     public List<Drink> drinks = new ArrayList<>();
+    public String employeeName;
 
     public static class Drink {
         public String name;
@@ -23,8 +24,8 @@ public class Order {
         return drink;
     }
 
-    public void addDrink(String name, int quality) {
-        drinks.add(newDrink(name, quality));
+    public void addDrink(String name, int quantity) {
+        drinks.add(newDrink(name, quantity));
     }
 
     public String asJson() {
