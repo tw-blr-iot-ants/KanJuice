@@ -244,7 +244,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         getJuiceServer().register(new TypedJsonString(user.toJson()), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                placeUserOrder(user, false);
+                placeUserOrder(user, false, true);
             }
 
             @Override
@@ -303,7 +303,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void success(final User user, Response response) {
-                placeUserOrder(user, false);
+                placeUserOrder(user, false, false);
             }
 
             @Override
@@ -322,7 +322,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void success(User user, Response response) {
-                placeUserOrder(user, true);
+                placeUserOrder(user, true, true);
             }
 
             @Override
@@ -333,13 +333,13 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         });
     }
 
-    private void placeUserOrder(final User user, final boolean allowRegistration) {
+    private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
         if (user == null) {
             orderFinished(false, "Failed to fetch your information");
             return;
         }
 
-        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user).asJson()), new Callback<Response>() {
+        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user, isSwipe).asJson()), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Log.d(TAG, "Successfully placed your order");
@@ -365,10 +365,11 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         });
     }
 
-    private Order constructOrder(User user) {
+    private Order constructOrder(User user, Boolean isSwipe) {
         Order order = new Order();
         order.employeeId = user.empId;
         order.employeeName = user.employeeName;
+        order.isSwipe = isSwipe;
         for(Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
             order.addDrink(item.juiceName, item.selectedQuantity);

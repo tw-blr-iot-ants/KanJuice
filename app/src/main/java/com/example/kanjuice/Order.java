@@ -11,6 +11,7 @@ public class Order {
     public String employeeId;
     public List<Drink> drinks = new ArrayList<>();
     public String employeeName;
+    public Boolean isSwipe;
 
     public static class Drink {
         public String name;
