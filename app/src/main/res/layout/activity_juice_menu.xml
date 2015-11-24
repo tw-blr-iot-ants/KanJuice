@@ -19,6 +19,21 @@
         android:verticalSpacing="8dp"
         android:visibility="gone"/>
 
+    <GridView
+        android:id="@+id/my_grid_footer_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_300"
+        android:columnWidth="@dimen/juice_item_width"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@android:color/holo_blue_bright"
+        android:numColumns="auto_fit"
+        android:padding="10dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="8dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/action_button_layout"
         android:layout_width="wrap_content"

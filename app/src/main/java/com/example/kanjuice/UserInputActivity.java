@@ -3,8 +3,6 @@ package com.example.kanjuice;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,8 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -48,6 +44,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final int MSG_FINISH = 101;
     public static final int MSG_DATA_RECEIVED = 102;
     public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
+    public static final int MSG_SHOW_REGISTRATION_SCREEN = 104;
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -64,6 +61,11 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                             "Failed to connect to bluetooth device",
                             Toast.LENGTH_LONG).show();
                     break;
+
+                case MSG_SHOW_REGISTRATION_SCREEN:
+                    swipeCardView.setVisibility(View.INVISIBLE);
+                    UserInputActivity.this.showRegisterScreen();
+                    break;
             }
         }
     };
@@ -74,6 +76,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private View orLayout;
     private View orderingProgressView;
     private TextView messageView;
+    private TextView swipeCardView;
     private ImageView statusView;
     private View messageLayout;
     private int internalCardNumber;
@@ -83,10 +86,20 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_user_input);
-
         juices = getIntent().getParcelableArrayExtra("juices");
-        setupViews(juices);
+        if(isRegisterActivity()) {
+            setContentView(R.layout.swipe_card);
+            swipeCardView = (TextView) findViewById(R.id.swipe_card);
+            swipeCardView.setVisibility(View.VISIBLE);
+        }
+        else {
+            setContentView(R.layout.activity_user_input);
+            setupViews(juices);
+        }
+    }
+
+    private boolean isRegisterActivity() {
+        return ((JuiceItem)juices[0]).juiceName.equals("Register User");
     }
 
     @Override
@@ -244,7 +257,18 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         getJuiceServer().register(new TypedJsonString(user.toJson()), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                placeUserOrder(user, false, true);
+                H.sendEmptyMessage(MSG_FINISH);
+                if (isRegisterActivity()) {
+                    UserInputActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Thank you " + user.employeeName + ". Your card has been registered",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    placeUserOrder(user, false, true);
+                }
             }
 
             @Override
@@ -328,7 +352,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                orderFinished(false, "Your card is not registered" , 6500);
+                orderFinished(false, "Your card is not registered", 6500);
             }
         });
     }
@@ -404,6 +428,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             e.printStackTrace();
             this.cardNumber = "";
             orderFinished(false, "Problem reading your card number");
+        }
+        if (isRegisterActivity()) {
+            H.sendEmptyMessage(MSG_SHOW_REGISTRATION_SCREEN);
         }
     }
 

@@ -203,6 +203,9 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
                 juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
             }
         }
+        String registerUser = "Register User";
+        juiceItems.add(new JuiceItem(registerUser, JuiceDecorator.matchKannadaName(registerUser), JuiceDecorator.matchImage(registerUser)));
+
         notifyDataSetChanged();
     }
 

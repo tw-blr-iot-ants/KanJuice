@@ -186,6 +186,13 @@
             android:gravity="center"
             android:textSize="30dp"/>
 
+        <TextView
+            android:id="@+id/register_user_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="30dp"/>
+
         <Button
             android:id="@+id/register"
             android:layout_width="wrap_content"
