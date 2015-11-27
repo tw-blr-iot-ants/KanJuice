@@ -61,6 +61,7 @@ public class BluetoothDataReader {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Log.d(TAG, "No bluetooth adapter available");
+            return null;
         }
 
 //        if (!mBluetoothAdapter.isEnabled()) {
