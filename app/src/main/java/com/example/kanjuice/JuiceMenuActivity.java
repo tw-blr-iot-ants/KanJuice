@@ -21,7 +21,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class JuiceMenuActivity extends Activity  {
+public class JuiceMenuActivity extends Activity {
 
     private static final String TAG = "JuiceMenuActivity";
     private JuiceAdapter adapter;
@@ -170,6 +170,9 @@ public class JuiceMenuActivity extends Activity  {
     }
 
     private boolean onJuiceItemLongClick(int position) {
+        if(((JuiceItem) adapter.getItem(position)).juiceName.equals("Register User")) {
+            return false;
+        }
         adapter.toggleSelectionChoice(position);
         if (!isInMultiSelectMode) {
             enterMultiSelectionMode();
