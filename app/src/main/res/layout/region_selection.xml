@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/region_selection_background">
+
+    <RadioGroup
+        android:id="@+id/regions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/bangalore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/region_choice_font_size"
+            android:textColor="@color/region_choice_color"
+            android:text="@string/bangalore"/>
+        <RadioButton
+            android:id="@+id/chennai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/region_choice_font_size"
+            android:textColor="@color/region_choice_color"
+            android:text="@string/chennai"/>
+        <RadioButton
+            android:id="@+id/gurgaon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/region_choice_font_size"
+            android:textColor="@color/region_choice_color"
+            android:text="@string/gurgaon"/>
+        <RadioButton
+            android:id="@+id/hyderabad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/region_choice_font_size"
+            android:textColor="@color/region_choice_color"
+            android:text="@string/hyderabad"/>
+        <RadioButton
+            android:id="@+id/pune"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/region_choice_font_size"
+            android:textColor="@color/region_choice_color"
+            android:text="@string/pune"/>
+    </RadioGroup>
+
+</LinearLayout>

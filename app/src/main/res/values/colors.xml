@@ -5,4 +5,8 @@
     <color name="juice_item_title_background">#55ffffff</color>
     <color name="blue_300">#64B5F6</color>
     <color name="gray_300">#E0E0E0</color>
+    <color name="region_selection_background">#FF9900</color>
+    <color name="region_choice_color">#CC2900</color>
+    <color name="app_splash_company_name">#CC3399</color>
+    <color name="app_splash_app_name">#33CC33</color>
 </resources>
