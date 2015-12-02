@@ -125,7 +125,7 @@ public class JuiceMenuActivity extends Activity {
     private void decorate(List<Juice> juices) {
         for (Juice juice : juices) {
             juice.imageId = JuiceDecorator.matchImage(juice.name);
-            juice.localLangId = JuiceDecorator.matchLocalName(juice.name, selectedRegion);
+            juice.localLangId = JuiceDecorator.matchLocalName(juice.name, "bangalore");
         }
     }
 

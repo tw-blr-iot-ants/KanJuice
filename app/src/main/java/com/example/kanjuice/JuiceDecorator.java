@@ -1,23 +1,15 @@
 package com.example.kanjuice;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import java.util.HashMap;
 
 public class JuiceDecorator {
 
     private static HashMap<String, Integer> imageIdMap;
-     private static HashMap<String, HashMap> regionTextMap;
+     private static HashMap<String, HashMap<String, Integer>> regionTextMap;
     private static HashMap<String, Integer> kanTextMap;
     private static HashMap<String, Integer> tamTextMap;
 
    static {
-        regionTextMap = new HashMap<>();
-        regionTextMap.put("bangalore", kanTextMap);
-        regionTextMap.put("chennai", tamTextMap);
-
         imageIdMap = new HashMap<>();
         imageIdMap.put("amla", R.drawable.amla);
         imageIdMap.put("black jeera masala soda", R.drawable.black_jeera_masala_soda);
@@ -137,6 +129,10 @@ public class JuiceDecorator {
         tamTextMap.put("custardapple", R.string.custard_apple_tam);
         tamTextMap.put("papaya", R.string.papaya_tam);
 
+        regionTextMap = new HashMap<>();
+        regionTextMap.put("bangalore", kanTextMap);
+        regionTextMap.put("chennai", tamTextMap);
+
     }
 
     public static int matchImage(String name) {
@@ -148,7 +144,7 @@ public class JuiceDecorator {
     }
 
     public static int matchLocalName(String name, String region) {
-        Integer id = (Integer) (regionTextMap.get(region)).get(name.toLowerCase().trim());
+        Integer id = (regionTextMap.get(region)).get(name.toLowerCase().trim());
         if (id == null) {
             id = R.string.unknown;
         }
