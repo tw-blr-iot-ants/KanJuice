@@ -46,7 +46,7 @@
     <string name="sapota_kan">ಸಪೋಟ</string>
     <string name="apple_kan">ಸೇಬು</string>
     <string name="butter_fruit_kan">ಬೆಣ್ಣೆ ಹಣ್ಣು</string>
-    <string name="unknown_kan"> </string>
+    <string name="unknown"> </string>
 
     <string name="no_network_connection">No internet connection?</string>
     <string name="retry">Retry</string>
@@ -69,4 +69,31 @@
     <string name="title_activity_region_selection">Region Selection</string>
     <string name="app_splash_company_name">ThoughtWorks</string>
     <string name="app_splash_app_name">KanJuice</string>
+    <string name="amla_tam">நெல்லிக் காய்</string>
+    <string name="black_jeera_masala_soda_tam">மசாலா ஜீரகம் சோடா</string>
+    <string name="cucumber_tam">வெள்ளரிக்காய்</string>
+    <string name="ginger_lime_tam">இஞ்சி எலுமிச்சம் பழச்சாறு</string>
+    <string name="ginger_mint_lime_tam">இஞ்சி புதினா எலுமிச்சம் பழச்சாறு</string>
+    <string name="grapes_tam">திராட்சை</string>
+    <string name="jal_jeera_tam">ஜீரக தண்ணீர்</string>
+    <string name="lime_tam">எலுமிச்சை</string>
+    <string name="mint_lime_tam">புதினா எலுமிச்சம் பழச்சாறு</string>
+    <string name="muskmelon_tam">கர்பூரப்பழம்</string>
+    <string name="orange_tam">ஆரஞ்சு</string>
+    <string name="pineapple_tam">அன்னாசிப்பழம்</string>
+    <string name="salt_lime_soda_tam">உப்பு எலுமிச்சை சோடா</string>
+    <string name="soda_tam">சோடா</string>
+    <string name="sweet_and_salt_lime_soda_tam">இனிப்பு மற்றும் உப்பு எலுமிச்சை சோடா</string>
+    <string name="sweet_lime_soda_tam">இனிப்பு எலுமிச்சை சோடா</string>
+    <string name="watermelon_tam">தர்பூசணி</string>
+    <string name="banana_tam">வாழைப்பழம்</string>
+    <string name="butter_fruit_tam">வெண்ணெய் பழம்</string>
+    <string name="sapota_tam">சப்போட்டா</string>
+    <string name="apple_tam">ஆப்பிள்</string>
+    <string name="moosambi_tam">சாத்துக்குடி</string>
+    <string name="mango_tam">மாம்பழம்</string>
+    <string name="custard_apple_tam">சீத்தாப்பழம்</string>
+    <string name="papaya_tam">பப்பாளி</string>
+    <string name="mixed_fruit_tam">கலந்த பழம்</string>
+    <string name="kokum_tam">கோக்கும்</string>
 </resources>

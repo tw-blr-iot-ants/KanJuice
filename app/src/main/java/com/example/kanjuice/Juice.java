@@ -6,7 +6,7 @@ public class Juice {
     public String name;
     public boolean available;
     public int imageId;
-    public int kanId;
+    public int localLangId;
 
     public String asJson() {
         return new Gson().toJson(this);

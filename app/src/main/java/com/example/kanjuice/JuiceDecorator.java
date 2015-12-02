@@ -1,13 +1,23 @@
 package com.example.kanjuice;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.HashMap;
 
 public class JuiceDecorator {
 
     private static HashMap<String, Integer> imageIdMap;
+     private static HashMap<String, HashMap> regionTextMap;
     private static HashMap<String, Integer> kanTextMap;
+    private static HashMap<String, Integer> tamTextMap;
 
    static {
+        regionTextMap = new HashMap<>();
+        regionTextMap.put("bangalore", kanTextMap);
+        regionTextMap.put("chennai", tamTextMap);
+
         imageIdMap = new HashMap<>();
         imageIdMap.put("amla", R.drawable.amla);
         imageIdMap.put("black jeera masala soda", R.drawable.black_jeera_masala_soda);
@@ -87,6 +97,46 @@ public class JuiceDecorator {
         kanTextMap.put("custardapple", R.string.custard_apple);
         kanTextMap.put("papaya", R.string.papaya);
 
+        tamTextMap = new HashMap<>();
+        tamTextMap.put("amla", R.string.amla_tam);
+        tamTextMap.put("black jeera masala soda", R.string.black_jeera_masala_soda_tam);
+        tamTextMap.put("cucumber", R.string.cucumber_tam);
+        tamTextMap.put("ginger lime", R.string.ginger_lime_tam);
+        tamTextMap.put("ginger mint lime", R.string.ginger_mint_lime_tam);
+        tamTextMap.put("grapes", R.string.grapes_tam);
+        tamTextMap.put("grape", R.string.grapes_tam);
+        tamTextMap.put("jal jeera", R.string.jal_jeera_tam);
+        tamTextMap.put("jal jeera soda", R.string.jal_jeera_tam);
+        tamTextMap.put("kokum", R.string.kokum_tam);
+        tamTextMap.put("lime", R.string.lime_tam);
+        tamTextMap.put("mint lime", R.string.mint_lime_tam);
+        tamTextMap.put("mixed fruit", R.string.mixed_fruit_tam);
+        tamTextMap.put("mix fruit", R.string.mixed_fruit_tam);
+        tamTextMap.put("muskmelon", R.string.muskmelon_tam);
+        tamTextMap.put("musk melon", R.string.muskmelon_tam);
+        tamTextMap.put("orange", R.string.orange_tam);
+        tamTextMap.put("pineapple", R.string.pineapple_tam);
+        tamTextMap.put("salt lime soda", R.string.salt_lime_soda_tam);
+        tamTextMap.put("soda", R.string.soda_tam);
+        tamTextMap.put("sweet and salt lime soda", R.string.sweet_and_salt_lime_soda_tam);
+        tamTextMap.put("sweet & salt lime soda", R.string.sweet_and_salt_lime_soda_tam);
+        tamTextMap.put("sweet lime soda", R.string.sweet_lime_soda_tam);
+        tamTextMap.put("watermelon", R.string.watermelon_tam);
+        tamTextMap.put("water melon", R.string.watermelon_tam);
+        tamTextMap.put("banana", R.string.banana_tam);
+        tamTextMap.put("banana shake", R.string.banana_tam);
+        tamTextMap.put("butter fruit", R.string.butter_fruit_tam);
+        tamTextMap.put("butterfruit", R.string.butter_fruit_tam);
+        tamTextMap.put("sapota", R.string.sapota_tam);
+        tamTextMap.put("apple", R.string.apple_tam);
+        tamTextMap.put("mosambi", R.string.moosambi_tam);
+        tamTextMap.put("grapes", R.string.grapes_tam);
+        tamTextMap.put("grape", R.string.grapes_tam);
+        tamTextMap.put("mango", R.string.mango_tam);
+        tamTextMap.put("custard apple", R.string.custard_apple_tam);
+        tamTextMap.put("custardapple", R.string.custard_apple_tam);
+        tamTextMap.put("papaya", R.string.papaya_tam);
+
     }
 
     public static int matchImage(String name) {
@@ -97,10 +147,10 @@ public class JuiceDecorator {
         return id;
     }
 
-    public static int matchKannadaName(String name) {
-        Integer id = kanTextMap.get(name.toLowerCase().trim());
+    public static int matchLocalName(String name, String region) {
+        Integer id = (Integer) (regionTextMap.get(region)).get(name.toLowerCase().trim());
         if (id == null) {
-            id = R.string.unknown_kan;
+            id = R.string.unknown;
         }
         return id;
     }

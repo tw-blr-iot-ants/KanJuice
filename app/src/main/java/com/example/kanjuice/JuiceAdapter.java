@@ -70,7 +70,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             h.multiSelect.quantityViews.get(juiceItem.selectedQuantity - 1).setSelected(true);
         } else {
             h.singleSelect.titleView.setText(juiceItem.juiceName);
-            h.singleSelect.titleInKanView.setText(juiceItem.kanResId);
+            h.singleSelect.titleInLocalLanguageView.setText(juiceItem.localLangResId);
             h.singleSelect.imageView.setImageResource(juiceItem.imageResId);
         }
     }
@@ -138,7 +138,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         h.multiSelectView = (LinearLayout) juiceItemView.findViewById(R.id.multi_select_layout);
         h.multiSelect.titleView = (TextView) juiceItemView.findViewById(R.id.multi_select_title);
         h.singleSelect.titleView = (TextView) juiceItemView.findViewById(R.id.single_select_title);
-        h.singleSelect.titleInKanView = (TextView) juiceItemView.findViewById(R.id.single_select_title_in_kan);
+        h.singleSelect.titleInLocalLanguageView = (TextView) juiceItemView.findViewById(R.id.single_select_title_in_local_lang);
         h.singleSelect.imageView = (ImageView) juiceItemView.findViewById(R.id.image);
 
         List<View> quantityViews = new ArrayList<>();
@@ -200,11 +200,11 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         for(Juice juice : juices) {
             if(juice.available) {
-                juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
+                juiceItems.add(new JuiceItem(juice.name, juice.localLangId, juice.imageId));
             }
         }
         String registerUser = "Register User";
-        juiceItems.add(new JuiceItem(registerUser, JuiceDecorator.matchKannadaName(registerUser), JuiceDecorator.matchImage(registerUser)));
+        juiceItems.add(new JuiceItem(registerUser, JuiceDecorator.matchLocalName(registerUser, "bangalore"), JuiceDecorator.matchImage(registerUser)));
 
         notifyDataSetChanged();
     }
@@ -224,7 +224,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         public class SingleSelect {
             public TextView titleView;
-            public TextView titleInKanView;
+            public TextView titleInLocalLanguageView;
             public ImageView imageView;
         }
     }

@@ -41,12 +41,12 @@
                 android:textSize="@dimen/juice_item_title_font_size"/>
 
             <TextView
-                android:id="@+id/single_select_title_in_kan"
+                android:id="@+id/single_select_title_in_local_lang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Kannada"
-                android:textSize="@dimen/juice_item_title_font_size_in_kannada"/>
+                android:text="Local Language"
+                android:textSize="@dimen/juice_item_title_font_size_in_local_lang"/>
 
         </LinearLayout>
 

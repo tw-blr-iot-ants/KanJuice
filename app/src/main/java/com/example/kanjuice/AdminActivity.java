@@ -1,8 +1,6 @@
 package com.example.kanjuice;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -14,7 +12,6 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedString;
 
 
 public class AdminActivity extends Activity implements CompoundButton.OnCheckedChangeListener {
@@ -130,8 +127,8 @@ public class AdminActivity extends Activity implements CompoundButton.OnCheckedC
             TextView titleView = (TextView) view.findViewById(R.id.title);
             titleView.setText(juice.name);
 
-            TextView kanTitleView = (TextView) view.findViewById(R.id.title_kan);
-            kanTitleView.setText(JuiceDecorator.matchKannadaName(juice.name));
+            TextView localLangTitleView = (TextView) view.findViewById(R.id.title_local_lang);
+            localLangTitleView.setText(JuiceDecorator.matchLocalName(juice.name, "bangalore"));
 
             CheckBox availabilityView = (CheckBox) view.findViewById(R.id.availability);
             availabilityView.setChecked(juice.available);

@@ -32,13 +32,14 @@ public class JuiceMenuActivity extends Activity {
     private View noNetworkView;
     private GridView juicesView;
     private View menuLoadingView;
+    private String selectedRegion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPreferences = getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE);
-        String selectedRegion = sharedPreferences.getString("selectedRegion", null);
+        selectedRegion = sharedPreferences.getString("selectedRegion", null);
 
         setContentView(R.layout.activity_juice_menu);
 
@@ -124,7 +125,7 @@ public class JuiceMenuActivity extends Activity {
     private void decorate(List<Juice> juices) {
         for (Juice juice : juices) {
             juice.imageId = JuiceDecorator.matchImage(juice.name);
-            juice.kanId = JuiceDecorator.matchKannadaName(juice.name);
+            juice.localLangId = JuiceDecorator.matchLocalName(juice.name, selectedRegion);
         }
     }
 

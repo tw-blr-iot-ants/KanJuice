@@ -9,11 +9,11 @@ public class JuiceItem implements Parcelable {
     public int selectedQuantity;
     public boolean animate;
     public int imageResId;
-    public int kanResId;
+    public int localLangResId;
 
-    public JuiceItem(String juiceName, int kanResId, int imageId) {
+    public JuiceItem(String juiceName, int localLangResId, int imageId) {
         this.juiceName = juiceName;
-        this.kanResId = kanResId;
+        this.localLangResId = localLangResId;
         this.isMultiSelected = false;
         this.selectedQuantity = 1;
         this.imageResId = imageId;

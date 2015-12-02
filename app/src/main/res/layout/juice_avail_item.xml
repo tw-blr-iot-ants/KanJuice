@@ -18,7 +18,7 @@
             android:textSize="25sp"/>
 
         <TextView
-            android:id="@+id/title_kan"
+            android:id="@+id/title_local_lang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"/>
