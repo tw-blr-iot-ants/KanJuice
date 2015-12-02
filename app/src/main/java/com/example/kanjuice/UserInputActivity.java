@@ -63,7 +63,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     break;
 
                 case MSG_SHOW_REGISTRATION_SCREEN:
-                    swipeCardView.setVisibility(View.INVISIBLE);
                     UserInputActivity.this.showRegisterScreen();
                     break;
             }
@@ -342,19 +341,24 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private void onCardNumberReceived(final int cardNumber) {
         Log.d(TAG, "onCardNumberReceived: " + cardNumber);
         internalCardNumber = cardNumber;
-        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+        if (isRegisterActivity()) {
+            H.sendEmptyMessage(MSG_SHOW_REGISTRATION_SCREEN);
+        } else {
+            showOrdering();
+            getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
 
-            @Override
-            public void success(User user, Response response) {
-                placeUserOrder(user, true, true);
-            }
+                @Override
+                public void success(User user, Response response) {
+                    placeUserOrder(user, true, true);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                orderFinished(false, "Your card is not registered", 6500);
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
+                    orderFinished(false, "Your card is not registered", 6500);
+                }
+            });
+        }
     }
 
     private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
@@ -419,7 +423,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         try {
             cardNumber += new String(data);
             if (cardNumber.contains("*")) {
-                showOrdering();
                 onCardNumberReceived(extractCardNumber(cardNumber));
                 this.cardNumber = "";
             }
@@ -428,9 +431,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             e.printStackTrace();
             this.cardNumber = "";
             orderFinished(false, "Problem reading your card number");
-        }
-        if (isRegisterActivity()) {
-            H.sendEmptyMessage(MSG_SHOW_REGISTRATION_SCREEN);
         }
     }
 

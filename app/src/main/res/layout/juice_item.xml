@@ -121,6 +121,8 @@
 
                     <Button
                         android:id="@+id/four"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
                         android:layout_width="@dimen/quantity_width"
                         android:layout_height="@dimen/quantity_height"
                         android:background="@drawable/circle_background"
@@ -131,6 +133,8 @@
 
                     <Button
                         android:id="@+id/five"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
                         android:layout_width="@dimen/quantity_width"
                         android:layout_height="@dimen/quantity_height"
                         android:background="@drawable/circle_background"
