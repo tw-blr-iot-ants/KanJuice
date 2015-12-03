@@ -20,7 +20,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class JuiceMenuActivity extends Activity  {
+public class JuiceMenuActivity extends Activity{
 
     private static final String TAG = "JuiceMenuActivity";
     private JuiceAdapter adapter;
@@ -134,9 +134,11 @@ public class JuiceMenuActivity extends Activity  {
 
     private void setupViews() {
         juicesView = (GridView) findViewById(R.id.grid);
+
         setupAdapter(juicesView);
 
         juicesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 onJuiceItemClick(position);
@@ -170,7 +172,7 @@ public class JuiceMenuActivity extends Activity  {
 
     private boolean onJuiceItemLongClick(int position) {
         adapter.toggleSelectionChoice(position);
-        if (!isInMultiSelectMode) {
+        if (isInMultiSelectMode == false) {
             enterMultiSelectionMode();
         }
         return true;
@@ -225,6 +227,7 @@ public class JuiceMenuActivity extends Activity  {
     }
 
     private void enterMultiSelectionMode() {
+        Log.d(TAG,"calling multiselect......");
         isInMultiSelectMode = true;
 
         actionButtonLayout.setVisibility(View.VISIBLE);
@@ -243,7 +246,7 @@ public class JuiceMenuActivity extends Activity  {
     }
 
     private void gotoSwipingScreen(int position) {
-        gotoSwipingScreen(new JuiceItem[]{ (JuiceItem) adapter.getItem(position)});
+        gotoSwipingScreen(new JuiceItem[]{(JuiceItem) adapter.getItem(position)});
     }
 
     private void gotoSwipingScreen(JuiceItem[] juiceItems) {

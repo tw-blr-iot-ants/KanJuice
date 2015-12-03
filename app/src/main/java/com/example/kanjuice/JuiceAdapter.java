@@ -9,25 +9,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
+public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     private static final String TAG = "JuiceAdapter";
     public static final int ANIMATION_DURATION = 500;
     private ArrayList<JuiceItem> juiceItems;
     private final LayoutInflater inflater;
+    Context context;
 
-    private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.four, R.id.five};
+    private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.sugarless};
 
     public JuiceAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         juiceItems = new ArrayList<>();
+        this.context = context;
     }
 
     @Override
@@ -52,7 +56,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         return view;
     }
 
-    private void bind(View view, JuiceItem juiceItem) {
+    private void bind(View view, final JuiceItem juiceItem) {
         final ViewHolder h = (ViewHolder) view.getTag();
 
         if (juiceItem.animate) {
@@ -63,6 +67,10 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         if (juiceItem.isMultiSelected) {
             h.multiSelect.titleView.setText(juiceItem.juiceName);
+            if(juiceItem.isSugarless){
+                h.multiSelect.sugarlesscb.setChecked(true);
+            }
+           // h.multiSelect.sugarlesscb.setChecked(false);
             for (View v : h.multiSelect.quantityViews) {
                 v.setSelected(false);
                 v.setTag(juiceItem);
@@ -77,7 +85,9 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     private void showContentWithAnimation(final ViewHolder h, final JuiceItem juiceItem) {
         if (h.multiSelectView.getVisibility() == View.INVISIBLE && juiceItem.isMultiSelected == true) {
+            Log.d(TAG, "multiselect......." + h.multiSelectView);
             h.multiSelectView.setVisibility(View.VISIBLE);
+            h.multiSelect.sugarlesscb.setChecked(false);
             ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY", 500f, 0f);
             anim.setDuration(ANIMATION_DURATION);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -98,7 +108,7 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             anim1.start();
 
         } else if (h.multiSelectView.getVisibility() == View.VISIBLE && juiceItem.isMultiSelected == false) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY",  -0f, 500f);
+            ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY", -0f, 500f);
             anim.setDuration(ANIMATION_DURATION);
             anim.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animation) {
@@ -137,15 +147,19 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         h.singleItemView = (LinearLayout) juiceItemView.findViewById(R.id.single_select_layout);
         h.multiSelectView = (LinearLayout) juiceItemView.findViewById(R.id.multi_select_layout);
         h.multiSelect.titleView = (TextView) juiceItemView.findViewById(R.id.multi_select_title);
+        h.multiSelect.sugarlesscb = (CheckBox) juiceItemView.findViewById(R.id.sugarless);
         h.singleSelect.titleView = (TextView) juiceItemView.findViewById(R.id.single_select_title);
         h.singleSelect.titleInKanView = (TextView) juiceItemView.findViewById(R.id.single_select_title_in_kan);
         h.singleSelect.imageView = (ImageView) juiceItemView.findViewById(R.id.image);
+
+        h.multiSelect.sugarlesscb.setChecked(false);
+
 
         List<View> quantityViews = new ArrayList<>();
         for (int id : quantityNumbers) {
             quantityViews.add(juiceItemView.findViewById(id));
         }
-        h.multiSelect.quantityViews  = quantityViews;
+        h.multiSelect.quantityViews = quantityViews;
 
         for (View view : quantityViews) {
             view.setOnClickListener(this);
@@ -158,17 +172,34 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        JuiceItem selectedJuiceItem = (JuiceItem) view.getTag();
-        Log.d(TAG, "clicked on juice : " + selectedJuiceItem.juiceName
-                + " qty: " + Integer.parseInt(((TextView) view).getText().toString()));
-
-        selectedJuiceItem.selectedQuantity = Integer.parseInt(((TextView) view).getText().toString());
+        final JuiceItem selectedJuiceItem = (JuiceItem) view.getTag();
+        if (view.getId() == R.id.sugarless) {
+            if (((JuiceItem) view.getTag()).isSugarless) {
+                selectedJuiceItem.isSugarless = false;
+                Toast.makeText(context, "You selected with sugar", Toast.LENGTH_SHORT).show();
+            } else {
+                selectedJuiceItem.isSugarless = true;
+                Toast.makeText(context,"You selected sugarless",Toast.LENGTH_SHORT).show();
+            }
+            Log.d(TAG, " is sugarless : " + selectedJuiceItem.isSugarless);
+        } else{
+            Log.d(TAG, "clicked on juice : " + selectedJuiceItem.juiceName
+                    + " qty: " + Integer.parseInt(((TextView) view).getText().toString()) + " is Sugarless : " + selectedJuiceItem.isSugarless);
+            selectedJuiceItem.selectedQuantity = Integer.parseInt(((TextView) view).getText().toString());
+        }
         notifyDataSetChanged();
     }
 
     public void toggleSelectionChoice(int position) {
         juiceItems.get(position).isMultiSelected = !juiceItems.get(position).isMultiSelected;
         juiceItems.get(position).animate = true;
+        notifyDataSetChanged();
+    }
+
+    public void selectJuiceSugarless(JuiceItem juiceItem){
+        juiceItem.isMultiSelected = !juiceItem.isMultiSelected;
+        juiceItem.animate = true;
+        juiceItem.isSugarless = true;
         notifyDataSetChanged();
     }
 
@@ -186,25 +217,26 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     }
 
     public void reset() {
-        for(JuiceItem juiceItem : juiceItems) {
+        for (JuiceItem juiceItem : juiceItems) {
             juiceItem.animate = juiceItem.isMultiSelected;
             juiceItem.isMultiSelected = false;
             juiceItem.selectedQuantity = 1;
+            juiceItem.isSugarless = false;
         }
         notifyDataSetChanged();
-
     }
 
     public void addAll(List<Juice> juices) {
         juiceItems = new ArrayList<>();
 
-        for(Juice juice : juices) {
-            if(juice.available) {
-                juiceItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId));
+        for (Juice juice : juices) {
+            if (juice.available) {
+                juiceItems.add(new JuiceItem(juice.name, juice.isSugarless, juice.kanId, juice.imageId, juice.sugarlessImgId));
             }
         }
         notifyDataSetChanged();
     }
+
 
     public static class ViewHolder {
         public LinearLayout singleItemView;
@@ -217,12 +249,14 @@ class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         private class MultiSelect {
             public TextView titleView;
             public List<View> quantityViews;
+            public CheckBox sugarlesscb;
         }
 
         public class SingleSelect {
             public TextView titleView;
             public TextView titleInKanView;
             public ImageView imageView;
+            public ImageView isSugarless;
         }
     }
 

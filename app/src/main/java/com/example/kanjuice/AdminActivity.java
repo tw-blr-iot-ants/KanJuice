@@ -25,9 +25,7 @@ public class AdminActivity extends Activity implements CompoundButton.OnCheckedC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_admin);
-
         setupViews();
         fetchMenu();
     }
