@@ -83,6 +83,12 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
         <activity
+            android:name=".CardSwipeActivity"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
+        <activity
             android:name=".FruitsMenuActivity"
             android:label="@string/title_activity_fruits"
             android:screenOrientation="landscape"

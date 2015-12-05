@@ -173,7 +173,7 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private boolean onJuiceItemLongClick(int position) {
-        if(((JuiceItem) adapter.getItem(position)).juiceName.equals("Register User")) {
+        if(isRegisterActivity(position)) {
             return false;
         }
         adapter.toggleSelectionChoice(position);
@@ -184,11 +184,21 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private void onJuiceItemClick(int position) {
-        if (isInMultiSelectMode) {
-            adapter.toggleSelectionChoice(position);
-        } else {
-            gotoSwipingScreen(position);
+        if(isRegisterActivity(position)) {
+            Intent intent = new Intent(JuiceMenuActivity.this, CardSwipeActivity.class);
+            startActivity(intent);
         }
+        else {
+            if (isInMultiSelectMode) {
+                adapter.toggleSelectionChoice(position);
+            } else {
+                gotoSwipingScreen(position);
+            }
+        }
+    }
+
+    private boolean isRegisterActivity(int position) {
+        return ((JuiceItem) adapter.getItem(position)).juiceName.equals("Register User");
     }
 
     private void setupActionLayout() {

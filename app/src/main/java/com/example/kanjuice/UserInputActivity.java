@@ -39,13 +39,13 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final int REQUEST_CODE_REGISTER = 1002;
 
     private TextView cardNumberView;
-    private String cardNumber = "";
+    private Integer cardNumber = 0;
 
     private static final int MSG_FINISH = 101;
     public static final int MSG_DATA_RECEIVED = 102;
     public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
-    public static final int MSG_SHOW_REGISTRATION_SCREEN = 104;
     public static final int MSG_DATA_RECEIVE_FAILED = 105;
+
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -54,7 +54,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     UserInputActivity.this.finish();
                     break;
                 case MSG_DATA_RECEIVED:
-                     UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
+                     UserInputActivity.this.updateReceivedData((Integer) msg.obj);
                     break;
 
                 case MSG_DATA_RECEIVE_FAILED:
@@ -65,10 +65,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     Toast.makeText(UserInputActivity.this,
                             "Failed to connect to bluetooth device",
                             Toast.LENGTH_LONG).show();
-                    break;
-
-                case MSG_SHOW_REGISTRATION_SCREEN:
-                    UserInputActivity.this.showRegisterScreen();
                     break;
             }
         }
@@ -90,20 +86,10 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        juices = getIntent().getParcelableArrayExtra("juices");
-        if(isRegisterActivity()) {
-            setContentView(R.layout.swipe_card);
-            swipeCardView = (TextView) findViewById(R.id.swipe_card);
-            swipeCardView.setVisibility(View.VISIBLE);
-        }
-        else {
-            setContentView(R.layout.activity_user_input);
-            setupViews(juices);
-        }
-    }
+        setContentView(R.layout.activity_user_input);
 
-    private boolean isRegisterActivity() {
-        return ((JuiceItem)juices[0]).juiceName.equals("Register User");
+        juices = getIntent().getParcelableArrayExtra("juices");
+        setupViews(juices);
     }
 
     @Override
@@ -261,18 +247,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         getJuiceServer().register(new TypedJsonString(user.toJson()), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                H.sendEmptyMessage(MSG_FINISH);
-                if (isRegisterActivity()) {
-                    UserInputActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "Thank you " + user.employeeName + ". Your card has been registered",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    placeUserOrder(user, false, true);
-                }
+                placeUserOrder(user, false, true);
             }
 
             @Override
@@ -346,24 +321,19 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private void onCardNumberReceived(final int cardNumber) {
         Log.d(TAG, "onCardNumberReceived: " + cardNumber);
         internalCardNumber = cardNumber;
-        if (isRegisterActivity()) {
-            H.sendEmptyMessage(MSG_SHOW_REGISTRATION_SCREEN);
-        } else {
-            showOrdering();
-            getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
 
-                @Override
-                public void success(User user, Response response) {
-                    placeUserOrder(user, true, true);
-                }
+            @Override
+            public void success(User user, Response response) {
+                placeUserOrder(user, true, true);
+            }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                    orderFinished(false, "Your card is not registered", 6500);
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
+                orderFinished(false, "Your card is not registered" , 6500);
+            }
+        });
     }
 
     private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
@@ -423,31 +393,20 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         return count == 1 ? ((JuiceItem)juices[0]).juiceName + " juice" : count + " juices";
     }
 
-    private void updateReceivedData(byte[] data) {
-        Log.d(TAG, "updateDataReceived " + new String(data));
+    private void updateReceivedData(Integer cardNumber) {
+        Log.d(TAG, "updateDataReceived " + cardNumber);
         try {
-            cardNumber += new String(data);
-            if (cardNumber.contains("*")) {
-                onCardNumberReceived(extractCardNumber(cardNumber));
-                this.cardNumber = "";
+            this.cardNumber = cardNumber;
+            if (this.cardNumber != 0) {
+                onCardNumberReceived(this.cardNumber);
+                this.cardNumber = 0;
             }
         } catch(Exception e) {
             Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
             e.printStackTrace();
-            this.cardNumber = "";
+            this.cardNumber = 0;
             orderFinished(false, "Problem reading your card number");
         }
-    }
-
-    private Integer extractCardNumber(String readString) {
-        Log.d(TAG, "Card# " + readString);
-        String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
-        String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
-        int startIndex = binaryNumber.length() - 17;
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
     }
 
     @Override

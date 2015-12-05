@@ -102,6 +102,7 @@ public class BluetoothDataReader {
                         }
                     } catch (IOException ex) {
                         setStopWorker(true);
+                        receiver.onDataReceiveFail(ex.getMessage());
                     }
                 }
             }
