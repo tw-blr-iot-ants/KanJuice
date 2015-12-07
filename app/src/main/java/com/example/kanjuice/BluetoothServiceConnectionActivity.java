@@ -65,6 +65,4 @@ public abstract class BluetoothServiceConnectionActivity extends Activity {
     }
 
     protected abstract Handler getHandler();
-
-
 }

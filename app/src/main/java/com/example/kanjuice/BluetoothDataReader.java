@@ -24,14 +24,13 @@ public class BluetoothDataReader {
     private Thread workerThread;
     private byte[] readBuffer;
 
-    private int readBufferPosition;
-    private int counter;
     private volatile boolean stopWorker;
 
     private SerialDataReceiver receiver;
 
     public interface SerialDataReceiver {
         void onDataReceived(byte[] data);
+        void onDataReceiveFail(String message);
     }
 
     public BluetoothDataReader(SerialDataReceiver receiver) {
@@ -64,11 +63,6 @@ public class BluetoothDataReader {
             return null;
         }
 
-//        if (!mBluetoothAdapter.isEnabled()) {
-//            Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            bluetoothActivity.startActivityForResult(enableBluetooth, 0);
-//        }
-
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
@@ -89,14 +83,12 @@ public class BluetoothDataReader {
         socket = arduinoDevice.createRfcommSocketToServiceRecord(BLUETOOTH_UUID);
         socket.connect();
         mmInputStream = socket.getInputStream();
-        Log.d(TAG, "Bluetooth Opened");
         beginListenForData();
         return true;
     }
 
     private void beginListenForData() {
         setStopWorker(false);
-        readBufferPosition = 0;
         readBuffer = new byte[1024];
         workerThread = new Thread(new Runnable() {
             public void run() {
@@ -106,8 +98,6 @@ public class BluetoothDataReader {
                         byte[] packetBytes = new byte[bytesAvailable];
                         int read = mmInputStream.read(packetBytes);
                         if (read > 0) {
-                            String data = new String(packetBytes);
-                            Log.d(TAG, "byetes:  : " + data);
                             receiver.onDataReceived(packetBytes);
                         }
                     } catch (IOException ex) {

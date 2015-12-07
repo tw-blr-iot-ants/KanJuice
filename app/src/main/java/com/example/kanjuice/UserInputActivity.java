@@ -45,6 +45,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     public static final int MSG_DATA_RECEIVED = 102;
     public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
     public static final int MSG_SHOW_REGISTRATION_SCREEN = 104;
+    public static final int MSG_DATA_RECEIVE_FAILED = 105;
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -54,6 +55,10 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     break;
                 case MSG_DATA_RECEIVED:
                      UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
+                    break;
+
+                case MSG_DATA_RECEIVE_FAILED:
+                    orderFinished(false, "Failed read card details, Please try again");
                     break;
 
                 case MSG_FAILED_BLUETOOTH_CONNECTION:
