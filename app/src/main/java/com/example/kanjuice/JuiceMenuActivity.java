@@ -254,8 +254,21 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private void gotoSwipingScreen(JuiceItem[] juiceItems) {
-        Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
-        intent.putExtra("juices", juiceItems);
+        if (isFruitsSection(juiceItems)) {
+            showFruitsSection();
+        } else {
+            Intent intent = new Intent(JuiceMenuActivity.this, UserInputActivity.class);
+            intent.putExtra("juices", juiceItems);
+            startActivity(intent);
+        }
+    }
+
+    private boolean isFruitsSection(JuiceItem[] juiceItems) {
+        return juiceItems[0].juiceName.equals("Fruits");
+    }
+
+    private void showFruitsSection() {
+        Intent intent = new Intent(JuiceMenuActivity.this, FruitsMenuActivity.class);
         startActivity(intent);
     }
 }

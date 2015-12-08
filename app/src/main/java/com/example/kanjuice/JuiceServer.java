@@ -13,6 +13,9 @@ public interface JuiceServer {
     @GET("/api/beverages/juices")
     public void getJuices(Callback<List<Juice>> cb);
 
+    @GET("/api/beverages/fruits")
+    public void getFruits(Callback<List<Juice>> cb);
+
     @GET("/api/users/internalNumber/{cardNumber}")
     public void getUserByCardNumber(@Path("cardNumber") int cardNumber, Callback<User> cb);
 

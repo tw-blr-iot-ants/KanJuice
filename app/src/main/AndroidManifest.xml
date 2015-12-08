@@ -82,6 +82,12 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
+        <activity
+            android:name=".FruitsMenuActivity"
+            android:label="@string/title_activity_fruits"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
+        </activity>
 
         <service
             android:name=".BluetoothReaderService"

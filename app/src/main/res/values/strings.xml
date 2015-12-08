@@ -59,7 +59,9 @@
     <string name="enter_name_here">Name here</string>
     <string name="papaya">ಪರಂಗಿ ಹಣ್ಣು</string>
     <string name="custard_apple">ಸೀತಾಫಲ್ </string>
+    <string name="fruits">ಹಣ್ಣುಗಳು</string>
     <string name="swipe_your_card_to_register">Swipe your card to register</string>
+    <string name="title_activity_fruits">Fruits section</string>
     <string name="bangalore">Bangalore</string>
     <string name="chennai">Chennai</string>
     <string name="gurgaon">Gurgaon</string>
