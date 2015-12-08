@@ -20,8 +20,9 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity{
     private static final int MSG_REGISTER_USER = 104;
     private static final int MSG_DATA_RECEIVE_FAILED = 105;
 
-    private static final int REQUEST_CODE_REGISTER = 1002;
+    private static final int REQUEST_CODE_REGISTER = 2001;
     public static final int NO_REGISTER_ACTIVITY_FINISH_DELAY = 10000;
+
     private Integer internalnumber = 0;
 
     Handler H = new Handler() {

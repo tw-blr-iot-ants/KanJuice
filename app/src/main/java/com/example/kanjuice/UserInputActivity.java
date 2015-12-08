@@ -1,8 +1,5 @@
 package com.example.kanjuice;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,15 +28,14 @@ import static java.lang.String.format;
 
 public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final String TAG = "UserInputActivity";
-    public static final int NO_USER_ACTIVITY_FINISH_DELAY = 10000;
-    public static final int ANIMATION_DURATION = 500;
-    public static final int DELAY_BEFORE_FINISHING_ACTIVITY = 2500;
+    //    public static final int ANIMATION_DURATION = 500;
+
+    public static final int TIME_FOR_FINISHING_ACTIVITY = 2000;
+    public static final int TIIME_FOR_NO_USER_ACTIVITY_FINISH_DELAY = 10000;
+    public static final int TIME_FOR_REGISTER_DISPLAY = 6500;
 
     private static final int REQUEST_CODE_ADMIN = 1001;
     private static final int REQUEST_CODE_REGISTER = 1002;
-
-    private TextView cardNumberView;
-    private Integer cardNumber = 0;
 
     private static final int MSG_FINISH = 101;
     public static final int MSG_DATA_RECEIVED = 102;
@@ -76,11 +72,13 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private View orLayout;
     private View orderingProgressView;
     private TextView messageView;
-    private TextView swipeCardView;
     private ImageView statusView;
     private View messageLayout;
     private int internalCardNumber;
     private View registerButton;
+
+    private Integer cardNumber = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,13 +94,12 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     protected void onPause() {
         super.onPause();
         AndroidUtils.disableRecentAppsClick(this);
-        H.removeMessages(MSG_FINISH);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        H.sendEmptyMessageDelayed(MSG_FINISH, NO_USER_ACTIVITY_FINISH_DELAY);
+        H.sendEmptyMessageDelayed(MSG_FINISH, TIIME_FOR_NO_USER_ACTIVITY_FINISH_DELAY);
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -117,8 +114,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(Html.fromHtml(format("You have selected <b>%s</b>", getJuiceCount(juices))));
-
-        cardNumberView = (TextView) findViewById(R.id.card_number);
 
         findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,17 +248,76 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to register the user");
+                orderFinished(false, "Failed to register. Try again!");
+                setRegisterButtonVisibility(false);
             }
         });
     }
+
+    private void placeOrderForEuid(final String euid) {
+        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
+
+            @Override
+            public void success(final User user, Response response) {
+                placeUserOrder(user, false, false);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
+                orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
+                setRegisterButtonVisibility(false);
+            }
+        });
+    }
+
+    private void onCardNumberReceived(final int cardNumber) {
+        internalCardNumber = cardNumber;
+        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
+
+            @Override
+            public void success(User user, Response response) {
+                placeUserOrder(user, true, true);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
+                orderFinished(false, "Your card is not registered", TIME_FOR_REGISTER_DISPLAY);
+                setRegisterButtonVisibility(true);
+            }
+        });
+    }
+
+    private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
+        if (user == null) {
+            orderFinished(false, "Failed to fetch your information");
+            return;
+        }
+
+        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user, isSwipe).asJson()), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Successfully placed your order");
+                setRegisterButtonVisibility(false);
+                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Failed to place your order: " + error.getMessage());
+                setRegisterButtonVisibility(false);
+                orderFinished(false, "Sorry! Failed to place your order, Try again!");
+            }
+        });
+    }
+
 
     private User getUserFromIntent(Intent data) {
         User newUser = new User();
         newUser.employeeName = data.getStringExtra("employeeName");
         newUser.empId = data.getStringExtra("empId");
         newUser.internalNumber = String.valueOf(internalCardNumber);
-
-        Log.d(TAG, " new user registered : " + newUser.toString());
         return newUser;
     }
 
@@ -275,7 +329,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void orderFinished(final boolean isSuccess, final String message) {
-        orderFinished(isSuccess, message, DELAY_BEFORE_FINISHING_ACTIVITY);
+        orderFinished(isSuccess, message, TIME_FOR_FINISHING_ACTIVITY);
     }
 
     private void orderFinished(final boolean isSuccess, final String message, final int timeForFinish) {
@@ -299,64 +353,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-    }
-
-    private void placeOrderForEuid(final String euid) {
-        getJuiceServer().getUserByEuid(euid, new Callback<User>() {
-
-            @Override
-            public void success(final User user, Response response) {
-                placeUserOrder(user, false, false);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
-                setRegisterButtonVisibility(false);
-            }
-        });
-    }
-
-    private void onCardNumberReceived(final int cardNumber) {
-        Log.d(TAG, "onCardNumberReceived: " + cardNumber);
-        internalCardNumber = cardNumber;
-        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
-
-            @Override
-            public void success(User user, Response response) {
-                placeUserOrder(user, true, true);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                orderFinished(false, "Your card is not registered", 6500);
-            }
-        });
-    }
-
-    private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
-        if (user == null) {
-            orderFinished(false, "Failed to fetch your information");
-            return;
-        }
-
-        getJuiceServer().placeOrder(new TypedJsonString(constructOrder(user, isSwipe).asJson()), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Log.d(TAG, "Successfully placed your order");
-                setRegisterButtonVisibility(false);
-                orderFinished(true, "Thank you " + user.employeeName + "! Your order is successfully placed");
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to place your order: " + error.getMessage());
-                setRegisterButtonVisibility(allowRegistration ? true : false);
-                orderFinished(false, "Sorry! Problem placing your order");
-            }
-        });
     }
 
     private void setRegisterButtonVisibility(final boolean visible) {
@@ -394,8 +390,14 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void updateReceivedData(Integer cardNumber) {
+        if (cardNumber == 0) {
+            this.cardNumber = 0;
+            orderFinished(false, "Problem reading your card number");
+            return;
+        }
+
         showOrdering();
-        Log.d(TAG, "updateDataReceived " + cardNumber);
+
         try {
             this.cardNumber = cardNumber;
             if (this.cardNumber != 0) {

@@ -22,7 +22,6 @@ public class BluetoothDataReader {
 
     private InputStream mmInputStream;
     private Thread workerThread;
-    private byte[] readBuffer;
 
     private volatile boolean stopWorker;
 
@@ -89,7 +88,6 @@ public class BluetoothDataReader {
 
     private void beginListenForData() {
         setStopWorker(false);
-        readBuffer = new byte[1024];
         workerThread = new Thread(new Runnable() {
             public void run() {
                 while (!Thread.currentThread().isInterrupted() && !isStopWorker()) {

@@ -99,11 +99,12 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public void onDataReceived(byte[] data) {
         Log.d(TAG, "onDataReceived: " + data);
         String dataString = new String(data);
-        Integer cardNumber = 0;
-        if (dataString.contains("*")) {
-            cardNumber = extractCardNumber(dataString);
+        if (dataString.endsWith("*")) {
+            sendCardNumber(extractCardNumber(dataString));
         }
+    }
 
+    private void sendCardNumber(Integer cardNumber) {
         if (clientListening && clientHandler != null) {
             clientHandler.obtainMessage(MSG_DATA_RECEIVED, cardNumber).sendToTarget();
         }
@@ -134,13 +135,17 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     }
 
     private Integer extractCardNumber(String readString) {
-        Log.d(TAG, "Card# " + readString);
-        String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
-        String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
-        int startIndex = binaryNumber.length() - 17;
-        if (startIndex < 0) {
-            startIndex = 0;
+        try {
+            Log.d(TAG, "Card# " + readString);
+            String cardDecNumber = readString.substring(readString.indexOf("$") + 1, readString.length() - 1).trim();
+            String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
+            int startIndex = binaryNumber.length() - 17;
+            if (startIndex < 0) {
+                startIndex = 0;
+            }
+            return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
+        } catch(Exception e) {
+            return 0;
         }
-        return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
     }
 }
