@@ -164,32 +164,32 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void animateOut() {
-        ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
-        cardAnimation.setDuration(ANIMATION_DURATION);
-        cardAnimation.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animation) {
+//        ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
+//        cardAnimation.setDuration(ANIMATION_DURATION);
+//        cardAnimation.addListener(new AnimatorListenerAdapter() {
+//            public void onAnimationEnd(Animator animation) {
                 cardLayout.setVisibility(View.INVISIBLE);
-            }
-        });
-        cardAnimation.start();
+//            }
+//        });
+//        cardAnimation.start();
 
-        ObjectAnimator euidAnimation = ObjectAnimator.ofFloat(euidLayout, "translationX", 0f, 400f);
-        euidAnimation.setDuration(ANIMATION_DURATION);
-        euidAnimation.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animation) {
+//        ObjectAnimator euidAnimation = ObjectAnimator.ofFloat(euidLayout, "translationX", 0f, 400f);
+//        euidAnimation.setDuration(ANIMATION_DURATION);
+//        euidAnimation.addListener(new AnimatorListenerAdapter() {
+//            public void onAnimationEnd(Animator animation) {
                 euidLayout.setVisibility(View.INVISIBLE);
-            }
-        });
-        euidAnimation.start();
+//            }
+//        });
+//        euidAnimation.start();
 
-        ObjectAnimator orAnimation = ObjectAnimator.ofFloat(orLayout, "translationY", 0f, 400f);
-        orAnimation.setDuration(ANIMATION_DURATION);
-        orAnimation.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animation) {
+//        ObjectAnimator orAnimation = ObjectAnimator.ofFloat(orLayout, "translationY", 0f, 400f);
+//        orAnimation.setDuration(ANIMATION_DURATION);
+//        orAnimation.addListener(new AnimatorListenerAdapter() {
+//            public void onAnimationEnd(Animator animation) {
                 orLayout.setVisibility(View.INVISIBLE);
-            }
-        });
-        orAnimation.start();
+//            }
+//        });
+//        orAnimation.start();
     }
 
     private KanJuiceApp getApp() {
@@ -215,7 +215,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private void handleEasterEggs(String whichEgg) {
         if (whichEgg.equals("999")) {
-            showAdminPage(whichEgg);
+            showAdminPage();
         } else if (whichEgg.equals("888")) {
             showRegisterScreen();
         } else if (whichEgg.equals("777")) {
@@ -223,7 +223,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         }
     }
 
-    private void showAdminPage(String cardNumber) {
+    private void showAdminPage() {
         H.removeMessages(MSG_FINISH);
         startActivityForResult(new Intent(this, AdminActivity.class), REQUEST_CODE_ADMIN);
     }
@@ -331,7 +331,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                orderFinished(false, "Your card is not registered" , 6500);
+                orderFinished(false, "Your card is not registered", 6500);
             }
         });
     }
