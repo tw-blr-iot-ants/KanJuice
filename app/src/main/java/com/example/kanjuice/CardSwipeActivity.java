@@ -66,8 +66,6 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity{
         setContentView(R.layout.swipe_card);
 
         swipeCardTextView = (TextView) findViewById(R.id.swipe_card);
-
-        registerNewUser(8987);
     }
 
     private void registerNewUser(Integer internalnumber) {
