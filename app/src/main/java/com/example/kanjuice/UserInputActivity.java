@@ -394,6 +394,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void updateReceivedData(Integer cardNumber) {
+        showOrdering();
         Log.d(TAG, "updateDataReceived " + cardNumber);
         try {
             this.cardNumber = cardNumber;
