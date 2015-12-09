@@ -1,12 +1,15 @@
 package com.example.kanjuice;
 
 
+import com.example.kanjuice.models.Juice;
+import com.example.kanjuice.models.User;
+import com.example.kanjuice.utils.TypedJsonString;
+
 import java.util.List;
 
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.*;
-import retrofit.mime.TypedString;
 
 public interface JuiceServer {
 

@@ -6,7 +6,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.kanjuice.AdminActivity"/>
+        className = "com.example.kanjuice.activities.AdminActivity"/>
       <point      
         x = "728"      
         y = "452"/>
@@ -14,7 +14,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.kanjuice.UserInputActivity"/>
+        className = "com.example.kanjuice.activities.UserInputActivity"/>
       <point      
         x = "728"      
         y = "472"/>
@@ -22,7 +22,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.kanjuice.RegisterActivity"/>
+        className = "com.example.kanjuice.activities.RegisterActivity"/>
       <point      
         x = "1220"      
         y = "908"/>
@@ -30,7 +30,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.kanjuice.JuiceMenuActivity"/>
+        className = "com.example.kanjuice.activities.JuiceMenuActivity"/>
       <point      
         x = "120"      
         y = "-144"/>

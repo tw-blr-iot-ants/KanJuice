@@ -12,10 +12,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import static com.example.kanjuice.UserInputActivity.MSG_DATA_RECEIVED;
-import static com.example.kanjuice.UserInputActivity.MSG_DATA_RECEIVE_FAILED;
-import static com.example.kanjuice.UserInputActivity.MSG_FAILED_BLUETOOTH_CONNECTION;
-
 public class BluetoothReaderService extends Service implements BluetoothDataReader.SerialDataReceiver {
 
     public static final String TAG = "BluetoothReaderService";
@@ -44,7 +40,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     private Handler clientHandler;
 
     public class LocalBinder extends Binder {
-        BluetoothReaderService getService() {
+        public BluetoothReaderService getService() {
             return BluetoothReaderService.this;
         }
     }
@@ -99,12 +95,16 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public void onDataReceived(byte[] data) {
         Log.d(TAG, "onDataReceived: " + data);
         String dataString = new String(data);
-        if (dataString.endsWith("*")) {
+        if (dataString.startsWith("$") && dataString.endsWith("*")) {
             sendCardNumber(extractCardNumber(dataString));
         }
     }
 
     private void sendCardNumber(Integer cardNumber) {
+        if (cardNumber == 0) {
+            return;
+        }
+
         if (clientListening && clientHandler != null) {
             clientHandler.obtainMessage(MSG_DATA_RECEIVED, cardNumber).sendToTarget();
         }

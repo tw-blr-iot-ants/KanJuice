@@ -26,8 +26,8 @@ public class KanJuiceApp extends Application {
     private void setupRestAdapter() {
         restAdapter = new RestAdapter.Builder()
                 .setEndpoint(KANJUICE_SERVER_URL)
-                .setExecutors(Executors.newFixedThreadPool(3), Executors.newFixedThreadPool(1))
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setExecutors(Executors.newFixedThreadPool(5), Executors.newFixedThreadPool(3))
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
     }
 

@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:gravity="center"
-              tools:context="com.example.kanjuice.RegisterActivity"
+              tools:context=".activities.RegisterActivity"
               android:padding="25dp">
 
     <EditText
