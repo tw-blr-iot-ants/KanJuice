@@ -12,6 +12,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.kanjuice.utils.TypedJsonString;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class BluetoothReaderService extends Service implements BluetoothDataReader.SerialDataReceiver {
 
     public static final String TAG = "BluetoothReaderService";
@@ -95,6 +101,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public void onDataReceived(byte[] data) {
         Log.d(TAG, "onDataReceived: " + data);
         String dataString = new String(data);
+        sendLogData("[BluetoothReaderService][onDataReceived] Data receieved from Bluetooth" + dataString);
         if (dataString.startsWith("$") && dataString.endsWith("*")) {
             sendCardNumber(extractCardNumber(dataString));
         }
@@ -112,7 +119,13 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
 
     @Override
     public void onDataReceiveFail(String message) {
+        sendLogData("[BluetoothReaderService][onDataReceiveFail]" +
+                "     Data receieved  Fail from Bluetooth :: " + message);
+
         if (clientListening && clientHandler != null) {
+            sendLogData("[BluetoothReaderService][onDataReceiveFail]" +
+                    " Data receieved client Listening from Bluetooth :: " + message);
+
             clientHandler.obtainMessage(MSG_DATA_RECEIVE_FAILED, message).sendToTarget();
         }
     }
@@ -137,6 +150,8 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     private Integer extractCardNumber(String readString) {
         try {
             Log.d(TAG, "Card# " + readString);
+            sendLogData("[BluetoothReaderService][extractCardNumber] Data receieved from Bluetooth" + readString);
+
             String cardDecNumber = readString.substring(readString.indexOf("$") + 1, readString.length() - 1).trim();
             String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
             int startIndex = binaryNumber.length() - 17;
@@ -147,5 +162,27 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         } catch(Exception e) {
             return 0;
         }
+    }
+
+    private void sendLogData(String debugMessage) {
+        getJuiceServer().saveLogData(new TypedJsonString("{error: " + debugMessage + "}"), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private KanJuiceApp getApp() {
+        return (KanJuiceApp) getApplication();
+    }
+
+    private JuiceServer getJuiceServer() {
+        return getApp().getJuiceServer();
     }
 }

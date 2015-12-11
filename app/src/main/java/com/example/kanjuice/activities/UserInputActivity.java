@@ -273,6 +273,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                sendLogData("Failed to fetch user for given euid: " + error.getMessage());
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
                 orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
                 setRegisterButtonVisibility(false);
@@ -402,23 +403,42 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         if (cardNumber == 0) {
             this.cardNumber = 0;
             orderFinished(false, "Problem reading your card number");
+            sendLogData("[updateReceivedData] recieved cardnumber as 0");
             return;
         }
 
         showOrdering();
 
         try {
+            sendLogData("[updateReceivedData] recieved card number as " + this.cardNumber.toString());
             this.cardNumber = cardNumber;
             if (this.cardNumber != 0) {
                 onCardNumberReceived(this.cardNumber);
                 this.cardNumber = 0;
             }
         } catch(Exception e) {
+            sendLogData("[updateReceivedData] got following exception"  + e.getMessage());
             Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
             e.printStackTrace();
             this.cardNumber = 0;
-            orderFinished(false, "Problem reading your card number");
+            orderFinished(false, "Problem processing your card number");
         }
+    }
+
+    private void sendLogData(String debugMessage) {
+
+
+        getJuiceServer().saveLogData(new TypedJsonString("{\"error\": \"" + debugMessage + "\"}"), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     @Override
