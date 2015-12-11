@@ -19,6 +19,7 @@ import com.example.kanjuice.adapters.JuiceAdapter;
 import com.example.kanjuice.models.Juice;
 import com.example.kanjuice.models.JuiceItem;
 import com.example.kanjuice.utils.JuiceDecorator;
+import com.example.kanjuice.utils.TypedJsonString;
 
 import java.util.List;
 
@@ -190,6 +191,7 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private void onJuiceItemClick(int position) {
+        sendLogData("[onJuiceItemClick] on click of the juice item");
         if(isRegisterActivity(position)) {
             Intent intent = new Intent(JuiceMenuActivity.this, CardSwipeActivity.class);
             startActivity(intent);
@@ -286,5 +288,21 @@ public class JuiceMenuActivity extends Activity {
     private void showFruitsSection() {
         Intent intent = new Intent(JuiceMenuActivity.this, FruitsMenuActivity.class);
         startActivity(intent);
+    }
+
+    private void sendLogData(String debugMessage) {
+
+
+        getJuiceServer().saveLogData(new TypedJsonString("{\"error\": \"" + debugMessage + "\"}"), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }

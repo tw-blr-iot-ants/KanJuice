@@ -75,6 +75,7 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
 
     private void registerNewUser(Integer internalnumber) {
         this.internalnumber = internalnumber;
+        sendLogData("[registerNewUser] received card number as " + this.internalnumber);
         H.removeMessages(MSG_FINISH);
         startRegisterActivity();
     }
@@ -143,5 +144,21 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
 
     private JuiceServer getJuiceServer() {
         return getApp().getJuiceServer();
+    }
+
+    private void sendLogData(String debugMessage) {
+
+
+        getJuiceServer().saveLogData(new TypedJsonString("{\"error\": \"" + debugMessage + "\"}"), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }
