@@ -273,7 +273,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                sendLogData("Failed to fetch user for given euid: " + error.getMessage());
+                sendLogData("Failed to fetch user for given euid: " + euid + " " +  error.getMessage());
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
                 orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
                 setRegisterButtonVisibility(false);
