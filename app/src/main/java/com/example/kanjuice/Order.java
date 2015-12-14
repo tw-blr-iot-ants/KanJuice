@@ -12,7 +12,6 @@ public class Order {
     public List<Drink> drinks = new ArrayList<>();
     public String employeeName;
     public Boolean isSwipe;
-    private boolean isSugarless;
 
     public static class Drink {
         public String name;

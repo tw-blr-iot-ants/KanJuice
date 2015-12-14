@@ -22,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hoho.android.usbserial.util.SerialInputOutputManager;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -56,7 +54,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     UserInputActivity.this.finish();
                     break;
                 case MSG_DATA_RECEIVED:
-                     UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
+                    UserInputActivity.this.updateReceivedData((byte[]) msg.obj);
                     break;
 
                 case MSG_FAILED_BLUETOOTH_CONNECTION:
@@ -230,7 +228,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         if (requestCode == REQUEST_CODE_ADMIN) {
             finish();
         } else if (requestCode == REQUEST_CODE_REGISTER) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 registerUser(getUserFromIntent(data));
             } else {
                 H.sendEmptyMessage(MSG_FINISH);
@@ -293,7 +291,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private void hideIme() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -328,12 +326,12 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                orderFinished(false, "Your card is not registered" , 6500);
+                orderFinished(false, "Your card is not registered", 6500);
             }
         });
     }
 
-    private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
+    private void placeUserOrder(final User user, final boolean allowRegistration, final boolean isSwipe) {
         if (user == null) {
             orderFinished(false, "Failed to fetch your information");
             return;
@@ -370,9 +368,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         order.employeeId = user.empId;
         order.employeeName = user.employeeName;
         order.isSwipe = isSwipe;
-        for(Parcelable juice : juices) {
+        for (Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
-            order.addDrink(item.juiceName,item.isSugarless, item.selectedQuantity);
+            order.addDrink(item.juiceName, item.isSugarless, item.selectedQuantity);
         }
         Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
         return order;
@@ -384,18 +382,22 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         }
 
         int count = 0;
-        for(Parcelable item : juices) {
-            count += ((JuiceItem)item).selectedQuantity;
+        for (Parcelable item : juices) {
+            count += ((JuiceItem) item).selectedQuantity;
         }
-        if (count == 1) return (((JuiceItem) juices[0]).juiceName + " juice " + isSugarless(juices[0]));
-        else return (count + " juices");
+        if (count == 1) {
+            return (((JuiceItem) juices[0]).juiceName + " juice " + isSugarless(juices[0]));
+        } else {
+            return (count + " juices");
+        }
     }
 
     private String isSugarless(Parcelable juice) {
-        if(((JuiceItem) juice).isSugarless)
+        if (((JuiceItem) juice).isSugarless) {
             return "Sugarless";
-        else
+        } else {
             return "with Sugar";
+        }
     }
 
     private void updateReceivedData(byte[] data) {
@@ -407,8 +409,8 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 onCardNumberReceived(extractCardNumber(cardNumber));
                 this.cardNumber = "";
             }
-        } catch(Exception e) {
-            Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
+        } catch (Exception e) {
+            Log.d(TAG, "Exception while reading card " + this.cardNumber + " with " + e.getMessage());
             e.printStackTrace();
             this.cardNumber = "";
             orderFinished(false, "Problem reading your card number");
@@ -417,7 +419,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private Integer extractCardNumber(String readString) {
         Log.d(TAG, "Card# " + readString);
-        String cardDecNumber = readString.substring(readString.indexOf("$") + 1 , readString.length() - 1).trim();
+        String cardDecNumber = readString.substring(readString.indexOf("$") + 1, readString.length() - 1).trim();
         String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
         int startIndex = binaryNumber.length() - 17;
         if (startIndex < 0) {

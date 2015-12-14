@@ -11,16 +11,14 @@ public class JuiceItem implements Parcelable {
     public boolean animate;
     public int imageResId;
     public int kanResId;
-    public int sugarlessImgId;
 
-    public JuiceItem(String juiceName, boolean isSugarless, int kanResId, int imageId, int SugarlessImgId) {
+    public JuiceItem(String juiceName, int imageId, int kanResId, boolean isSugarless) {
         this.juiceName = juiceName;
-        this.isSugarless = isSugarless;
+        this.imageResId = imageId;
         this.kanResId = kanResId;
-        sugarlessImgId = SugarlessImgId;
+        this.isSugarless = isSugarless;
         this.isMultiSelected = false;
         this.selectedQuantity = 1;
-        this.imageResId = imageId;
     }
 
     @Override

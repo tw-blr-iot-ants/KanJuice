@@ -79,8 +79,7 @@
                         android:layout_margin="@dimen/quantity_margin"
                         android:gravity="center"
                         android:textSize="18sp"
-                        android:text="1"
-                        android:singleLine="false" />
+                        android:text="1"/>
 
                     <Button
                         android:id="@+id/two"
@@ -109,16 +108,17 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
                     <CheckBox
-                        android:id="@+id/sugarless"
-                        android:layout_width="150sp"
-                        android:layout_height="@dimen/quantity_height"
-                        android:text="sugarless"
-                        android:layout_margin="@dimen/quantity_margin"
-                        android:textSize="18sp"
-                        android:singleLine="true" />
+                        android:id="@+id/sugarlessCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sugarless"
+                        android:textSize="20sp"
+                        android:paddingLeft="5sp"
+                        android:gravity="center"/>
                 </LinearLayout>
 
             </LinearLayout>

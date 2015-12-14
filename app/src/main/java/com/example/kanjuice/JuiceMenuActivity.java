@@ -172,7 +172,7 @@ public class JuiceMenuActivity extends Activity{
 
     private boolean onJuiceItemLongClick(int position) {
         adapter.toggleSelectionChoice(position);
-        if (isInMultiSelectMode == false) {
+        if (!isInMultiSelectMode) {
             enterMultiSelectionMode();
         }
         return true;
@@ -227,7 +227,6 @@ public class JuiceMenuActivity extends Activity{
     }
 
     private void enterMultiSelectionMode() {
-        Log.d(TAG,"calling multiselect......");
         isInMultiSelectMode = true;
 
         actionButtonLayout.setVisibility(View.VISIBLE);

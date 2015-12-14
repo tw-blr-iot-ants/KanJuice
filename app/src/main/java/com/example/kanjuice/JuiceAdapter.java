@@ -26,7 +26,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     private final LayoutInflater inflater;
     Context context;
 
-    private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.sugarless};
+    private int[] quantityNumbers = {R.id.one, R.id.two, R.id.three, R.id.sugarlessCheckbox};
 
     public JuiceAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -67,10 +67,9 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         if (juiceItem.isMultiSelected) {
             h.multiSelect.titleView.setText(juiceItem.juiceName);
-            if(juiceItem.isSugarless){
-                h.multiSelect.sugarlesscb.setChecked(true);
+            if (juiceItem.isSugarless) {
+                h.multiSelect.sugarlessCheckbox.setChecked(true);
             }
-           // h.multiSelect.sugarlesscb.setChecked(false);
             for (View v : h.multiSelect.quantityViews) {
                 v.setSelected(false);
                 v.setTag(juiceItem);
@@ -84,10 +83,9 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     }
 
     private void showContentWithAnimation(final ViewHolder h, final JuiceItem juiceItem) {
-        if (h.multiSelectView.getVisibility() == View.INVISIBLE && juiceItem.isMultiSelected == true) {
-            Log.d(TAG, "multiselect......." + h.multiSelectView);
+        if (h.multiSelectView.getVisibility() == View.INVISIBLE && juiceItem.isMultiSelected) {
             h.multiSelectView.setVisibility(View.VISIBLE);
-            h.multiSelect.sugarlesscb.setChecked(false);
+            h.multiSelect.sugarlessCheckbox.setChecked(false);
             ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY", 500f, 0f);
             anim.setDuration(ANIMATION_DURATION);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -107,7 +105,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
             });
             anim1.start();
 
-        } else if (h.multiSelectView.getVisibility() == View.VISIBLE && juiceItem.isMultiSelected == false) {
+        } else if (h.multiSelectView.getVisibility() == View.VISIBLE && !juiceItem.isMultiSelected) {
             ObjectAnimator anim = ObjectAnimator.ofFloat(h.multiSelectView, "translationY", -0f, 500f);
             anim.setDuration(ANIMATION_DURATION);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -147,12 +145,12 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         h.singleItemView = (LinearLayout) juiceItemView.findViewById(R.id.single_select_layout);
         h.multiSelectView = (LinearLayout) juiceItemView.findViewById(R.id.multi_select_layout);
         h.multiSelect.titleView = (TextView) juiceItemView.findViewById(R.id.multi_select_title);
-        h.multiSelect.sugarlesscb = (CheckBox) juiceItemView.findViewById(R.id.sugarless);
+        h.multiSelect.sugarlessCheckbox = (CheckBox) juiceItemView.findViewById(R.id.sugarlessCheckbox);
         h.singleSelect.titleView = (TextView) juiceItemView.findViewById(R.id.single_select_title);
         h.singleSelect.titleInKanView = (TextView) juiceItemView.findViewById(R.id.single_select_title_in_kan);
         h.singleSelect.imageView = (ImageView) juiceItemView.findViewById(R.id.image);
 
-        h.multiSelect.sugarlesscb.setChecked(false);
+        h.multiSelect.sugarlessCheckbox.setChecked(false);
 
 
         List<View> quantityViews = new ArrayList<>();
@@ -173,16 +171,11 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         final JuiceItem selectedJuiceItem = (JuiceItem) view.getTag();
-        if (view.getId() == R.id.sugarless) {
-            if (((JuiceItem) view.getTag()).isSugarless) {
-                selectedJuiceItem.isSugarless = false;
-                Toast.makeText(context, "You selected with sugar", Toast.LENGTH_SHORT).show();
-            } else {
-                selectedJuiceItem.isSugarless = true;
-                Toast.makeText(context,"You selected sugarless",Toast.LENGTH_SHORT).show();
-            }
+        if (view.getId() == R.id.sugarlessCheckbox) {
+            selectedJuiceItem.isSugarless = !((JuiceItem) view.getTag()).isSugarless;
+            Toast.makeText(context, "You selected "+ (selectedJuiceItem.isSugarless ? "without sugar" : "with sugar"), Toast.LENGTH_SHORT).show();
             Log.d(TAG, " is sugarless : " + selectedJuiceItem.isSugarless);
-        } else{
+        } else {
             Log.d(TAG, "clicked on juice : " + selectedJuiceItem.juiceName
                     + " qty: " + Integer.parseInt(((TextView) view).getText().toString()) + " is Sugarless : " + selectedJuiceItem.isSugarless);
             selectedJuiceItem.selectedQuantity = Integer.parseInt(((TextView) view).getText().toString());
@@ -193,13 +186,6 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     public void toggleSelectionChoice(int position) {
         juiceItems.get(position).isMultiSelected = !juiceItems.get(position).isMultiSelected;
         juiceItems.get(position).animate = true;
-        notifyDataSetChanged();
-    }
-
-    public void selectJuiceSugarless(JuiceItem juiceItem){
-        juiceItem.isMultiSelected = !juiceItem.isMultiSelected;
-        juiceItem.animate = true;
-        juiceItem.isSugarless = true;
         notifyDataSetChanged();
     }
 
@@ -231,7 +217,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         for (Juice juice : juices) {
             if (juice.available) {
-                juiceItems.add(new JuiceItem(juice.name, juice.isSugarless, juice.kanId, juice.imageId, juice.sugarlessImgId));
+                juiceItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, juice.isSugarless));
             }
         }
         notifyDataSetChanged();
@@ -249,14 +235,13 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         private class MultiSelect {
             public TextView titleView;
             public List<View> quantityViews;
-            public CheckBox sugarlesscb;
+            public CheckBox sugarlessCheckbox;
         }
 
         public class SingleSelect {
             public TextView titleView;
             public TextView titleInKanView;
             public ImageView imageView;
-            public ImageView isSugarless;
         }
     }
 
