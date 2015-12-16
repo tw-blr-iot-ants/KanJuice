@@ -7,16 +7,18 @@ public class JuiceItem implements Parcelable {
     public String juiceName;
     public boolean isMultiSelected;
     public int selectedQuantity;
+    public boolean isSugarless;
     public boolean animate;
     public int imageResId;
     public int kanResId;
 
-    public JuiceItem(String juiceName, int kanResId, int imageId) {
+    public JuiceItem(String juiceName, int imageId, int kanResId, boolean isSugarless) {
         this.juiceName = juiceName;
+        this.imageResId = imageId;
         this.kanResId = kanResId;
+        this.isSugarless = isSugarless;
         this.isMultiSelected = false;
         this.selectedQuantity = 1;
-        this.imageResId = imageId;
     }
 
     @Override
@@ -27,11 +29,11 @@ public class JuiceItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(juiceName);
+        dest.writeByte((byte) (isSugarless ? 1:0));
         dest.writeInt(selectedQuantity);
     }
 
-    public static final Creator<JuiceItem> CREATOR
-            = new Creator<JuiceItem>() {
+    public static final Creator<JuiceItem> CREATOR = new Creator<JuiceItem>() {
         public JuiceItem createFromParcel(Parcel in) {
             return new JuiceItem(in);
         }
@@ -43,6 +45,7 @@ public class JuiceItem implements Parcelable {
 
     private JuiceItem(Parcel in) {
         juiceName = in.readString();
+        isSugarless = in.readByte() != 0;
         selectedQuantity = in.readInt();
     }
 }

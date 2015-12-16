@@ -15,18 +15,20 @@ public class Order {
 
     public static class Drink {
         public String name;
+        public boolean isSugarless;
         public int quantity;
     }
 
-    public Drink newDrink(String name , int quantity) {
+    public Drink newDrink(String name ,boolean isSugarless, int quantity) {
         Drink drink = new Drink();
         drink.name = name;
+        drink.isSugarless = isSugarless;
         drink.quantity = quantity;
         return drink;
     }
 
-    public void addDrink(String name, int quantity) {
-        drinks.add(newDrink(name, quantity));
+    public void addDrink(String name, boolean isSugarless, int quantity) {
+        drinks.add(newDrink(name,isSugarless, quantity));
     }
 
     public String asJson() {
