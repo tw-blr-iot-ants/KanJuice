@@ -103,6 +103,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     protected void onPause() {
         super.onPause();
         AndroidUtils.disableRecentAppsClick(this);
+        H.removeMessages(MSG_FINISH);
     }
 
     @Override
@@ -379,9 +380,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         order.employeeId = user.empId;
         order.employeeName = user.employeeName;
         order.isSwipe = isSwipe;
-        for(Parcelable juice : juices) {
+        for (Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
-            order.addDrink(item.juiceName, item.selectedQuantity);
+            order.addDrink(item.juiceName, item.isSugarless, item.selectedQuantity);
         }
         Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
         return order;
@@ -393,10 +394,14 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         }
 
         int count = 0;
-        for(Parcelable item : juices) {
-            count += ((JuiceItem)item).selectedQuantity;
+        for (Parcelable item : juices) {
+            count += ((JuiceItem) item).selectedQuantity;
         }
-        return count == 1 ? ((JuiceItem)juices[0]).juiceName + " juice" : count + " juices";
+        if (count == 1) {
+            return (((JuiceItem) juices[0]).juiceName + " juice " + isSugarless(juices[0]));
+        } else {
+            return (count + " juices");
+        }
     }
 
     private void updateReceivedData(Integer cardNumber) {
@@ -408,7 +413,18 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         }
 
         showOrdering();
+    }
 
+    private String isSugarless(Parcelable juice) {
+        if (((JuiceItem) juice).isSugarless) {
+            return "Sugarless";
+        } else {
+            return "with Sugar";
+        }
+    }
+
+    private void updateReceivedData(byte[] data) {
+        Log.d(TAG, "updateDataReceived " + new String(data));
         try {
             sendLogData("[updateReceivedData] recieved card number as " + this.cardNumber.toString());
             this.cardNumber = cardNumber;

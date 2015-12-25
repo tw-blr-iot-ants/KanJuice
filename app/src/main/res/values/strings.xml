@@ -71,4 +71,5 @@
     <string name="title_activity_region_selection">Region Selection</string>
     <string name="app_splash_company_name">ThoughtWorks</string>
     <string name="app_splash_app_name">KanJuice</string>
+    <string name="sugarless">No Sugar</string>
 </resources>

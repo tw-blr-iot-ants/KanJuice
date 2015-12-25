@@ -11,7 +11,7 @@ public class KanJuiceApp extends Application {
 
     private static final boolean DEBUG = false;
     private static final String KANJUICE_PROD_SERVER_URL = "http://10.132.127.212:8083";
-    private static final String KANJUICE_DEV_SERVER_URL = "http://10.132.126.17:8083";
+    private static final String KANJUICE_DEV_SERVER_URL = "http://192.168.0.53:8083";
     private static final String KANJUICE_SERVER_URL = DEBUG ? KANJUICE_DEV_SERVER_URL : KANJUICE_PROD_SERVER_URL;
     private RestAdapter restAdapter;
     private JuiceServer juiceServer;
@@ -19,7 +19,6 @@ public class KanJuiceApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         setupRestAdapter();
     }
 
