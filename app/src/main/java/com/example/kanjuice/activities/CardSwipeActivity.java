@@ -12,6 +12,8 @@ import com.example.kanjuice.*;
 import com.example.kanjuice.models.User;
 import com.example.kanjuice.utils.TypedJsonString;
 
+import org.acra.ACRA;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,8 +43,10 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
                   Toast.makeText(CardSwipeActivity.this,
                           "Failed to connect to bluetooth device",
                           Toast.LENGTH_LONG).show();
+                  ACRA.getErrorReporter().handleException(new Throwable("Failed to connect to bluetooth device"));
                   break;
               case MSG_DATA_RECEIVED:
+                  stopListeningForData();
                   CardSwipeActivity.this.registerNewUser((Integer) msg.obj);
                   break;
 
@@ -51,6 +55,9 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
                   break;
 
               case MSG_DATA_RECEIVE_FAILED:
+                  Toast.makeText(CardSwipeActivity.this,
+                          "Error Reading your card !! Bangalore facilities team has been informed about the same",
+                          Toast.LENGTH_LONG).show();
                   CardSwipeActivity.this.finish();
                   break;
           }
@@ -85,6 +92,8 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
             if(resultCode == RESULT_OK) {
                 onRegisterActivityCallback(getUserFromIntent(data));
             } else {
+                ACRA.getErrorReporter()
+                        .handleException(new Throwable("CardSwipeActivity Request code not ok " + requestCode));
                 H.sendEmptyMessage(MSG_FINISH);
             }
         }
@@ -126,6 +135,7 @@ public class CardSwipeActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to register the user");
+                ACRA.getErrorReporter().handleException(error);
                 Toast.makeText(CardSwipeActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
                 H.sendEmptyMessage(MSG_FINISH);
             }

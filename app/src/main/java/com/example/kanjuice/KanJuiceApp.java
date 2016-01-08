@@ -3,10 +3,15 @@ package com.example.kanjuice;
 
 import android.app.Application;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import java.util.concurrent.Executors;
 
 import retrofit.RestAdapter;
 
+@ReportsCrashes(formUri = "http://10.132.127.212:3000/logs/kanjuice")
 public class KanJuiceApp extends Application {
 
     private static final boolean DEBUG = false;
@@ -19,6 +24,7 @@ public class KanJuiceApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ACRA.init(this);
         setupRestAdapter();
     }
 

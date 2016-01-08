@@ -26,6 +26,8 @@ import com.example.kanjuice.models.User;
 import com.example.kanjuice.utils.AndroidUtils;
 import com.example.kanjuice.utils.TypedJsonString;
 
+import org.acra.ACRA;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -59,11 +61,15 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                     UserInputActivity.this.finish();
                     break;
                 case MSG_DATA_RECEIVED:
-                     UserInputActivity.this.updateReceivedData((Integer) msg.obj);
+                    stopListeningForData();
+                    UserInputActivity.this.updateReceivedData((Integer) msg.obj);
                     break;
 
                 case MSG_DATA_RECEIVE_FAILED:
+                    stopListeningForData();
+                    showOrdering();
                     orderFinished(false, "Failed read card details, Please try again");
+                    setRegisterButtonVisibility(false);
                     break;
 
                 case MSG_FAILED_BLUETOOTH_CONNECTION:
@@ -274,7 +280,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                sendLogData("Failed to fetch user for given euid: " + euid + " " +  error.getMessage());
+                ACRA.getErrorReporter()
+                        .handleException(error);
+
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
                 orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
                 setRegisterButtonVisibility(false);
@@ -294,6 +302,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
+                ACRA
+                        .getErrorReporter()
+                        .handleException(error);
                 orderFinished(false, "Your card is not registered", TIME_FOR_REGISTER_DISPLAY);
                 setRegisterButtonVisibility(true);
             }
@@ -302,6 +313,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
         if (user == null) {
+            ACRA.getErrorReporter().handleException(new Throwable("placeUserOrder user is null"));
             orderFinished(false, "Failed to fetch your information");
             return;
         }
@@ -317,6 +329,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Failed to place your order: " + error.getMessage());
+                ACRA.getErrorReporter().handleException(error);
                 setRegisterButtonVisibility(false);
                 orderFinished(false, "Sorry! Failed to place your order, Try again!");
             }
@@ -408,32 +421,20 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         if (cardNumber == 0) {
             this.cardNumber = 0;
             orderFinished(false, "Problem reading your card number");
-            sendLogData("[updateReceivedData] recieved cardnumber as 0");
+            ACRA.getErrorReporter().handleException(new Throwable("recieved card number as 0"));
             return;
         }
 
         showOrdering();
-    }
 
-    private String isSugarless(Parcelable juice) {
-        if (((JuiceItem) juice).isSugarless) {
-            return "Sugarless";
-        } else {
-            return "with Sugar";
-        }
-    }
-
-    private void updateReceivedData(byte[] data) {
-        Log.d(TAG, "updateDataReceived " + new String(data));
         try {
-            sendLogData("[updateReceivedData] recieved card number as " + this.cardNumber.toString());
             this.cardNumber = cardNumber;
             if (this.cardNumber != 0) {
                 onCardNumberReceived(this.cardNumber);
                 this.cardNumber = 0;
             }
         } catch(Exception e) {
-            sendLogData("[updateReceivedData] got following exception"  + e.getMessage());
+            ACRA.getErrorReporter().handleException(e);
             Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
             e.printStackTrace();
             this.cardNumber = 0;
@@ -455,6 +456,14 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
             }
         });
+    }
+
+    private String isSugarless(Parcelable juice) {
+        if (((JuiceItem) juice).isSugarless) {
+            return "Sugarless";
+        } else {
+            return "with Sugar";
+        }
     }
 
     @Override

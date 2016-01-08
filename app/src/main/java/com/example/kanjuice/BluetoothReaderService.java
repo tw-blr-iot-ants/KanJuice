@@ -12,11 +12,9 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import com.example.kanjuice.utils.TypedJsonString;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import org.acra.ACRA;
+
 
 public class BluetoothReaderService extends Service implements BluetoothDataReader.SerialDataReceiver {
 
@@ -29,6 +27,9 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     public static final int MSG_DATA_RECEIVE_FAILED = 105;
 
     private static final int MSG_INITIALIZE_BLUETOOTH = 501;
+    private static final int MAX_DATA_LENGTH = 20;
+
+    private static final int MIN_DATA_LENGTH = 5;
 
     Handler H = new Handler() {
         @Override
@@ -44,6 +45,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     private final IBinder mBinder = new LocalBinder();
     private boolean clientListening;
     private Handler clientHandler;
+    private String dataString = "";
 
     public class LocalBinder extends Binder {
         public BluetoothReaderService getService() {
@@ -99,11 +101,17 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
 
     @Override
     public void onDataReceived(byte[] data) {
-        Log.d(TAG, "onDataReceived: " + data);
-        String dataString = new String(data);
-        sendLogData("[BluetoothReaderService][onDataReceived] Data receieved from Bluetooth" + dataString);
-        if (dataString.startsWith("$") && dataString.endsWith("*")) {
+        dataString = dataString + new String(data);
+
+        if (!isAnyClientListening()) {
+            dataString = "";
+        } else if (isInvalidData(dataString)) {
+            ACRA.getErrorReporter().handleException(new Throwable("Invalid data " +  dataString));
+            dataString = "";
+            clientHandler.obtainMessage(MSG_DATA_RECEIVE_FAILED).sendToTarget();
+        } else if(isLogicalData(dataString)) {
             sendCardNumber(extractCardNumber(dataString));
+            dataString = "";
         }
     }
 
@@ -112,20 +120,16 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
             return;
         }
 
-        if (clientListening && clientHandler != null) {
+        if (isAnyClientListening()) {
             clientHandler.obtainMessage(MSG_DATA_RECEIVED, cardNumber).sendToTarget();
         }
     }
 
     @Override
     public void onDataReceiveFail(String message) {
-        sendLogData("[BluetoothReaderService][onDataReceiveFail]" +
-                "     Data receieved  Fail from Bluetooth :: " + message);
+        ACRA.getErrorReporter().handleException(new Throwable("onDataReceiveFail: " + message));
 
-        if (clientListening && clientHandler != null) {
-            sendLogData("[BluetoothReaderService][onDataReceiveFail]" +
-                    " Data receieved client Listening from Bluetooth :: " + message);
-
+        if (isAnyClientListening()) {
             clientHandler.obtainMessage(MSG_DATA_RECEIVE_FAILED, message).sendToTarget();
         }
     }
@@ -150,39 +154,37 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
     private Integer extractCardNumber(String readString) {
         try {
             Log.d(TAG, "Card# " + readString);
-            sendLogData("[BluetoothReaderService][extractCardNumber] Data receieved from Bluetooth" + readString);
-
             String cardDecNumber = readString.substring(readString.indexOf("$") + 1, readString.length() - 1).trim();
-            String binaryNumber = Integer.toBinaryString(Integer.valueOf(cardDecNumber));
+            String binaryNumber = Long.toBinaryString(Long.valueOf(cardDecNumber));
             int startIndex = binaryNumber.length() - 17;
             if (startIndex < 0) {
                 startIndex = 0;
             }
             return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
         } catch(Exception e) {
+            ACRA.getErrorReporter().handleException(e);
             return 0;
         }
     }
 
-    private void sendLogData(String debugMessage) {
-        getJuiceServer().saveLogData(new TypedJsonString("{error: " + debugMessage + "}"), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+    private boolean isAnyClientListening() {
+        return clientListening && clientHandler != null;
     }
 
-    private KanJuiceApp getApp() {
-        return (KanJuiceApp) getApplication();
+
+    private boolean isInvalidData(String dataString) {
+        return (dataString.contains("*") && !dataString.endsWith("*")) ||
+                dataString.contains("$") && !dataString.startsWith("$") ||
+                dataString.length() > MAX_DATA_LENGTH ||
+                (dataString.indexOf("$") != dataString.lastIndexOf("$")) ||
+                (dataString.indexOf("*") != dataString.lastIndexOf("*"));
     }
 
-    private JuiceServer getJuiceServer() {
-        return getApp().getJuiceServer();
+    private boolean isLogicalData(String data) {
+        return (data.startsWith("$") && data.endsWith("*")) &&
+                data.indexOf("*") == data.lastIndexOf("*") &&
+                data.indexOf("$") == data.lastIndexOf("$") &&
+                data.length() > MIN_DATA_LENGTH;
     }
+
 }

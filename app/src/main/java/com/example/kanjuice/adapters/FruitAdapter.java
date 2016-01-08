@@ -55,7 +55,7 @@ public class FruitAdapter extends BaseAdapter {
 
         for(Juice juice : fruits) {
             if(juice.available) {
-                fruitItems.add(new JuiceItem(juice.name, juice.kanId, juice.imageId,false));
+                fruitItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, false));
             }
         }
 
