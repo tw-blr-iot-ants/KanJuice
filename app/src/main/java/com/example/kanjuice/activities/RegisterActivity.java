@@ -67,7 +67,18 @@ public class RegisterActivity extends Activity {
     }
 
     private void save(String euid, String name) {
+        if ("".equals(euid)) {
+            Toast.makeText(RegisterActivity.this, "Please enter your EmpID!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (euid.trim().length() != 5) {
+            Toast.makeText(RegisterActivity.this, "EmpID should be 5 digits!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if("".equals(name)) {
+            Toast.makeText(RegisterActivity.this, "Please enter your Full Name!", Toast.LENGTH_LONG).show();
             return;
         }
 
