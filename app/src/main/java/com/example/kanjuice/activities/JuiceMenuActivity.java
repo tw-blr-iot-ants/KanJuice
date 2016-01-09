@@ -179,7 +179,7 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private boolean onJuiceItemLongClick(int position) {
-        if(isRegisterActivity(position)) {
+        if(isRegisterActivity(position) || isFruitsSection(position)) {
             return false;
         }
         adapter.toggleSelectionChoice(position);
@@ -205,6 +205,10 @@ public class JuiceMenuActivity extends Activity {
 
     private boolean isRegisterActivity(int position) {
         return ((JuiceItem) adapter.getItem(position)).juiceName.equals("Register User");
+    }
+
+    private boolean isFruitsSection(int position) {
+        return ((JuiceItem) adapter.getItem(position)).juiceName.equals("Fruits");
     }
 
     private void setupActionLayout() {

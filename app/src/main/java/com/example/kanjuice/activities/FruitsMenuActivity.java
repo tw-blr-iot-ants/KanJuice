@@ -92,7 +92,7 @@ public class FruitsMenuActivity extends Activity{
                     public void run() {
                         fruitMenuLoadingView.setVisibility(View.GONE);
                         fruitsView.setVisibility(View.VISIBLE);
-                        onJuicesListReceived(juices);
+                        onFruitsListReceived(juices);
                     }
                 });
             }
@@ -106,9 +106,9 @@ public class FruitsMenuActivity extends Activity{
 
 
 
-    private void onJuicesListReceived(List<Juice> juices) {
-        decorate(juices);
-        adapter.addAll(juices);
+    private void onFruitsListReceived(List<Juice> fruits) {
+        decorate(fruits);
+        adapter.addAll(fruits);
     }
 
     private void decorate(List<Juice> juices) {

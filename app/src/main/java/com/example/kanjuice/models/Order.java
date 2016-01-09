@@ -17,18 +17,20 @@ public class Order {
         public String name;
         public boolean isSugarless;
         public int quantity;
+        public boolean isFruit;
     }
 
-    public Drink newDrink(String name ,boolean isSugarless, int quantity) {
+    public Drink newDrink(String name, boolean isSugarless, int quantity, boolean isFruit) {
         Drink drink = new Drink();
         drink.name = name;
         drink.isSugarless = isSugarless;
         drink.quantity = quantity;
+        drink.isFruit = isFruit;
         return drink;
     }
 
-    public void addDrink(String name, boolean isSugarless, int quantity) {
-        drinks.add(newDrink(name,isSugarless, quantity));
+    public void addDrink(String name, boolean isSugarless, int quantity, boolean isFruit) {
+        drinks.add(newDrink(name,isSugarless, quantity, isFruit));
     }
 
     public String asJson() {

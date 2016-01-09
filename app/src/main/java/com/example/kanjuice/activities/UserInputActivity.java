@@ -311,7 +311,8 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         });
     }
 
-    private void placeUserOrder(final User user, final boolean allowRegistration, final  boolean isSwipe) {
+    private void placeUserOrder(final User user, final boolean allowRegistration,
+                                final  boolean isSwipe) {
         if (user == null) {
             ACRA.getErrorReporter().handleException(new Throwable("placeUserOrder user is null"));
             orderFinished(false, "Failed to fetch your information");
@@ -395,26 +396,32 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         order.isSwipe = isSwipe;
         for (Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;
-            order.addDrink(item.juiceName, item.isSugarless, item.selectedQuantity);
+            order.addDrink(item.juiceName, item.isSugarless, item.selectedQuantity, item.isFruit);
         }
         Log.d(TAG, "order is being placed : " + order.toString() + " for user: " + user.toString());
         return order;
     }
 
     private Object getJuiceCount(Parcelable[] juices) {
+        int count = 0;
         if (juices == null) {
             return "";
         }
 
-        int count = 0;
+
         for (Parcelable item : juices) {
             count += ((JuiceItem) item).selectedQuantity;
         }
+
         if (count == 1) {
-            return (((JuiceItem) juices[0]).juiceName + " juice " + isSugarless(juices[0]));
+            return (((JuiceItem) juices[0]).juiceName + getSuffixForOrder(juices[0])  + isSugarless(juices[0]));
         } else {
             return (count + " juices");
         }
+    }
+
+    private String getSuffixForOrder(Parcelable juice) {
+        return ((JuiceItem) juice).isFruit ? " fruit " : " juice ";
     }
 
     private void updateReceivedData(Integer cardNumber) {
@@ -459,6 +466,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private String isSugarless(Parcelable juice) {
+        if (((JuiceItem) juice).isFruit) return "";
         if (((JuiceItem) juice).isSugarless) {
             return "Sugarless";
         } else {
