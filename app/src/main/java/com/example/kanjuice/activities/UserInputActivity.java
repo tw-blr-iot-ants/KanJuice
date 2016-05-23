@@ -284,7 +284,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                         .handleException(error);
 
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
-                orderFinished(false, "Failed to fetch your information for employee Id : " + euid);
+                orderFinished(false, "Failed to fetch your info. Contact Admin Team/Siddhu");
                 setRegisterButtonVisibility(false);
             }
         });
