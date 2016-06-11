@@ -176,6 +176,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         return (dataString.contains("*") && !dataString.endsWith("*")) ||
                 dataString.contains("$") && !dataString.startsWith("$") ||
                 dataString.length() > MAX_DATA_LENGTH ||
+                dataString.length() < MIN_DATA_LENGTH ||
                 (dataString.indexOf("$") != dataString.lastIndexOf("$")) ||
                 (dataString.indexOf("*") != dataString.lastIndexOf("*"));
     }
