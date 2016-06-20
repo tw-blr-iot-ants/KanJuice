@@ -101,17 +101,14 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
 
     @Override
     public void onDataReceived(byte[] data) {
-        dataString = dataString + new String(data);
+        Log.d(TAG, "onDataReceived: " + data.toString());
+        String dataString = new String(data);
 
-        if (!isAnyClientListening()) {
-            dataString = "";
-        } else if (isInvalidData(dataString)) {
+        if(isInvalidData(dataString)) {
             ACRA.getErrorReporter().handleException(new Throwable("Invalid data " +  dataString));
-            dataString = "";
-            clientHandler.obtainMessage(MSG_DATA_RECEIVE_FAILED).sendToTarget();
-        } else if(isLogicalData(dataString)) {
+        } else {
             sendCardNumber(extractCardNumber(dataString));
-            dataString = "";
+//            sendCardNumber( Integer.valueOf(dataString));
         }
     }
 
@@ -155,12 +152,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         try {
             Log.d(TAG, "Card# " + readString);
             String cardDecNumber = readString.substring(readString.indexOf("$") + 1, readString.length() - 1).trim();
-            String binaryNumber = Long.toBinaryString(Long.valueOf(cardDecNumber));
-            int startIndex = binaryNumber.length() - 17;
-            if (startIndex < 0) {
-                startIndex = 0;
-            }
-            return Integer.valueOf(binaryNumber.substring(startIndex, binaryNumber.length() - 1), 2);
+            return Integer.valueOf(cardDecNumber);
         } catch(Exception e) {
             ACRA.getErrorReporter().handleException(e);
             return 0;
@@ -171,20 +163,7 @@ public class BluetoothReaderService extends Service implements BluetoothDataRead
         return clientListening && clientHandler != null;
     }
 
-
     private boolean isInvalidData(String dataString) {
-        return (dataString.contains("*") && !dataString.endsWith("*")) ||
-                dataString.contains("$") && !dataString.startsWith("$") ||
-                dataString.length() > MAX_DATA_LENGTH ||
-                (dataString.indexOf("$") != dataString.lastIndexOf("$")) ||
-                (dataString.indexOf("*") != dataString.lastIndexOf("*"));
+        return "$*".equals(dataString);
     }
-
-    private boolean isLogicalData(String data) {
-        return (data.startsWith("$") && data.endsWith("*")) &&
-                data.indexOf("*") == data.lastIndexOf("*") &&
-                data.indexOf("$") == data.lastIndexOf("$") &&
-                data.length() > MIN_DATA_LENGTH;
-    }
-
 }
