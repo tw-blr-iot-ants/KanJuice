@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.example.kanjuice"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="1"
-          android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kanjuice"
+    android:versionCode="1"
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="14"/>
+        android:targetSdkVersion="14" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-feature android:name="android.hardware.usb.host"/>
+    <uses-feature android:name="android.hardware.usb.host" />
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
-    <uses-permission android:name="android.permission.REORDER_TASKS"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <!-- [START gcm_permission] -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.example.kanjuice.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.kanjuice.permission.C2D_MESSAGE" />
+
+    <!-- [END gcm_permission] -->
 
     <application
         android:name=".KanJuiceApp"
@@ -32,9 +44,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-                android:name=".activities.SplashActivity"
-                android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"
-                android:screenOrientation="landscape">
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -45,8 +57,7 @@
             android:label="@string/title_activity_region_selection"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        </activity>
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name=".activities.JuiceMenuActivity"
             android:label="@string/app_title"
@@ -54,11 +65,12 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
 
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.HOME" />
-                 <category android:name="android.intent.category.DEFAULT" />
-             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.UserInputActivity"
@@ -68,38 +80,33 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter"/>
+                android:resource="@xml/device_filter" />
         </activity>
         <activity
             android:name=".activities.AdminActivity"
             android:label="@string/title_activity_admin"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        </activity>
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name=".activities.RegisterActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
         <activity
             android:name=".activities.CardSwipeActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        </activity>
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name=".activities.FruitsMenuActivity"
             android:label="@string/title_activity_fruits"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
 
         <service
             android:name=".BluetoothReaderService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
     </application>
 
 </manifest>
