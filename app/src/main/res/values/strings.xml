@@ -73,4 +73,5 @@
     <string name="app_splash_app_name">KanJuice</string>
     <string name="sugarless">No Sugar</string>
     <string name="crash_toast_text">Bengaluru Facilities team will be informed about this issue !</string>
+    <string name="senderId">610412178409</string>
 </resources>
