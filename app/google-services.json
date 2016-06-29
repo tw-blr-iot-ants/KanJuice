@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "610412178409",
+    "project_id": "kanjuice-e2e3e"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610412178409:android:accea13d26a37727",
+        "android_client_info": {
+          "package_name": "com.example.kanjuice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrPzuwwwShMmocb1kU4tY0wMH2ZOKdg2g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
