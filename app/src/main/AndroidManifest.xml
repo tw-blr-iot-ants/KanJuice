@@ -127,7 +127,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".service.MyInstanceIDListenerService"
+            android:name=".service.GCMTokenListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />

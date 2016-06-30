@@ -13,7 +13,7 @@ public class IdReaderHandler implements NotificationHandler {
 
     @Override
     public void handleMessage(Bundle data) {
-        String getUserId = data.getString("userId");
+           String getUserId = data.getString("userId");
 
     }
 }

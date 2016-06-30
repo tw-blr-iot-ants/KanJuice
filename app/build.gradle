@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
-
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "com.example.kanjuice"
@@ -31,5 +30,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.0.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'ch.acra:acra:4.6.2'
-    compile 'com.google.android.gms:play-services-gcm:9.2.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
 }
+
+

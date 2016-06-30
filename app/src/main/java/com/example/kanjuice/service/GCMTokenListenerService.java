@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
 
-public class MyInstanceIDListenerService extends InstanceIDListenerService {
+public class GCMTokenListenerService extends InstanceIDListenerService {
 
     private static final String TAG = "RegIntentService";
 
@@ -12,7 +12,7 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
 
     @Override
     public void onTokenRefresh() {
-        Intent service = new Intent(this, RegistrationIntentService.class);
+        Intent service = new Intent(this, GCMRegistrationIntentService.class);
         startService(service);
     }
 
