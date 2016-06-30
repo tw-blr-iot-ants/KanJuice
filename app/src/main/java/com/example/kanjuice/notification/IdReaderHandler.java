@@ -1,5 +1,8 @@
 package com.example.kanjuice.notification;
 
+import com.google.android.gms.gcm.GcmListenerService;
+
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,7 +13,9 @@ import android.support.v7.app.NotificationCompat;
 import com.google.android.gms.gcm.GcmListenerService;
 
 public class IdReaderHandler extends GcmListenerService implements NotificationHandler {
-    private Context context;
+
+
+    private final Context context;
 
     public IdReaderHandler(Context context) {
 
