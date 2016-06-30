@@ -1,6 +1,5 @@
 package com.example.kanjuice.gcm;
 
-import android.app.Notification;
 import android.os.Bundle;
 
 import com.example.kanjuice.notification.NotificationHandler;
@@ -33,7 +32,7 @@ public class GCMListenerService extends GcmListenerService {
             return;
         NotificationHandler notificationHandler = notificationHandlerFactory.handleFor(String.valueOf(notificationType));
         logger.d("handling messese after receiving this");
-        notificationHandler.handleMessage(data);
+        notificationHandler.sendNotification(data);
     }
 }
 
