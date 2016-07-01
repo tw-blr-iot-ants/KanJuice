@@ -5,19 +5,24 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.kanjuice.*;
 import com.example.kanjuice.adapters.JuiceAdapter;
 import com.example.kanjuice.models.Juice;
 import com.example.kanjuice.models.JuiceItem;
+import com.example.kanjuice.service.GCMRegistrationIntentService;
 import com.example.kanjuice.utils.JuiceDecorator;
 
 import java.util.List;
@@ -38,20 +43,38 @@ public class JuiceMenuActivity extends Activity {
     private View noNetworkView;
     private GridView juicesView;
     private View menuLoadingView;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         SharedPreferences sharedPreferences = getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE);
         String selectedRegion = sharedPreferences.getString("selectedRegion", null);
 
         setContentView(R.layout.activity_juice_menu);
+        Intent intent = new Intent(this, GCMRegistrationIntentService.class);
+        startService(intent);
 
         setupViews();
 
         startBluetoothDataReaderService();
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().endsWith(GCMRegistrationIntentService.RESITRATION_SUCESS)) {
+                    String token = intent.getStringExtra("token");
+                    Toast.makeText(context, "GCM token " + token, Toast.LENGTH_LONG).show();
+                } else if (intent.getAction().endsWith(GCMRegistrationIntentService.RESITRATION_FAILD)) {
+                    Toast.makeText(context, "GCM restration error", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
     }
+
 
     private void startBluetoothDataReaderService() {
         startService(new Intent(this, BluetoothReaderService.class));
@@ -60,6 +83,8 @@ public class JuiceMenuActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("Spalce activity", "onPause");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         disableRecentAppsClick();
     }
 
@@ -70,6 +95,11 @@ public class JuiceMenuActivity extends Activity {
         exitMultiSelectMode();
 
         fetchMenu();
+        Log.d("Spalce activity", "resume");
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new
+                IntentFilter(GCMRegistrationIntentService.RESITRATION_SUCESS));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(GCMRegistrationIntentService.RESITRATION_FAILD));
     }
 
     @Override
@@ -179,7 +209,7 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private boolean onJuiceItemLongClick(int position) {
-        if(isRegisterActivity(position) || isFruitsSection(position)) {
+        if (isRegisterActivity(position) || isFruitsSection(position)) {
             return false;
         }
         adapter.toggleSelectionChoice(position);
@@ -190,11 +220,10 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private void onJuiceItemClick(int position) {
-        if(isRegisterActivity(position)) {
+        if (isRegisterActivity(position)) {
             Intent intent = new Intent(JuiceMenuActivity.this, CardSwipeActivity.class);
             startActivity(intent);
-        }
-        else {
+        } else {
             if (isInMultiSelectMode) {
                 adapter.toggleSelectionChoice(position);
             } else {
@@ -270,7 +299,7 @@ public class JuiceMenuActivity extends Activity {
     }
 
     private void gotoSwipingScreen(int position) {
-        gotoSwipingScreen(new JuiceItem[]{ (JuiceItem) adapter.getItem(position)});
+        gotoSwipingScreen(new JuiceItem[]{(JuiceItem) adapter.getItem(position)});
     }
 
     private void gotoSwipingScreen(JuiceItem[] juiceItems) {

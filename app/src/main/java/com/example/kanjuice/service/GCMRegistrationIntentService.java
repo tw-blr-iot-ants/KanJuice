@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.example.kanjuice.R;
+import com.example.kanjuice.activities.JuiceMenuActivity;
 import com.example.kanjuice.activities.SplashActivity;
 import com.example.kanjuice.util.Logger;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -13,7 +14,8 @@ import com.google.android.gms.iid.InstanceID;
 public class GCMRegistrationIntentService extends IntentService {
     private static final String TAG = "RegIntentService";
     public static final String RESITRATION_SUCESS = "resistrationSucess";
-    public static final String RESITRATION_FAILD = "resistrationFailed";;
+    public static final String RESITRATION_FAILD = "resistrationFailed";
+    ;
     Logger logger = Logger.loggerFor(GCMRegistrationIntentService.class);
 
     public GCMRegistrationIntentService() {
@@ -26,7 +28,8 @@ public class GCMRegistrationIntentService extends IntentService {
     }
 
     public void registerToGCM() {
-        Intent registrationComplete = new Intent(this, SplashActivity.class);
+
+        Intent registrationComplete = new Intent(this, JuiceMenuActivity.class);
         String token = null;
         try {
             InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
