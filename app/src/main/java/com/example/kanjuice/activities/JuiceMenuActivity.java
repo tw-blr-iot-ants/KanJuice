@@ -18,7 +18,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.kanjuice.*;
+import com.example.kanjuice.BluetoothReaderService;
+import com.example.kanjuice.JuiceServer;
+import com.example.kanjuice.KanJuiceApp;
+import com.example.kanjuice.R;
 import com.example.kanjuice.adapters.JuiceAdapter;
 import com.example.kanjuice.models.Juice;
 import com.example.kanjuice.models.JuiceItem;
@@ -59,19 +62,21 @@ public class JuiceMenuActivity extends Activity {
 
         setupViews();
 
-        startBluetoothDataReaderService();
+//        startBluetoothDataReaderService();
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().endsWith(GCMRegistrationIntentService.RESITRATION_SUCESS)) {
+                if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_SUCESS)) {
                     String token = intent.getStringExtra("token");
                     Toast.makeText(context, "GCM token " + token, Toast.LENGTH_LONG).show();
-                } else if (intent.getAction().endsWith(GCMRegistrationIntentService.RESITRATION_FAILD)) {
-                    Toast.makeText(context, "GCM restration error", Toast.LENGTH_LONG).show();
+                } else if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_FAILD)) {
+                    Toast.makeText(context, "GCM registration error", Toast.LENGTH_LONG).show();
                 }
             }
         };
+        Intent service = new Intent(this, GCMRegistrationIntentService.class);
+        startService(service);
 
     }
 
@@ -83,7 +88,7 @@ public class JuiceMenuActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("Spalce activity", "onPause");
+        Log.d("Splash activity", "onPause");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         disableRecentAppsClick();
     }
@@ -95,11 +100,11 @@ public class JuiceMenuActivity extends Activity {
         exitMultiSelectMode();
 
         fetchMenu();
-        Log.d("Spalce activity", "resume");
+        Log.d("Splash activity", "resume");
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new
-                IntentFilter(GCMRegistrationIntentService.RESITRATION_SUCESS));
+                IntentFilter(GCMRegistrationIntentService.REGISTRATION_SUCESS));
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-                new IntentFilter(GCMRegistrationIntentService.RESITRATION_FAILD));
+                new IntentFilter(GCMRegistrationIntentService.REGISTRATION_FAILD));
     }
 
     @Override

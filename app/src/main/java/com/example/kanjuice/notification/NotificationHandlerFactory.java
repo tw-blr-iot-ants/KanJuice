@@ -10,6 +10,6 @@ public class NotificationHandlerFactory {
     }
 
     public NotificationHandler handleFor(String notificationType) {
-       return new IdReaderHandler(context);
+       return new NotificationService(context);
     }
 }

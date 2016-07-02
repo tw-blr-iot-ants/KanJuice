@@ -120,8 +120,8 @@
         </receiver>
 
         <service
-            android:name=".gcm.GCMListenerService"
-            android:exported="true">
+            android:name=".gcm.GCMReceiverService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
