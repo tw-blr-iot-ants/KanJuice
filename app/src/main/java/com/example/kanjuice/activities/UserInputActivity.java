@@ -1,11 +1,15 @@
 package com.example.kanjuice.activities;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,9 +21,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kanjuice.BuildConfig;
 import com.example.kanjuice.JuiceServer;
 import com.example.kanjuice.KanJuiceApp;
 import com.example.kanjuice.R;
+import com.example.kanjuice.gcm.GCMReceiverService;
 import com.example.kanjuice.models.JuiceItem;
 import com.example.kanjuice.models.Order;
 import com.example.kanjuice.models.User;
@@ -33,14 +39,11 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 import static java.lang.String.format;
 
 
-public class UserInputActivity extends BluetoothServiceConnectionActivity {
+public class UserInputActivity extends Activity {
     private static final String TAG = "UserInputActivity";
-    //    public static final int ANIMATION_DURATION = 500;
-
     public static final int TIME_FOR_FINISHING_ACTIVITY = 2000;
     public static final int TIIME_FOR_NO_USER_ACTIVITY_FINISH_DELAY = 10000;
     public static final int TIME_FOR_REGISTER_DISPLAY = 6500;
@@ -49,34 +52,16 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private static final int REQUEST_CODE_REGISTER = 1002;
 
     private static final int MSG_FINISH = 101;
-    public static final int MSG_DATA_RECEIVED = 102;
-    public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
-    public static final int MSG_DATA_RECEIVE_FAILED = 105;
+    public static final String EXTRA_CARD_NUMBER = BuildConfig.APPLICATION_ID + ".EMP_ID";
 
-    Handler H = new Handler() {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_FINISH:
                     UserInputActivity.this.finish();
                     break;
-                case MSG_DATA_RECEIVED:
-                    stopListeningForData();
-                    UserInputActivity.this.updateReceivedData((Integer) msg.obj);
-                    break;
-
-                case MSG_DATA_RECEIVE_FAILED:
-                    stopListeningForData();
-                    showOrdering();
-                    orderFinished(false, "Failed read card details, Please try again");
-                    setRegisterButtonVisibility(false);
-                    break;
-
-                case MSG_FAILED_BLUETOOTH_CONNECTION:
-                    Toast.makeText(UserInputActivity.this,
-                            "Failed to connect to bluetooth device",
-                            Toast.LENGTH_LONG).show();
-                    break;
+                default:
             }
         }
     };
@@ -93,6 +78,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private View registerButton;
 
     private Integer cardNumber = 0;
+    private BroadcastReceiver receiver;
 
 
     @Override
@@ -109,13 +95,23 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     protected void onPause() {
         super.onPause();
         AndroidUtils.disableRecentAppsClick(this);
-        H.removeMessages(MSG_FINISH);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        H.sendEmptyMessageDelayed(MSG_FINISH, TIIME_FOR_NO_USER_ACTIVITY_FINISH_DELAY);
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String cardNumber = intent.getStringExtra(EXTRA_CARD_NUMBER);
+                Log.d(UserInputActivity.class.getSimpleName(), "Employee Id is: " + cardNumber);
+                placeOrder(cardNumber);
+            }
+        };
+        manager.registerReceiver(receiver, new IntentFilter(GCMReceiverService.ACTION_RECEIVE_EMP_ID));
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -170,7 +166,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void showRegisterScreen() {
-        H.removeMessages(MSG_FINISH);
+        handler.removeMessages(MSG_FINISH);
         startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_CODE_REGISTER);
     }
 
@@ -214,13 +210,17 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private void onGo(EditText euidView) {
         String cardNumber = euidView.getText().toString().trim();
 
+        placeOrder(cardNumber);
+    }
+
+    private void placeOrder(String cardNumber) {
         if (cardNumber.length() == 3) {
             handleEasterEggs(cardNumber);
         } else if (cardNumber.length() == 5) {
             showOrdering();
             placeOrderForEuid(cardNumber);
         } else {
-            makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT);
+            Toast.makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT).show();
         }
     }
 
@@ -235,7 +235,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void showAdminPage() {
-        H.removeMessages(MSG_FINISH);
+        handler.removeMessages(MSG_FINISH);
         startActivityForResult(new Intent(this, AdminActivity.class), REQUEST_CODE_ADMIN);
     }
 
@@ -247,7 +247,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
             if (resultCode == RESULT_OK) {
                 registerUser(getUserFromIntent(data));
             } else {
-                H.sendEmptyMessage(MSG_FINISH);
+                handler.sendEmptyMessage(MSG_FINISH);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -348,7 +348,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 
     private void showOrdering() {
         hideIme();
-        H.removeMessages(MSG_FINISH);
+        handler.removeMessages(MSG_FINISH);
         animateOut();
         orderingProgressView.setVisibility(View.VISIBLE);
     }
@@ -366,8 +366,8 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 statusView.setImageResource(isSuccess ? R.drawable.success : R.drawable.failure);
                 messageLayout.setVisibility(View.VISIBLE);
 
-                H.removeMessages(MSG_FINISH);
-                H.sendEmptyMessageDelayed(MSG_FINISH, timeForFinish);
+                handler.removeMessages(MSG_FINISH);
+                handler.sendEmptyMessageDelayed(MSG_FINISH, timeForFinish);
             }
         });
     }
@@ -450,8 +450,6 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void sendLogData(String debugMessage) {
-
-
         getJuiceServer().saveLogData(new TypedJsonString("{\"error\": \"" + debugMessage + "\"}"), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
@@ -472,10 +470,5 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         } else {
             return "with Sugar";
         }
-    }
-
-    @Override
-    protected Handler getHandler() {
-        return H;
     }
 }

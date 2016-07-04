@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.kanjuice.BluetoothReaderService;
 import com.example.kanjuice.JuiceServer;
 import com.example.kanjuice.KanJuiceApp;
 import com.example.kanjuice.R;
@@ -68,8 +67,6 @@ public class JuiceMenuActivity extends Activity {
 
         setupViews();
 
-//        startBluetoothDataReaderService();
-
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -85,11 +82,6 @@ public class JuiceMenuActivity extends Activity {
         Intent service = new Intent(this, GCMRegistrationIntentService.class);
         startService(service);
 
-    }
-
-
-    private void startBluetoothDataReaderService() {
-        startService(new Intent(this, BluetoothReaderService.class));
     }
 
     @Override
