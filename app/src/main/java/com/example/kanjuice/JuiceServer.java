@@ -36,4 +36,5 @@ public interface JuiceServer {
 
     @POST("/api/log/")
     public void saveLogData(@Body TypedJsonString message, Callback<Response> cb);
+
 }

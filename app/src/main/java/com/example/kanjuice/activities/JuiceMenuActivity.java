@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,15 +23,21 @@ import com.example.kanjuice.BluetoothReaderService;
 import com.example.kanjuice.JuiceServer;
 import com.example.kanjuice.KanJuiceApp;
 import com.example.kanjuice.R;
+import com.example.kanjuice.TokenServer;
 import com.example.kanjuice.adapters.JuiceAdapter;
+import com.example.kanjuice.models.GCMToken;
 import com.example.kanjuice.models.Juice;
 import com.example.kanjuice.models.JuiceItem;
 import com.example.kanjuice.service.GCMRegistrationIntentService;
+import com.example.kanjuice.util.Logger;
 import com.example.kanjuice.utils.JuiceDecorator;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import retrofit.Callback;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -38,6 +45,7 @@ import retrofit.client.Response;
 public class JuiceMenuActivity extends Activity {
 
     private static final String TAG = "JuiceMenuActivity";
+    private static final String TOKEN_URL = "http://10.132.127.212:3000";
     private JuiceAdapter adapter;
     private boolean isInMultiSelectMode = false;
     private View goButton;
@@ -47,6 +55,7 @@ public class JuiceMenuActivity extends Activity {
     private GridView juicesView;
     private View menuLoadingView;
     private BroadcastReceiver broadcastReceiver;
+    private Logger logger = Logger.loggerFor(JuiceMenuActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,7 @@ public class JuiceMenuActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_SUCESS)) {
                     String token = intent.getStringExtra("token");
+                    sendToken(token);
                     Toast.makeText(context, "GCM token " + token, Toast.LENGTH_LONG).show();
                 } else if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_FAILD)) {
                     Toast.makeText(context, "GCM registration error", Toast.LENGTH_LONG).show();
@@ -209,6 +219,30 @@ public class JuiceMenuActivity extends Activity {
                 menuLoadingView.setVisibility(View.VISIBLE);
                 noNetworkView.setVisibility(View.INVISIBLE);
                 fetchMenu();
+            }
+        });
+    }
+
+    private void sendToken(String token){
+        GCMToken gcmToken = new GCMToken();
+        gcmToken.setLocation("blr");
+        gcmToken.setOutletType("juice");
+        gcmToken.setDeviceID("123");
+        gcmToken.setGcmToken(token);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(TOKEN_URL)
+                .build();
+
+        TokenServer server = restAdapter.create(TokenServer.class);
+        server.send(gcmToken, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                logger.d("token sending is successful and status is :" + response.getStatus());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                logger.d("token sending is failed");
             }
         });
     }
