@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,10 +32,8 @@ import com.example.kanjuice.util.Logger;
 import com.example.kanjuice.utils.JuiceDecorator;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -223,11 +220,11 @@ public class JuiceMenuActivity extends Activity {
         });
     }
 
-    private void sendToken(String token){
+    private void sendToken(String token) {
         GCMToken gcmToken = new GCMToken();
-        gcmToken.setLocation("blr");
-        gcmToken.setOutletType("juice");
-        gcmToken.setDeviceID("123");
+        gcmToken.setLocation(getString(R.string.location));
+        gcmToken.setOutletType(getString(R.string.outlet_type));
+        gcmToken.setDeviceID(getString(R.string.device_id));
         gcmToken.setGcmToken(token);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(TOKEN_URL)

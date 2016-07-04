@@ -179,7 +179,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 //        cardAnimation.setDuration(ANIMATION_DURATION);
 //        cardAnimation.addListener(new AnimatorListenerAdapter() {
 //            public void onAnimationEnd(Animator animation) {
-                cardLayout.setVisibility(View.INVISIBLE);
+        cardLayout.setVisibility(View.INVISIBLE);
 //            }
 //        });
 //        cardAnimation.start();
@@ -188,7 +188,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 //        euidAnimation.setDuration(ANIMATION_DURATION);
 //        euidAnimation.addListener(new AnimatorListenerAdapter() {
 //            public void onAnimationEnd(Animator animation) {
-                euidLayout.setVisibility(View.INVISIBLE);
+        euidLayout.setVisibility(View.INVISIBLE);
 //            }
 //        });
 //        euidAnimation.start();
@@ -197,7 +197,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
 //        orAnimation.setDuration(ANIMATION_DURATION);
 //        orAnimation.addListener(new AnimatorListenerAdapter() {
 //            public void onAnimationEnd(Animator animation) {
-                orLayout.setVisibility(View.INVISIBLE);
+        orLayout.setVisibility(View.INVISIBLE);
 //            }
 //        });
 //        orAnimation.start();
@@ -244,7 +244,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         if (requestCode == REQUEST_CODE_ADMIN) {
             finish();
         } else if (requestCode == REQUEST_CODE_REGISTER) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 registerUser(getUserFromIntent(data));
             } else {
                 H.sendEmptyMessage(MSG_FINISH);
@@ -312,7 +312,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     }
 
     private void placeUserOrder(final User user, final boolean allowRegistration,
-                                final  boolean isSwipe) {
+                                final boolean isSwipe) {
         if (user == null) {
             ACRA.getErrorReporter().handleException(new Throwable("placeUserOrder user is null"));
             orderFinished(false, "Failed to fetch your information");
@@ -375,7 +375,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
     private void hideIme() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -414,7 +414,7 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
         }
 
         if (count == 1) {
-            return (((JuiceItem) juices[0]).juiceName + getSuffixForOrder(juices[0])  + isSugarless(juices[0]));
+            return (((JuiceItem) juices[0]).juiceName + getSuffixForOrder(juices[0]) + isSugarless(juices[0]));
         } else {
             return (count + " juices");
         }
@@ -440,9 +440,9 @@ public class UserInputActivity extends BluetoothServiceConnectionActivity {
                 onCardNumberReceived(this.cardNumber);
                 this.cardNumber = 0;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             ACRA.getErrorReporter().handleException(e);
-            Log.d(TAG, "Exception while reading card "  + this.cardNumber + " with "  + e.getMessage());
+            Log.d(TAG, "Exception while reading card " + this.cardNumber + " with " + e.getMessage());
             e.printStackTrace();
             this.cardNumber = 0;
             orderFinished(false, "Problem processing your card number");
