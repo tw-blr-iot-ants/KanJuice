@@ -45,13 +45,21 @@ import static java.lang.String.format;
 public class UserInputActivity extends Activity {
     private static final String TAG = "UserInputActivity";
     public static final int TIME_FOR_FINISHING_ACTIVITY = 2000;
-    public static final int TIIME_FOR_NO_USER_ACTIVITY_FINISH_DELAY = 10000;
-    public static final int TIME_FOR_REGISTER_DISPLAY = 6500;
-
     private static final int REQUEST_CODE_ADMIN = 1001;
     private static final int REQUEST_CODE_REGISTER = 1002;
-
     private static final int MSG_FINISH = 101;
+    private Parcelable[] juices;
+    private View cardLayout;
+    private View euidLayout;
+    private View orLayout;
+    private View orderingProgressView;
+    private TextView messageView;
+    private ImageView statusView;
+    private View messageLayout;
+    private int internalCardNumber;
+    private View registerButton;
+    private BroadcastReceiver receiver;
+
     public static final String EXTRA_CARD_NUMBER = BuildConfig.APPLICATION_ID + ".EMP_ID";
 
     Handler handler = new Handler() {
@@ -65,21 +73,6 @@ public class UserInputActivity extends Activity {
             }
         }
     };
-
-    private Parcelable[] juices;
-    private View cardLayout;
-    private View euidLayout;
-    private View orLayout;
-    private View orderingProgressView;
-    private TextView messageView;
-    private ImageView statusView;
-    private View messageLayout;
-    private int internalCardNumber;
-    private View registerButton;
-
-    private Integer cardNumber = 0;
-    private BroadcastReceiver receiver;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -171,32 +164,9 @@ public class UserInputActivity extends Activity {
     }
 
     private void animateOut() {
-//        ObjectAnimator cardAnimation = ObjectAnimator.ofFloat(cardLayout, "translationX", 0f, -400f);
-//        cardAnimation.setDuration(ANIMATION_DURATION);
-//        cardAnimation.addListener(new AnimatorListenerAdapter() {
-//            public void onAnimationEnd(Animator animation) {
         cardLayout.setVisibility(View.INVISIBLE);
-//            }
-//        });
-//        cardAnimation.start();
-
-//        ObjectAnimator euidAnimation = ObjectAnimator.ofFloat(euidLayout, "translationX", 0f, 400f);
-//        euidAnimation.setDuration(ANIMATION_DURATION);
-//        euidAnimation.addListener(new AnimatorListenerAdapter() {
-//            public void onAnimationEnd(Animator animation) {
         euidLayout.setVisibility(View.INVISIBLE);
-//            }
-//        });
-//        euidAnimation.start();
-
-//        ObjectAnimator orAnimation = ObjectAnimator.ofFloat(orLayout, "translationY", 0f, 400f);
-//        orAnimation.setDuration(ANIMATION_DURATION);
-//        orAnimation.addListener(new AnimatorListenerAdapter() {
-//            public void onAnimationEnd(Animator animation) {
         orLayout.setVisibility(View.INVISIBLE);
-//            }
-//        });
-//        orAnimation.start();
     }
 
     private KanJuiceApp getApp() {
@@ -286,27 +256,6 @@ public class UserInputActivity extends Activity {
                 Log.d(TAG, "Failed to fetch user for given euid: " + error.getMessage());
                 orderFinished(false, "Failed to fetch your info. Contact Admin Team/Siddhu");
                 setRegisterButtonVisibility(false);
-            }
-        });
-    }
-
-    private void onCardNumberReceived(final int cardNumber) {
-        internalCardNumber = cardNumber;
-        getJuiceServer().getUserByCardNumber(cardNumber, new Callback<User>() {
-
-            @Override
-            public void success(User user, Response response) {
-                placeUserOrder(user, true, true);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Failed to fetch user for given cardNumber : " + cardNumber + " e: " + error.getMessage());
-                ACRA
-                        .getErrorReporter()
-                        .handleException(error);
-                orderFinished(false, "Your card is not registered", TIME_FOR_REGISTER_DISPLAY);
-                setRegisterButtonVisibility(true);
             }
         });
     }
@@ -422,45 +371,6 @@ public class UserInputActivity extends Activity {
 
     private String getSuffixForOrder(Parcelable juice) {
         return ((JuiceItem) juice).isFruit ? " fruit " : " juice ";
-    }
-
-    private void updateReceivedData(Integer cardNumber) {
-        if (cardNumber == 0) {
-            this.cardNumber = 0;
-            orderFinished(false, "Problem reading your card number");
-            ACRA.getErrorReporter().handleException(new Throwable("recieved card number as 0"));
-            return;
-        }
-
-        showOrdering();
-
-        try {
-            this.cardNumber = cardNumber;
-            if (this.cardNumber != 0) {
-                onCardNumberReceived(this.cardNumber);
-                this.cardNumber = 0;
-            }
-        } catch (Exception e) {
-            ACRA.getErrorReporter().handleException(e);
-            Log.d(TAG, "Exception while reading card " + this.cardNumber + " with " + e.getMessage());
-            e.printStackTrace();
-            this.cardNumber = 0;
-            orderFinished(false, "Problem processing your card number");
-        }
-    }
-
-    private void sendLogData(String debugMessage) {
-        getJuiceServer().saveLogData(new TypedJsonString("{\"error\": \"" + debugMessage + "\"}"), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
     }
 
     private String isSugarless(Parcelable juice) {

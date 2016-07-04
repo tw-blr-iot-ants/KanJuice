@@ -37,7 +37,5 @@ public interface JuiceServer {
     @POST("/api/register/")
     public void register(@Body TypedJsonString userJson, Callback<Response> cb);
 
-    @POST("/api/log/")
-    public void saveLogData(@Body TypedJsonString message, Callback<Response> cb);
 
 }
