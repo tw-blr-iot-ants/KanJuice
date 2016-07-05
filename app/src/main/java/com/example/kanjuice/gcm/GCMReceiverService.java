@@ -19,9 +19,6 @@ public class GCMReceiverService extends GcmListenerService {
         logger = Logger.loggerFor(GCMReceiverService.class);
     }
 
-    public static final String TAG = "BluetoothReaderService";
-
-    public static final int MSG_DATA_RECEIVED = 102;
 
     @Override
     public void onCreate() {

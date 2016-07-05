@@ -101,7 +101,8 @@ public class UserInputActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 String cardNumber = intent.getStringExtra(EXTRA_CARD_NUMBER);
                 Log.d(UserInputActivity.class.getSimpleName(), "Employee Id is: " + cardNumber);
-                placeOrder(cardNumber);
+                if(cardNumber!=null)
+                    placeOrder(cardNumber);
             }
         };
         manager.registerReceiver(receiver, new IntentFilter(GCMReceiverService.ACTION_RECEIVE_EMP_ID));
