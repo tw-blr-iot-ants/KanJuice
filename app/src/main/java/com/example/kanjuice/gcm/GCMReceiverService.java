@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.example.kanjuice.BuildConfig;
+import com.example.kanjuice.activities.CardSwipeActivity;
 import com.example.kanjuice.activities.UserInputActivity;
 import com.example.kanjuice.util.Logger;
 import com.google.android.gms.gcm.GcmListenerService;
@@ -38,5 +39,9 @@ public class GCMReceiverService extends GcmListenerService {
         Intent intent = new Intent(ACTION_RECEIVE_EMP_ID);
         intent.putExtra(UserInputActivity.EXTRA_CARD_NUMBER, message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        Intent intentForUserRegistration = new Intent(ACTION_RECEIVE_EMP_ID);
+        intent.putExtra(CardSwipeActivity.EXTRA_INTERNAL_NUMBER, message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intentForUserRegistration);
     }
 }

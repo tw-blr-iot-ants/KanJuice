@@ -73,9 +73,8 @@ public class JuiceMenuActivity extends Activity {
                 if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_SUCESS)) {
                     String token = intent.getStringExtra("token");
                     sendToken(token);
-                    Toast.makeText(context, "GCM token " + token, Toast.LENGTH_LONG).show();
                 } else if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_FAILD)) {
-                    Toast.makeText(context, "GCM registration error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "some unknown error occurs try again later..", Toast.LENGTH_LONG).show();
                 }
             }
         };
