@@ -1,17 +1,23 @@
 package com.example.kanjuice.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kanjuice.BuildConfig;
 import com.example.kanjuice.JuiceServer;
 import com.example.kanjuice.KanJuiceApp;
 import com.example.kanjuice.R;
+import com.example.kanjuice.gcm.GCMReceiverService;
 import com.example.kanjuice.models.User;
 import com.example.kanjuice.utils.TypedJsonString;
 
@@ -24,42 +30,16 @@ import retrofit.client.Response;
 public class CardSwipeActivity extends Activity {
     private static final String TAG = "CardSwipeActivity";
     private static final int MSG_FINISH = 101;
-    public static final int MSG_DATA_RECEIVED = 102;
-    public static final int MSG_FAILED_BLUETOOTH_CONNECTION = 103;
-    private static final int MSG_REGISTER_USER = 104;
-    private static final int MSG_DATA_RECEIVE_FAILED = 105;
+    private BroadcastReceiver receiver;
 
     private static final int REQUEST_CODE_REGISTER = 2001;
-    public static final int NO_REGISTER_ACTIVITY_FINISH_DELAY = 10000;
-
+    public static final String EXTRA_INTERNAL_NUMBER = BuildConfig.APPLICATION_ID + ".EMP_ID";
     private Integer internalnumber = 0;
-
     Handler H = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_FINISH:
-                    CardSwipeActivity.this.finish();
-                    break;
-
-                case MSG_FAILED_BLUETOOTH_CONNECTION:
-                    Toast.makeText(CardSwipeActivity.this,
-                            "Failed to connect to bluetooth device",
-                            Toast.LENGTH_LONG).show();
-                    ACRA.getErrorReporter().handleException(new Throwable("Failed to connect to bluetooth device"));
-                    break;
-                case MSG_DATA_RECEIVED:
-                    CardSwipeActivity.this.registerNewUser((Integer) msg.obj);
-                    break;
-
-                case MSG_REGISTER_USER:
-                    registerUser((User) msg.obj);
-                    break;
-
-                case MSG_DATA_RECEIVE_FAILED:
-                    Toast.makeText(CardSwipeActivity.this,
-                            "Error Reading your card !! Bangalore facilities team has been informed about the same",
-                            Toast.LENGTH_LONG).show();
                     CardSwipeActivity.this.finish();
                     break;
             }
@@ -70,7 +50,23 @@ public class CardSwipeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        H.sendEmptyMessageDelayed(MSG_FINISH, NO_REGISTER_ACTIVITY_FINISH_DELAY);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String internalNumber = intent.getStringExtra(EXTRA_INTERNAL_NUMBER);
+                Log.d(CardSwipeActivity.class.getSimpleName(), "internal number is : " + internalNumber);
+                if (internalNumber != null)
+                    registerNewUser(Integer.valueOf(internalNumber));
+            }
+        };
+        broadcastManager.registerReceiver(receiver, new IntentFilter(GCMReceiverService.ACTION_RECEIVE_EMP_ID));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -118,7 +114,7 @@ public class CardSwipeActivity extends Activity {
 
     private void onRegisterActivityCallback(final User user) {
         swipeCardTextView.setText("Registering ...");
-        H.sendMessage(H.obtainMessage(MSG_REGISTER_USER, user));
+        registerUser(user);
     }
 
     private void registerUser(final User user) {
