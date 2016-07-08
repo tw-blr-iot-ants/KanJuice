@@ -40,19 +40,9 @@ public class KanJuiceApp extends Application {
         ACRA.init(this);
         try {
             setupRestAdapter();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (ShortBufferException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException |
+                NoSuchPaddingException | ShortBufferException | IllegalBlockSizeException |
+                BadPaddingException e) {
             e.printStackTrace();
         }
     }
