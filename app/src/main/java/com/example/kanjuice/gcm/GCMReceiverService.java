@@ -34,7 +34,7 @@ public class GCMReceiverService extends GcmListenerService {
         logger.d(String.format("Message received from %s: %s", from, message));
 
         Intent intent = new Intent(ACTION_RECEIVE_EMP_ID);
-        intent.putExtra(UserInputActivity.EXTRA_CARD_NUMBER, message);
+        intent.putExtra(UserInputActivity.NOTIFICATION_PAYLOAD, message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         Intent intentForUserRegistration = new Intent(ACTION_RECEIVE_EMP_ID);

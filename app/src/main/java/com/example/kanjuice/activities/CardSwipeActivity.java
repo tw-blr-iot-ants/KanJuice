@@ -54,13 +54,20 @@ public class CardSwipeActivity extends Activity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String internalNumber = intent.getStringExtra(EXTRA_INTERNAL_NUMBER);
-                Log.d(CardSwipeActivity.class.getSimpleName(), "internal number is : " + internalNumber);
-                if (internalNumber != null)
-                    registerNewUser(Integer.valueOf(internalNumber));
+                String notificationPayload = intent.getStringExtra(EXTRA_INTERNAL_NUMBER);
+                Log.d(CardSwipeActivity.class.getSimpleName(), "internal number is : " + notificationPayload);
+                if (notificationPayload != null){
+                    int cardNumber = extractCardNumber(notificationPayload);
+                    registerNewUser(Integer.valueOf(cardNumber));
+                }
+
             }
         };
         broadcastManager.registerReceiver(receiver, new IntentFilter(GCMReceiverService.ACTION_RECEIVE_EMP_ID));
+    }
+
+    private int extractCardNumber(String notificationPayload) {
+        return Integer.parseInt(notificationPayload.split(",")[0]);
     }
 
     @Override
@@ -124,7 +131,7 @@ public class CardSwipeActivity extends Activity {
                 CardSwipeActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(CardSwipeActivity.this, "Hey " + user.employeeName + "!! You have been registered successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CardSwipeActivity.this, "Hey " + user.employeeName + "!! ThankYou, We're awaiting admin team yo approve your request", Toast.LENGTH_LONG).show();
                     }
                 });
                 H.sendEmptyMessage(MSG_FINISH);

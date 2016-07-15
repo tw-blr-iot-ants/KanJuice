@@ -60,7 +60,7 @@ public class UserInputActivity extends Activity {
     private View registerButton;
     private BroadcastReceiver receiver;
 
-    public static final String EXTRA_CARD_NUMBER = BuildConfig.APPLICATION_ID + ".EMP_ID";
+    public static final String NOTIFICATION_PAYLOAD = BuildConfig.APPLICATION_ID + ".EMP_ID";
 
     Handler handler = new Handler() {
         @Override
@@ -99,13 +99,22 @@ public class UserInputActivity extends Activity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String cardNumber = intent.getStringExtra(EXTRA_CARD_NUMBER);
-                Log.d(UserInputActivity.class.getSimpleName(), "Employee Id is: " + cardNumber);
-                if(cardNumber!=null)
-                    placeOrder(cardNumber);
+                String notificationPayload = intent.getStringExtra(NOTIFICATION_PAYLOAD);
+                if(notificationPayload!=null){
+                    String employeeId = extractEmployeeId(notificationPayload);
+                    Log.d(TAG,"EmployeeId is : "+employeeId);
+                    placeOrder(employeeId);
+                }
             }
         };
         manager.registerReceiver(receiver, new IntentFilter(GCMReceiverService.ACTION_RECEIVE_EMP_ID));
+    }
+
+    private String extractEmployeeId(String notificationPayload) {
+        if(!notificationPayload.endsWith(",")){
+            return notificationPayload.substring(notificationPayload.lastIndexOf(",")+1,notificationPayload.length());
+        }
+        return null;
     }
 
     public void setupViews(Parcelable[] juices) {
@@ -185,11 +194,13 @@ public class UserInputActivity extends Activity {
     }
 
     private void placeOrder(String cardNumber) {
-        if (cardNumber.length() == 3) {
-            handleEasterEggs(cardNumber);
-        } else if (cardNumber.length() == 5) {
+        if (cardNumber==null|| cardNumber.length() == 5) {
             showOrdering();
             placeOrderForEuid(cardNumber);
+        }
+        else
+            if (cardNumber.length() == 3) {
+            handleEasterEggs(cardNumber);
         } else {
             Toast.makeText(UserInputActivity.this, "Employee id entered is not valid", LENGTH_SHORT).show();
         }
