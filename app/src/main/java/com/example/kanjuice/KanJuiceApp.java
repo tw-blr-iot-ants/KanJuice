@@ -4,6 +4,8 @@ package com.example.kanjuice;
 import android.app.Application;
 import android.util.Base64;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
@@ -37,6 +39,7 @@ public class KanJuiceApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         ACRA.init(this);
         try {
             setupRestAdapter();

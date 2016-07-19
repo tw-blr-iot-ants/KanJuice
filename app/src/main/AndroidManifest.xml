@@ -134,6 +134,9 @@
             </intent-filter>
         </service>
         <!---[ENd GCM ]-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="00d28b2db142e79979c2e6cbe82d360c43c3c9c5" />
     </application>
 
 </manifest>
