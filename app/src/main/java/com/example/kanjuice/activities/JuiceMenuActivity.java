@@ -41,7 +41,7 @@ import retrofit.client.Response;
 public class JuiceMenuActivity extends Activity {
 
     private static final String TAG = "JuiceMenuActivity";
-    private static final String TOKEN_URL = "http://10.132.127.212:3000";
+    private static final String TOKEN_URL = "http://10.132.127.212:4000";
     private JuiceAdapter adapter;
     private boolean isInMultiSelectMode = false;
     private View goButton;
@@ -66,18 +66,6 @@ public class JuiceMenuActivity extends Activity {
         startService(intent);
 
         setupViews();
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_SUCESS)) {
-                    String token = intent.getStringExtra("token");
-                    sendToken(token);
-                } else if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_FAILD)) {
-                    Toast.makeText(context, "some unknown error occurs try again later..", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
         Intent service = new Intent(this, GCMRegistrationIntentService.class);
         startService(service);
 
@@ -94,6 +82,17 @@ public class JuiceMenuActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_SUCESS)) {
+                    String token = intent.getStringExtra("token");
+                    sendToken(token);
+                } else if (intent.getAction().endsWith(GCMRegistrationIntentService.REGISTRATION_FAILD)) {
+                    Toast.makeText(context, "some unknown error occurs try again later..", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
 
         exitMultiSelectMode();
 
