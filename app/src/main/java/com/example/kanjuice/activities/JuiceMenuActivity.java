@@ -30,6 +30,9 @@ import com.example.kanjuice.service.GCMRegistrationIntentService;
 import com.example.kanjuice.util.Logger;
 import com.example.kanjuice.utils.JuiceDecorator;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit.Callback;
@@ -126,9 +129,23 @@ public class JuiceMenuActivity extends Activity {
                 JuiceMenuActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Iterator<Juice> iterator = juices.iterator();
+                        HashSet<String> ctl = new HashSet<>();
+                        ctl.add("tea");
+                        ctl.add("lemon tea");
+                        ctl.add("ginger tea");
+                        ctl.add("coffee");
+                        List<Juice> onlyJuices = new ArrayList<>();
+                        while (iterator.hasNext()) {
+                            Juice juice = iterator.next();
+                            if (!ctl.contains(juice.name.toLowerCase())) {
+                                onlyJuices.add(juice);
+                            }
+                        }
+
                         menuLoadingView.setVisibility(View.GONE);
                         juicesView.setVisibility(View.VISIBLE);
-                        onJuicesListReceived(juices);
+                        onJuicesListReceived(onlyJuices);
                     }
                 });
             }
