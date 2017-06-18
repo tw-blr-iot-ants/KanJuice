@@ -77,4 +77,7 @@
     <string name="location">blr</string>
     <string name="outlet_type">juice</string>
     <string name="device_id">123</string>
+    <string name="DrinkType">juice</string>
+    <string name="Fruit">fruit</string>
+    <string name="Juice">juice</string>
 </resources>

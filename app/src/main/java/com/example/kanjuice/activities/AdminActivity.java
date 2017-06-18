@@ -3,14 +3,20 @@ package com.example.kanjuice.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.example.kanjuice.utils.JuiceDecorator;
 import com.example.kanjuice.JuiceServer;
 import com.example.kanjuice.KanJuiceApp;
 import com.example.kanjuice.R;
 import com.example.kanjuice.models.Juice;
+import com.example.kanjuice.utils.JuiceDecorator;
 import com.example.kanjuice.utils.TypedJsonString;
 
 import java.util.ArrayList;
@@ -33,6 +39,7 @@ public class AdminActivity extends Activity implements CompoundButton.OnCheckedC
         setupViews();
         fetchMenu();
     }
+
     private KanJuiceApp getApp() {
         return (KanJuiceApp) getApplication();
     }
@@ -48,7 +55,7 @@ public class AdminActivity extends Activity implements CompoundButton.OnCheckedC
     }
 
     private void setJuiceAvailability(final Juice juice) {
-        Log.d(TAG, "setJuiceAvailability: "  + juice.asJson());
+        Log.d(TAG, "setJuiceAvailability: " + juice.asJson());
         getJuiceServer().updateJuice(new TypedJsonString(juice.asJson()), new Callback<Response>() {
 
             @Override
@@ -59,7 +66,6 @@ public class AdminActivity extends Activity implements CompoundButton.OnCheckedC
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "failed to update  juice availibility");
-                juice.available = !juice.available;
             }
         });
     }

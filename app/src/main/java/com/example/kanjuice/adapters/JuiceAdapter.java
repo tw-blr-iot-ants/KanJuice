@@ -178,7 +178,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
         final JuiceItem selectedJuiceItem = (JuiceItem) view.getTag();
         if (view.getId() == R.id.sugarlessCheckbox) {
             selectedJuiceItem.isSugarless = !((JuiceItem) view.getTag()).isSugarless;
-            Toast.makeText(context, "You selected "+ (selectedJuiceItem.isSugarless ? "without sugar" : "with sugar"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "You selected " + (selectedJuiceItem.isSugarless ? "without sugar" : "with sugar"), Toast.LENGTH_SHORT).show();
             Log.d(TAG, " is sugarless : " + selectedJuiceItem.isSugarless);
         } else {
             Log.d(TAG, "clicked on juice : " + selectedJuiceItem.juiceName
@@ -222,7 +222,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
 
         for (Juice juice : juices) {
             if (juice.available) {
-                juiceItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, juice.isSugarless, false));
+                juiceItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, juice.isSugarless, false, context.getString(R.string.DrinkType)));
             }
         }
         addFruitSection();
@@ -234,13 +234,13 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     private void addRegisterOption() {
         String registerUser = "Register User";
         juiceItems.add(new JuiceItem(registerUser, JuiceDecorator.matchImage(registerUser),
-                                     JuiceDecorator.matchKannadaName(registerUser),false, false));
+                JuiceDecorator.matchKannadaName(registerUser), false, false, context.getString(R.string.DrinkType)));
     }
 
     private void addFruitSection() {
         String fruits = "Fruits";
         juiceItems.add(new JuiceItem(fruits, JuiceDecorator.matchImage(fruits),
-                JuiceDecorator.matchKannadaName(fruits),false, false));
+                JuiceDecorator.matchKannadaName(fruits), false, false, context.getString(R.string.DrinkType)));
     }
 
 

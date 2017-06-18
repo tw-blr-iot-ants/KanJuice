@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.kanjuice.*;
+import com.example.kanjuice.JuiceServer;
+import com.example.kanjuice.KanJuiceApp;
+import com.example.kanjuice.R;
 import com.example.kanjuice.adapters.FruitAdapter;
 import com.example.kanjuice.models.Juice;
 import com.example.kanjuice.models.JuiceItem;
@@ -24,7 +26,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class FruitsMenuActivity extends Activity{
+public class FruitsMenuActivity extends Activity {
 
 
     private ListView fruitsView;
@@ -61,7 +63,7 @@ public class FruitsMenuActivity extends Activity{
     }
 
     private void onJuiceItemClick(int position) {
-                gotoSwipingScreen(position);
+        gotoSwipingScreen(position);
     }
 
 
@@ -103,7 +105,6 @@ public class FruitsMenuActivity extends Activity{
             }
         });
     }
-
 
 
     private void onFruitsListReceived(List<Juice> fruits) {

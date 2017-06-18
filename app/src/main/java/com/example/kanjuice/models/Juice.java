@@ -9,6 +9,7 @@ public class Juice {
     public int imageId;
     public int kanId;
     public String isFruit;
+    public String type;
 
     public String asJson() {
         return new Gson().toJson(this);

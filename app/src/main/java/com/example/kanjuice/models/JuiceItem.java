@@ -12,13 +12,15 @@ public class JuiceItem implements Parcelable {
     public int imageResId;
     public int kanResId;
     public boolean isFruit;
+    public String type;
 
 
-    public JuiceItem(String juiceName, int imageId, int kanResId, boolean isSugarless, boolean isFruit) {
+    public JuiceItem(String juiceName, int imageId, int kanResId, boolean isSugarless, boolean isFruit, String type) {
         this.juiceName = juiceName;
         this.imageResId = imageId;
         this.kanResId = kanResId;
         this.isSugarless = isSugarless;
+        this.type = type;
         this.isMultiSelected = false;
         this.selectedQuantity = 1;
         this.isFruit = isFruit;
@@ -32,7 +34,7 @@ public class JuiceItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(juiceName);
-        dest.writeByte((byte) (isSugarless ? 1:0));
+        dest.writeByte((byte) (isSugarless ? 1 : 0));
         dest.writeByte((byte) (isFruit ? 1 : 0));
         dest.writeInt(selectedQuantity);
     }
@@ -52,5 +54,6 @@ public class JuiceItem implements Parcelable {
         isSugarless = in.readByte() != 0;
         isFruit = in.readByte() != 0;
         selectedQuantity = in.readInt();
+        type = isFruit ? "fruit" : "juice";
     }
 }

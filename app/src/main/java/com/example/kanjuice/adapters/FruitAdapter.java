@@ -52,9 +52,9 @@ public class FruitAdapter extends BaseAdapter {
     public void addAll(List<Juice> fruits) {
         fruitItems = new ArrayList<>();
 
-        for(Juice juice : fruits) {
-            if(juice.available) {
-                fruitItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, false, true));
+        for (Juice juice : fruits) {
+            if (juice.available) {
+                fruitItems.add(new JuiceItem(juice.name, juice.imageId, juice.kanId, false, true, context.getString(R.string.Fruit)));
             }
         }
         notifyDataSetChanged();
