@@ -130,15 +130,11 @@ public class JuiceMenuActivity extends Activity {
                     @Override
                     public void run() {
                         Iterator<Juice> iterator = juices.iterator();
-                        HashSet<String> ctl = new HashSet<>();
-                        ctl.add("tea");
-                        ctl.add("lemon tea");
-                        ctl.add("ginger tea");
-                        ctl.add("coffee");
                         List<Juice> onlyJuices = new ArrayList<>();
                         while (iterator.hasNext()) {
                             Juice juice = iterator.next();
-                            if (!ctl.contains(juice.name.toLowerCase())) {
+                            System.out.println(juice);
+                            if (!juice.type.toLowerCase().equals("ctl")) {
                                 onlyJuices.add(juice);
                             }
                         }
