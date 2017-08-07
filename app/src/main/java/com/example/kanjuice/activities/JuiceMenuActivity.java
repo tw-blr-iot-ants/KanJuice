@@ -264,7 +264,8 @@ public class JuiceMenuActivity extends Activity {
             startActivity(intent);
         } else {
             if (isInMultiSelectMode) {
-                adapter.toggleSelectionChoice(position);
+                Toast.makeText(getApplicationContext(), "Please select fruit separately", Toast.LENGTH_LONG).show();
+//                adapter.toggleSelectionChoice(position);
             } else {
                 gotoSwipingScreen(position);
             }

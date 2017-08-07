@@ -240,7 +240,7 @@ public class JuiceAdapter extends BaseAdapter implements View.OnClickListener {
     private void addFruitSection() {
         String fruits = "Fruits";
         juiceItems.add(new JuiceItem(fruits, JuiceDecorator.matchImage(fruits),
-                JuiceDecorator.matchKannadaName(fruits), false, false, context.getString(R.string.DrinkType)));
+                JuiceDecorator.matchKannadaName(fruits), false, false, context.getString(R.string.Fruit)));
     }
 
 
