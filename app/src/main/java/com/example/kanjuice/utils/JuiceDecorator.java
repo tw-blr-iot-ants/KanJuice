@@ -50,6 +50,7 @@ public class JuiceDecorator {
         imageIdMap.put("register user", R.drawable.register_user);
         imageIdMap.put("fruits", R.drawable.fruits);
         imageIdMap.put("strawberry milk shake", R.drawable.strawberry);
+        imageIdMap.put("pomegranate", R.drawable.pomegranate);
 
 
         kanTextMap = new HashMap<>();
@@ -91,6 +92,7 @@ public class JuiceDecorator {
         kanTextMap.put("custard apple", R.string.custard_apple);
         kanTextMap.put("custardapple", R.string.custard_apple);
         kanTextMap.put("papaya", R.string.papaya);
+        kanTextMap.put("pomegranate", R.string.pomegranate);
         kanTextMap.put("fruits", R.string.fruits);
 
     }

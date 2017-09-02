@@ -46,6 +46,7 @@
     <string name="sapota_kan">ಸಪೋಟ</string>
     <string name="apple_kan">ಸೇಬು</string>
     <string name="butter_fruit_kan">ಬೆಣ್ಣೆ ಹಣ್ಣು</string>
+    <string name="pomegranate">ದಾಳಿಂಬೆ</string>
     <string name="unknown_kan"> </string>
 
     <string name="no_network_connection">No internet connection?</string>
