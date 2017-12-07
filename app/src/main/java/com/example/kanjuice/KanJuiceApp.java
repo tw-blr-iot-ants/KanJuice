@@ -25,12 +25,11 @@ import javax.crypto.spec.SecretKeySpec;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
-public class KanJuiceApp extends Application {
 
-    private static final boolean DEBUG = false;
-    private static final String KANJUICE_PROD_SERVER_URL = "http://10.132.127.212:8083";
-    private static final String KANJUICE_DEV_SERVER_URL = "http://10.132.127.120:8083";
-    private static final String KANJUICE_SERVER_URL = DEBUG ? KANJUICE_DEV_SERVER_URL : KANJUICE_PROD_SERVER_URL;
+import static com.example.kanjuice.constants.KanjuiceUrls.*;
+
+@ReportsCrashes(formUri = KANJUICE_SERVER_LOG_URL)
+public class KanJuiceApp extends Application {
     private static final String ENCRYPTION_KEY = "abcd1234";
     private RestAdapter restAdapter;
     private JuiceServer juiceServer;
