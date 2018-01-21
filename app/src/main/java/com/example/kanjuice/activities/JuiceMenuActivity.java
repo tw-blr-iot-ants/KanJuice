@@ -44,7 +44,7 @@ import retrofit.client.Response;
 public class JuiceMenuActivity extends Activity {
 
     private static final String TAG = "JuiceMenuActivity";
-    private static final String TOKEN_URL = "http://10.132.127.212:4000";
+    private static final String TOKEN_URL = "https://bridge-kanjuice.herokuapp.com";
     private JuiceAdapter adapter;
     private boolean isInMultiSelectMode = false;
     private View goButton;
