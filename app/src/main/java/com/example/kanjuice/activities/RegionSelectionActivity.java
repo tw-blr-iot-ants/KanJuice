@@ -12,6 +12,7 @@ import com.example.kanjuice.R;
 
 public class RegionSelectionActivity extends Activity{
 
+    public static final String SELECTED_REGION = "selectedRegion";
     private RadioGroup regionsChoice;
     private String selectedRegion;
 
@@ -29,7 +30,7 @@ public class RegionSelectionActivity extends Activity{
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                 selectedRegion = ((RadioButton) findViewById(checkedId)).getText().toString();
                 SharedPreferences sharedPreferences = getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE);
-                sharedPreferences.edit().putString("selectedRegion", selectedRegion).commit();
+                sharedPreferences.edit().putString(SELECTED_REGION, selectedRegion).commit();
                 gotoJuiceMenuActivity();
             }
         });

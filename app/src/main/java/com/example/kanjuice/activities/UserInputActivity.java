@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,6 +40,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.example.kanjuice.activities.RegionSelectionActivity.SELECTED_REGION;
 import static java.lang.String.format;
 
 
@@ -59,6 +61,7 @@ public class UserInputActivity extends Activity {
     private int internalCardNumber;
     private View registerButton;
     private BroadcastReceiver receiver;
+    private SharedPreferences sharedPreferences;
 
     public static final String NOTIFICATION_PAYLOAD = BuildConfig.APPLICATION_ID + ".EMP_ID";
 
@@ -81,6 +84,7 @@ public class UserInputActivity extends Activity {
         setContentView(R.layout.activity_user_input);
 
         juices = getIntent().getParcelableArrayExtra("juices");
+        sharedPreferences = getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE);
         setupViews(juices);
     }
 
@@ -352,6 +356,7 @@ public class UserInputActivity extends Activity {
         Order order = new Order();
         order.employeeId = user.empId;
         order.employeeName = user.employeeName;
+        order.region = sharedPreferences.getString(SELECTED_REGION, null);
         order.isSwipe = isSwipe;
         for (Parcelable juice : juices) {
             JuiceItem item = (JuiceItem) juice;

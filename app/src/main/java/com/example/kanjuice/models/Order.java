@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Order {
     public String employeeId;
+    public String region;
     public List<Drink> drinks = new ArrayList<>();
     public String employeeName;
     public Boolean isSwipe;

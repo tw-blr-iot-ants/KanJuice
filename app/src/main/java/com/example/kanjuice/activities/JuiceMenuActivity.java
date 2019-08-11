@@ -39,6 +39,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.example.kanjuice.activities.RegionSelectionActivity.SELECTED_REGION;
+
 
 public class JuiceMenuActivity extends Activity {
 
@@ -58,10 +60,6 @@ public class JuiceMenuActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        SharedPreferences sharedPreferences = getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE);
-        String selectedRegion = sharedPreferences.getString("selectedRegion", null);
 
         setContentView(R.layout.activity_juice_menu);
         Intent intent = new Intent(this, GCMRegistrationIntentService.class);
